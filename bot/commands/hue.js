@@ -1,1 +1,1 @@
-exports.hue = (msg) => msg.channel.send('br')
+module.exports = (msg) => msg.channel.send('br')

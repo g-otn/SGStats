@@ -3,12 +3,14 @@ const bot = new Discord.Client()
 
 bot.on("ready", () => console.log(bot.user.tag + " is online"))
 
-bot.on("message", (message) => {
-    if (message.author.bot || !message.content.startsWith(process.env.PREFIX))
+bot.on("message", (msg) => {
+    if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX))
         return;
 
-    let cmd = message.content.split(' ')[0].substring(1)
-    let args = message.content.split(' ').slice(1)
+    let cmd = msg.content.substring(0, msg.content.indexOf(' '))
+    let args = msg.content.indexOf(' ').split(' ').slice(1)
+    console.log('cmd:', cmd)
+    console.log('args:', args)
 
     switch (cmd) {
         case 'forums':
@@ -18,6 +20,7 @@ bot.on("message", (message) => {
             break
         case 'hue':
             require('./commands/hue')(msg)
+            break
         case 'lb':
         case 'leaderboard':
             break;
