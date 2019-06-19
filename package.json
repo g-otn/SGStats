@@ -1,11 +1,12 @@
 {
   "name": "sgstats-discord-bot",
   "version": "4.0.0",
-  "description": "Discord scraper bot for the Smithtainment network",
-  "main": "app.js",
+  "description": "Discord bot for the Smithtainment gaming network to scrap Steam and GamerTracker data",
+  "main": "main.js",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.4.2",
+    "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
