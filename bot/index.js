@@ -57,5 +57,5 @@ bot.on("message", (msg) => {
         default:
     }
 })
-
+console.log(process.env)
 bot.login(process.env.TOKEN)
