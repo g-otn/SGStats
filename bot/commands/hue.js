@@ -1,0 +1,1 @@
+exports.hue = (msg) => msg.channel.send('br')

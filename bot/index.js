@@ -1,17 +1,13 @@
 const Discord = require('discord.js')
 const bot = new Discord.Client()
-const prefix = require("./config.json").prefix
 
-bot.on("ready", () => {
-    console.clear()
-    console.log("SGStats is online")
-})
+bot.on("ready", () => console.log(bot.user.tag + " is online"))
 
 bot.on("message", (message) => {
-    if (message.author.bot || !message.content.startsWith(prefix))
+    if (message.author.bot || !message.content.startsWith(process.env.PREFIX))
         return;
-    
-    let cmd = message.content.split(' ')[0].substring(1, cmd.length)
+
+    let cmd = message.content.split(' ')[0].substring(1)
     let args = message.content.split(' ').slice(1)
 
     switch (cmd) {
@@ -20,6 +16,8 @@ bot.on("message", (message) => {
             break
         case 'help':
             break
+        case 'hue':
+            require('./commands/hue')(msg)
         case 'lb':
         case 'leaderboard':
             break;
@@ -56,5 +54,5 @@ bot.on("message", (message) => {
         default:
     }
 })
-
+console.log(process.env)
 bot.login(process.env.TOKEN)
