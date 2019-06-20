@@ -17,7 +17,7 @@ bot.on("message", (msg) => {
             // require('./commands/forums')(bot, msg)
             break
         case 'help':
-            require('./commands/help')(msg, args)
+            require('./commands/help')(msg, args[0])
             break
         case 'hue':
             require('./commands/hue')(msg)
@@ -28,7 +28,7 @@ bot.on("message", (msg) => {
             break;
         case 'on':
         case 'online':
-            require('./commands/online')(msg, args)
+            require('./commands/online')(msg, args[0])
             break
         case 'pop':
         case 'population':
@@ -50,7 +50,7 @@ bot.on("message", (msg) => {
         case 'csgoh':
         case 'mch':
         case 'mcttth':
-        case 'ph':
+        case 'phh':
         case 'prophunth':
         case 'vah':
         case 'vanillah':
@@ -61,7 +61,7 @@ bot.on("message", (msg) => {
             break
         case 'steam':
         case 'steaminfo':
-            require('./commands/steaminfo')(msg, args)
+            require('./commands/steaminfo')(msg, args[0])
             break
         default:
     }
