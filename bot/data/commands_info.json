@@ -1,6 +1,6 @@
 {
-    "": {
-        "description": "",
+    "leaderboard": {
+        "description": "Shows a leaderboard around a player on a server sorted by score, time played or score/min",
         "syntax": "",
         "example": "",
         "values": [

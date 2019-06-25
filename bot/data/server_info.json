@@ -7,6 +7,10 @@
             "reebAPI": ""
         }
     },
+    "csgo": {
+        "name": "5v5 CSGO Competitive",
+        "ip": "192.99.4.87:28791"
+    },
     "deathrun": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
@@ -38,5 +42,5 @@
             "gamertrackerID": "",
             "reebAPI": ""
         }
-    },
+    }
 }

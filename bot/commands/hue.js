@@ -1,3 +1,3 @@
-module.exports = (msg) => {
+exports.sendTestMessage = (msg) => {
     msg.channel.send('br')
 }

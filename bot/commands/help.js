@@ -1,28 +1,20 @@
 const Discord = require('discord.js')
+const pkg = require('../../package.json')
+const info = require('../data/commands_info.json')
 
-module.exports = (msg, command) => {
+async function sendHelpMenu(msg, command) {
+    let helpmsg = new Discord.RichEmbed()
+    .setFooter('SGStats v' + pkg.version + ' by ' + pkg.author, 'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=32')
 
-
-    switch (command) {
+    if (command && info[command]) { // Command exists
         
-        default: // unknown or undefined
-        sendHelpMenu(msg)
-        return
+    } else {                        // Unknown or no command
+        helpmsg
+        .setTitle('SGStats Commands')
+        .setDescription('Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command')
+        .setColor('BLUE')
+        msg.channel.send(helpmsg)
     }
 }
 
-function sendHelpMenu(msg) {
-    let pkg = require('../../package.json')
-    msg.channel.send(
-        new Discord.RichEmbed()
-        .setTitle('SGStats Commands')
-        .setDescription(
-            'Use ``' + process.env.PREFIX + 'help <command>`` for more help on a specific command'
-        )
-        .set
-        .setColor('BLUE')
-        .setFooter('SGStats v' + pkg.version + ' by ' + pkg.author,
-            'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=32'
-        )
-    )
-}
+exports.sendHelpMenu = sendHelpMenu

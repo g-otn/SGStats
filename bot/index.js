@@ -1,69 +1,67 @@
 const Discord = require('discord.js')
 const bot = new Discord.Client()
+const commands = require('./commands')
+const servers = require('./data/server_info.json')
 
 bot.on("ready", () => console.log(bot.user.tag + " is online"))
 
 bot.on("message", (msg) => {
-    if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX))
-        return;
+    if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX)) return
 
     let cmd = msg.content.split(' ')[0].substring(process.env.PREFIX.length)
     let args = msg.content.split(' ').slice(1)
-    console.log('cmd:', cmd)
-    console.log('args:', args)
+
+    if (!cmd) return
 
     switch (cmd) {
         case 'forums':
-            // require('./commands/forums')(bot, msg)
+            commands.forums.checkSection(bot, msg, args)
             break
         case 'help':
-            require('./commands/help')(msg, args[0])
+            commands.help.sendHelpMenu(msg, args[0])
             break
         case 'hue':
-            require('./commands/hue')(msg)
+            commands.hue.sendTestMessage(msg)
             break
         case 'lb':
         case 'leaderboard':
-            require('./commands/leaderboard')(msg, args)
-            break;
+            commands.leaderboard.sendLeaderboard(msg, args)
+            break
+        case 'map':
+            commands.data.sendData(msg, 2, args)
+            break
         case 'on':
         case 'online':
-            require('./commands/online')(msg, args[0])
+            commands.online.sendOnline(msg, args[0])
             break
         case 'pop':
         case 'population':
-            require('./commands/population')(msg, args)
+            commands.data.sendData(msg, 1, args)
             break
-        case 'server':
-        case 'cs':
-        case 'csgo':
-        case 'mc':
-        case 'mcttt':
-        case 'ph':
-        case 'prophunt':
-        case 'va':
-        case 'vanilla':
-            require('./commands/server')(msg, cmd, args)
-            break
-        case 'serverh':
-        case 'csh':
-        case 'csgoh':
-        case 'mch':
-        case 'mcttth':
-        case 'phh':
-        case 'prophunth':
-        case 'vah':
-        case 'vanillah':
-            require('./commands/serverh')(msg, cmd, args)
+        case 'rank':
+            commands.data.sendData(msg, 3, args)
             break
         case 'stats':
-            require('./commands/stats')(msg, args)
+            commands.stats.sendPlayerStatus(msg, args)
             break
         case 'steam':
         case 'steaminfo':
-            require('./commands/steaminfo')(msg, args[0])
+            commands.steaminfo.sendSteamInfo(msg, args[0])
             break
         default:
+            // serverh and servers commands
+            let serverNameInCommand = cmd.substr(0, cmd.length - 1)
+            if (Object.keys(servers).some(serverName => serverName == serverNameInCommand)) {
+                if (cmd[cmd.length - 1] == 'h') {
+                    commands.player.sendPlayerGraph(msg, servers[serverNameInCommand], args[0], args.slice(1), 1)
+                } else if (cmd[cmd.length - 1] == 's') {
+                    commands.player.sendPlayerGraph(msg, servers[serverNameInCommand], args[0], args.slice(1), 2)
+                }
+                break
+            }
+
+            // Unknown command
+            msg.channel.send('Unknown command, type ``' + process.env.PREFIX + 'help`` for a list of commands.')
     }
 })
 
