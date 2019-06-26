@@ -1,32 +1,59 @@
 {
     "leaderboard": {
-        "description": "Shows a leaderboard around a player on a server sorted by score, time played or score/min",
-        "syntax": "",
-        "example": "",
-        "values": [
-            {
-                "name": "Servers",
-                "options": ""
-            },
-            {
-                "name": "Periods",
-                "options": ""
-            }
-        ]
+        "description": "Shows a leaderboard around a player on a server sorted by total score, time played or score/min.",
+        "syntax": "``$leaderboard <sorting method> <player name>``\nSorting Methods: ``score``, ``time`` played and ``min``.\nAbbreviation: ``lb``",
+        "example": "``$leaderboard score Skeke`` ``$lb time Skeke`` ``$lb Skeke``",
+        "notes": "You can ommit the sorting method and just give the player name, it will then show a leaderboard sorted by score.",
+        "server": {
+            "usesIP": true
+        }
     },
-    "": {
+    "map": {
+        "description": "Shows a graph of the most used maps in a server over the last day, week or month.",
+        "syntax": "``$map <period> <server>``\nPeriods: ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``",
+        "example": "",
+        "server": {
+            "usesGamertrackerID": true
+        }
+    },
+    "online": {
         "description": "",
         "syntax": "",
-        "example": "",
-        "values": [
-            {
-                "name": "Servers",
-                "options": ""
-            },
-            {
-                "name": "Periods",
-                "options": ""
-            }
-        ]
+        "example": ""
+    },
+    "population": {
+        "description": "",
+        "syntax": "",
+        "example": ""
+    },
+    "rank": {
+        "description": "",
+        "syntax": "",
+        "example": ""
+    },
+    "server": {
+        "description": "",
+        "syntax": "",
+        "example": ""
+    },
+    "playerh": {
+        "description": "",
+        "syntax": "",
+        "example": ""
+    },
+    "players": {
+        "description": "",
+        "syntax": "",
+        "example": ""
+    },
+    "stats": {
+        "description": "",
+        "syntax": "",
+        "example": ""
+    },
+    "steaminfo": {
+        "description": "",
+        "syntax": "",
+        "example": ""
     }
 }

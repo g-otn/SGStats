@@ -2,45 +2,42 @@
     "anime": {
         "name": "Anime PropHunt",
         "ip": "209.126.103.165:27045",
-        "scraperInfo": {
-            "gamertrackerID": "",
-            "reebAPI": ""
-        }
+        "playerStatusSupport": true,
+        "gamertrackerID": "6035198"
     },
     "csgo": {
         "name": "5v5 CSGO Competitive",
-        "ip": "192.99.4.87:28791"
+        "ip": "192.99.4.87:28791",
+        "playerStatusSupport": false,
+        "gamertrackerID": "6003210",
+        "reebAPIHTMLTagDiscriminator": ""
     },
     "deathrun": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
-        "scraperInfo": {
-            "gamertrackerID": "",
-            "reebAPI": ""
-        }
+        "playerStatusSupport": true,
+        "gamertrackerID": "5493690",
+        "reebAPIHTMLTagDiscriminator": ""
     },
     "mcttt": {
         "name": "Minecraft TTT",
         "ip": "192.223.31.40:27015",
-        "scraperInfo": {
-            "gamertrackerID": "",
-            "reebAPI": ""
-        }
+        "playerStatusSupport": true,
+        "gamertrackerID": "5086005",
+        "reebAPIHTMLTagDiscriminator": ""
     },
     "prophunt": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
-        "scraperInfo": {
-            "gamertrackerID": "",
-            "reebAPI": ""
-        }
+        "playerStatusSupport": true,
+        "gamertrackerID": "6022066",
+        "reebAPIHTMLTagDiscriminator": ""
     },
     "vanilla": {
         "name": "True Vanilla TTT",
         "ip": "192.99.4.87:27200",
-        "scraperInfo": {
-            "gamertrackerID": "",
-            "reebAPI": ""
-        }
+        "playerStatusSupport": true,
+        "gamertrackerID": "6022841",
+        "reebAPIHTMLTagDiscriminator": ""
     }
 }
