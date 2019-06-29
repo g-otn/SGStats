@@ -1,36 +1,43 @@
 {
     "categories": [
-        "Server",
-        "Player",
-        "Other"
+        {
+            "name": "Server",
+            "color": "GOLD"
+        },
+        {
+            "name": "Player",
+            "color": "BLUE"
+        },
+        {
+            "name": "Other",
+            "color": "GREY"
+        }
     ],
-    "commands": {
+    "list": {
         "leaderboard": {
             "category": "Player",
             "description": "Shows a leaderboard around a player on a server sorted by total score, time played or score/min.",
             "syntax": [
                 "**``$leaderboard <sorting method> <player>``**",
-                "Sorting Methods: ``score``, ``time`` played and ``min``.",
-                "Abbreviation: ``$lb``"
+                "**Sorting Methods:** ``score``, ``time`` and ``min``.",
+                "**Abbreviation:** ``$lb``"
             ],
-            "example": [
+            "examples": [
                 "``$leaderboard score Skeke``",
                 "``$lb time Skeke``",
                 "``$lb Skeke``"
             ],
             "notes": "You can ommit the sorting method and just type the player name, it will then sort by score.",
-            "server": {
-                "usesIP": true
-            }
+            "server": {}
         },
         "map": {
             "category": "Server",
             "description": "Shows a graph of the most used maps in a server over the last day, week or month.",
             "syntax": [
                 "**``$map <period> <server>``**",
-                "Periods: ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
             ],
-            "example": [
+            "examples": [
                 "``$map week mcttt``"
             ],
             "server": {
@@ -42,54 +49,51 @@
             "description": "Shows a list of the server's online players and their time played since the last join. Also shows a graph of the server's population through the day.",
             "syntax": [
                 "**``$online <server>``**",
-                "Abbreviation: ``$on``"
+                "**Abbreviation:** ``$on``"
             ],
-            "example": "``$online mcttt`` ``$on mc``",
-            "server": {
-                "usesIP": true
-            }
+            "examples": [
+                "``$online mcttt``",
+                "``$on mc``"
+            ],
+            "server": {}
         },
         "playerh": {
             "category": "Player",
             "description": "Shows a graph of the minutes played each day on a server over the last day, week or month.",
             "syntax": [
                 "**``$<server>h <period> <player>``**",
-                "Periods: ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
             ],
-            "example": [
+            "examples": [
                 "``$mcttth week Skeke``",
-                "``mch Skeke``"
+                "``$mch Skeke``"
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
-            "server": {
-                "usesIP": true
-            }
+            "server": {}
         },
         "players": {
             "category": "Player",
-            "description": "Shows a graph of the score gained each day on a server over the last day, week or month.",
+            "description": "Shows a graph of the score earned on a server over the last day, week or month.",
             "syntax": [
                 "**``$<server>s <period> <player>``**",
-                "Periods: ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
             ],
-            "example": [
+            "examples": [
                 "``$mcttts day Skeke``",
                 "``$mcs m Skeke``"
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
-            "server": {
-                "usesIP": true
-            }
+            "server": {}
         },
         "population": {
             "category": "Server",
             "description": "Shows a graph of the population of a server over the last day, week or month.",
             "syntax": [
                 "**``$rank <period> <server>``**",
-                "Periods: ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``",
-                "Abbreviation: ``$pop``"
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``",
+                "**Abbreviation:** ``$pop``"
             ],
-            "example": [
+            "examples": [
                 "``$population week mcttt``",
                 "``$pop mcttt"
             ],
@@ -103,9 +107,9 @@
             "description": "Shows a graph of the server rank over the last day, week or month.",
             "syntax": [
                 "**``$rank <period> <server>``**",
-                "Periods: ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
             ],
-            "example": [
+            "examples": [
                 "``$rank month mcttt``",
                 "``$rank mcttt``"
             ],
@@ -120,12 +124,12 @@
             "syntax": [
                 "**``$<server>``**"
             ],
-            "example": [
+            "examples": [
                 "``$mcttt``",
                 "``$mc``"
             ],
             "server": {
-                "usesSGAPI": true
+                "usesReebAPI": true
             }
         },
         "stats": {
@@ -134,22 +138,20 @@
             "syntax": [
                 "**``$stats <server> <player>``**"
             ],
-            "example": [
+            "examples": [
                 "``$stats mcttt Skeke``"
             ],
-            "server": {
-                "usesIP": true
-            }
+            "server": {}
         },
         "steaminfo": {
             "category": "Other",
             "description": "Shows some information from steam of a steam user.",
             "syntax": [
-                "``$steaminfo <input>``",
-                "Input: SteamID (``STEAM_X_Y_Z``), SteamID64 (``765611XXXXXXXXXXX``) or profile's custom URL (steamcommunity.com/id/``skeke``/)",
-                "Abbreviation: ``$steam``"
+                "**``$steaminfo <input>``**",
+                "**Input:** SteamID (``STEAM_X_Y_Z``), SteamID64 (``765611XXXXXXXXXXX``) or profile's custom URL (steamcommunity.com/id/``skeke``/)",
+                "**Abbreviation:** ``$steam``"
             ],
-            "example": [
+            "examples": [
                 "``$steaminfo STEAM_1:0:70936906``",
                 "``$steam 76561198102139540``",
                 "``$steaminfo skeke``"

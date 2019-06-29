@@ -1,0 +1,72 @@
+{
+    "an": {
+        "name": "Anime PropHunt",
+        "ip": "209.126.103.165:27045",
+        "gamertrackerID": "6035198"
+    },
+    "anime": {
+        "name": "Anime PropHunt",
+        "ip": "209.126.103.165:27045",
+        "gamertrackerID": "6035198"
+    },
+    "cs": {
+        "name": "5v5 CSGO Competitive",
+        "ip": "192.99.4.87:28791",
+        "gamertrackerID": "6003210",
+        "reebAPIHTMLTagDiscriminator": "1"
+    },
+    "csgo": {
+        "name": "5v5 CSGO Competitive",
+        "ip": "192.99.4.87:28791",
+        "gamertrackerID": "6003210",
+        "reebAPIHTMLTagDiscriminator": "2"
+    },
+    "dr": {
+        "name": "Classic Deathrun",
+        "ip": "70.42.74.160:27015",
+        "gamertrackerID": "5493690",
+        "reebAPIHTMLTagDiscriminator": "3"
+    },
+    "deathrun": {
+        "name": "Classic Deathrun",
+        "ip": "70.42.74.160:27015",
+        "gamertrackerID": "5493690",
+        "reebAPIHTMLTagDiscriminator": "4"
+    },
+    "mc": {
+        "name": "Minecraft TTT",
+        "ip": "192.223.31.40:27015",
+        "gamertrackerID": "5086005",
+        "reebAPIHTMLTagDiscriminator": "5"
+    },
+    "mcttt": {
+        "name": "Minecraft TTT",
+        "ip": "192.223.31.40:27015",
+        "gamertrackerID": "5086005",
+        "reebAPIHTMLTagDiscriminator": "6"
+    },
+    "ph": {
+        "name": "Vanilla Prophunt",
+        "ip": "208.103.169.108:27024",
+        "gamertrackerID": "6022066",
+        "reebAPIHTMLTagDiscriminator": "7"
+    },
+    "prophunt": {
+        "name": "Vanilla Prophunt",
+        "ip": "208.103.169.108:27024",
+        "gamertrackerID": "6022066",
+        "reebAPIHTMLTagDiscriminator": "8"
+    },
+    "va": {
+        "name": "True Vanilla TTT",
+        "ip": "192.99.4.87:27200",
+        "gamertrackerID": "6022841",
+        "reebAPIHTMLTagDiscriminator": "9"
+    },
+    "vanilla": {
+        "name": "True Vanilla TTT",
+        "ip": "192.99.4.87:27200",
+        "gamertrackerID": "6022841",
+        "reebAPIHTMLTagDiscriminator": "0"
+    }
+}
