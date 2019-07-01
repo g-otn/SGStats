@@ -93,7 +93,6 @@ function sendData(msg, cmd, period, server) {
             return
         }
     }
-    console.log(cmd,period,server)
 
     let graphURL = getGraphURL(cmd, period[0] /* Transform to d|w|m */, server)
 
