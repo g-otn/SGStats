@@ -38,11 +38,13 @@
                 "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
             ],
             "examples": [
-                "``$map week mcttt``"
+                "``$map week mcttt``",
+                "``$map mcttt``"
             ],
             "server": {
                 "usesGamertrackerID": true
-            }
+            },
+            "notes": "You can ommit the period and just type the player name, it will then choose month as the period."
         },
         "online": {
             "category": "Server",
@@ -95,9 +97,9 @@
             ],
             "examples": [
                 "``$population week mcttt``",
-                "``$pop mcttt"
+                "``$pop mcttt``"
             ],
-            "notes": "You can ommit the period and just type the server, it will then choose week as the period.",
+            "notes": "You can ommit the period and just type the server, it will then choose day as the period.",
             "server": {
                 "usesGamertrackerID": true
             }
