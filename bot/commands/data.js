@@ -22,7 +22,7 @@ function sendData(msg, cmd, period, server) {
             new Discord.RichEmbed()
             .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
             .setTitle('Missing server')
-            .setDescription('You must choose a server!\n**Examples:**\n' + commands.list[cmd].examples.join('\n').split('$').join(process.env.PREFIX) + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+            .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
             .setColor('RED')
         )
         return
@@ -32,6 +32,14 @@ function sendData(msg, cmd, period, server) {
         // server is undefined, so period must contain a server name and if it contains, the server must support/have gamertrackerID
         if (period.match(/(day)|(week)|(month)|d|w|m/)) {
             // Correct period but missing server name
+            msg.channel.send(
+                new Discord.RichEmbed()
+                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
+                .setTitle('Missing server')
+                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                .setColor('RED')
+            )
+            return
         }
 
         if (!Object.keys(servers).some(serverName => {
