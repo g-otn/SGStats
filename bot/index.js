@@ -27,11 +27,12 @@ bot.on("message", (msg) => {
         case 'leaderboard':
             commands.leaderboard.sendLeaderboard(msg, args)
             break
-        case 'map':
         case 'pop':
+            cmd = 'population' // Removes abbreviation
         case 'population':
+        case 'map':
         case 'rank':
-            commands.data.sendData(msg, cmd, args[0], args.slice(1))
+            commands.data.sendData(msg, cmd, args[0], args[1])
             break
         case 'on':
         case 'online':
@@ -64,7 +65,13 @@ bot.on("message", (msg) => {
             }
 
             // Unknown command
-            msg.channel.send('Unknown command, type ``' + process.env.PREFIX + 'help`` for a list of commands.')
+            msg.channel.send(
+                new Discord.RichEmbed()
+                .setTitle('Unknown command')
+                .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
+                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_confusion.png?v=1561883974127')
+                .setColor('DARK_BLUE')
+            )
     }
 })
 
