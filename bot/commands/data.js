@@ -30,6 +30,10 @@ function sendData(msg, cmd, period, server) {
     period = period.toLowerCase()
     if (!server) {
         // server is undefined, so period must contain a server name and if it contains, the server must support/have gamertrackerID
+        if (period.match(/(day)|(week)|(month)|d|w|m/)) {
+            // Correct period but missing server name
+        }
+
         if (!Object.keys(servers).some(serverName => {
             return serverName == period
         }) || !servers[period].gamertrackerID) {
@@ -56,7 +60,7 @@ function sendData(msg, cmd, period, server) {
         }
     } else { // period && server
         server = server.toLowerCase()
-        if (!period.match(/(day)|(week)|(month)|d|w|m/g)) {
+        if (!period.match(/(day)|(week)|(month)|d|w|m/)) {
             // Invalid period (and full command is used)
             msg.channel.send(
                 new Discord.RichEmbed()
