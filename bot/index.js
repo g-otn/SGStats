@@ -8,10 +8,9 @@ bot.on("ready", () => console.log(bot.user.tag + " is online"))
 bot.on("message", (msg) => {
     if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX)) return
 
-    let cmd = msg.content.split(' ')[0].substring(process.env.PREFIX.length)
-    let args = msg.content.split(' ').slice(1)
-
+    let cmd = msg.content.split(' ')[0].substring(process.env.PREFIX.length).toLowerCase()
     if (!cmd) return
+    let args = msg.content.split(' ').slice(1)
 
     switch (cmd) {
         case 'forums':
@@ -70,7 +69,7 @@ bot.on("message", (msg) => {
                 .setTitle('Unknown command')
                 .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
                 .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_confusion.png?v=1561883974127')
-                .setColor('DARK_BLUE')
+                .setColor('RED')
             )
     }
 })
