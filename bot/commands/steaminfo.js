@@ -18,27 +18,27 @@ async function getSteamInfo(steamID64) {
         await rp(options)
             .catch(err => {
                 console.log(err)
-            })
+            }) // steamInfo will be undefined
             .then(res => {
                 if (res.response.players.length !== 0)
                     steamInfo = res.response.players[0]
             })
+
+    if (!steaminfo) return // Prevent from trying to get gmod hours if there's not basic info
 
     // Get gmod hours
     options.uri = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`
     options.qs.steamids = undefined
     options.qs.steamid = steamID64
     await rp(options)
-        .catch(err => {
-            console.log(err)
-        })
+        .catch() // gmodHours is undefined
         .then(res => {
             if (res.response.games) {
-                let gmodMinutes = res.response.games.find(game => {
-                    return game.appid == 4000
-                }).playtime_forever
-                if (gmodMinutes)
-                    steamInfo.gmodHours = Math.round(gmodMinutes / 60)
+                let gmod = res.response.games.find(game => {
+                    return game.appid == 4000 // Garry's Mod app id
+                })
+                if (gmod)
+                    steamInfo.gmodHours = Math.round(gmod.playtime_forever / 60)
             }
         })
 
