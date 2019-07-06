@@ -13,27 +13,26 @@ async function getSteamInfo(steamID64) {
         },
         json: true
     }
-    // Get user basic info
-    options.uri = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/',
-        await rp(options)
-            .catch(err => {
-                console.log(err)
-            }) // steamInfo will be undefined
-            .then(res => {
-                if (res.response.players.length !== 0)
-                    steamInfo = res.response.players[0]
-            })
 
-    if (!steaminfo) return // Prevent from trying to get gmod hours if there's not basic info
+    // Get user basic info
+    options.uri = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/'
+    await rp(options)
+        .catch(err => steamInfo = { err: err })
+        .then(res => {
+            if (res.response && res.response.players.length !== 0)
+                steamInfo = res.response.players[0]
+        })
+
+    if (!steaminfo.err) return steaminfo // Prevent from trying to get gmod hours if there's not basic info
 
     // Get gmod hours
     options.uri = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`
     options.qs.steamids = undefined
     options.qs.steamid = steamID64
     await rp(options)
-        .catch() // gmodHours is undefined
+        .catch(err => steaminfo.gmodHours = err)
         .then(res => {
-            if (res.response.games) {
+            if (res.response && res.response.games) {
                 let gmod = res.response.games.find(game => {
                     return game.appid == 4000 // Garry's Mod app id
                 })
@@ -47,11 +46,32 @@ async function getSteamInfo(steamID64) {
 
 function sendMessage(msg, steamInfo) {
 
-    msg.channel.send(
-        new Discord.RichEmbed()
-            .setDescription(JSON.stringify(steamInfo, null, '\t'))
-            .setColor('GREY')
-    )
+    if (steamInfo.err)
+        msg.channel.send(
+            new Discord.RichEmbed()
+                .setTitle('Connection error')
+                .setDescription('Something happened while gathering the steamInfo\n' + steamInfo.err)
+                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_sad.png?v=1561883974814')
+                .setColor('DARK_RED')
+        )
+    else
+        msg.channel.send(
+            new Discord.RichEmbed()
+                .setTitle(steamInfo.personaname + '\'s info')
+                .setDescription(
+                    'Name: ' + steamInfo.personaname
+                    + (steamInfo.communityvisibilitystate == '3' ? '\nReal name: ' +(steamInfo.realname ? steamInfo.realname : '(not set)') : '')
+                    + '\nSteamID: ``' + steam.convertToText(steamInfo.steamid) + '``'
+                    + '\nSteamID64: ``' + steamInfo.steamid + '``'
+                    + (steamInfo.profileurl.match(/\/id\//) ? '\nCustomURL: ' + steamInfo.profileurl.match(/\/id\/(\w+)/)[1] : '')
+                    + `\nProfile: [${steamInfo.communityvisibilitystate == '1' ? 'private' : 'public'}](${steamInfo.profileurl})`
+                    + (steamInfo.gmodHours ? `\nGarry\'s Mod hours: ${steamInfo.gmodHours}` : '')
+                    + '\nPlaying: ' + (steamInfo.gameextrainfo ? (steamInfo.gameid ? `[${steamInfo.gameextrainfo}](https://store.steampowered.com/app/${steamInfo.gameid}/)` : steamInfo.gameextrainfo) : 'unknown')
+                    + '\nLast time online: ' + new Date(steamInfo.lastlogoff * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                )
+                .setThumbnail(steamInfo.avatarmedium)
+                .setColor('GREY')
+        )
 }
 
 function sendSteamInfo(msg, input) {
