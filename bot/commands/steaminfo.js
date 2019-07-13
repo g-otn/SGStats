@@ -46,9 +46,6 @@ exports.getSteamInfo = async (steamID64) => {
 }
 
 function sendMessage(msg, steamInfo) {
-    console.log(steamInfo)
-    console.log(steam.convertToText(steamInfo.steamid))
-    console.log('\na\n')
     if (steamInfo.err)
         msg.channel.send(
             new Discord.RichEmbed()
