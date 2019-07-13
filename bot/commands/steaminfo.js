@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const rp = require('request-promise')
 const steam = require('steamidconvert')(process.env.STEAMWEBAPI_KEY)
+const timeago = require('timeago.js')
 const commands = require('../data/commands')
 
 async function getSteamInfo(steamID64) {
@@ -17,20 +18,19 @@ async function getSteamInfo(steamID64) {
     // Get user basic info
     options.uri = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/'
     await rp(options)
-        .catch(err => steamInfo = { err: err })
         .then(res => {
             if (res.response && res.response.players.length !== 0)
                 steamInfo = res.response.players[0]
         })
+        .catch(err => steamInfo = { err: err })
 
-    if (!steaminfo.err) return steaminfo // Prevent from trying to get gmod hours if there's not basic info
+    if (steamInfo.err) return steamInfo // Prevent from trying to get gmod hours if there's not basic info
 
     // Get gmod hours
     options.uri = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`
     options.qs.steamids = undefined
     options.qs.steamid = steamID64
     await rp(options)
-        .catch(err => steaminfo.gmodHours = err)
         .then(res => {
             if (res.response && res.response.games) {
                 let gmod = res.response.games.find(game => {
@@ -40,16 +40,19 @@ async function getSteamInfo(steamID64) {
                     steamInfo.gmodHours = Math.round(gmod.playtime_forever / 60)
             }
         })
+        .catch(err => steamInfo.gmodHours = `Error (${err.statusCode})`)
 
     return steamInfo
 }
 
 function sendMessage(msg, steamInfo) {
-
+    console.log(steamInfo)
+    console.log(steam.convertToText(steamInfo.steamid))
+    console.log('\na\n')
     if (steamInfo.err)
         msg.channel.send(
             new Discord.RichEmbed()
-                .setTitle('Connection error')
+                .setTitle('Error')
                 .setDescription('Something happened while gathering the steamInfo\n' + steamInfo.err)
                 .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_sad.png?v=1561883974814')
                 .setColor('DARK_RED')
@@ -59,15 +62,24 @@ function sendMessage(msg, steamInfo) {
             new Discord.RichEmbed()
                 .setTitle(steamInfo.personaname + '\'s info')
                 .setDescription(
-                    'Name: ' + steamInfo.personaname
-                    + (steamInfo.communityvisibilitystate == '3' ? '\nReal name: ' +(steamInfo.realname ? steamInfo.realname : '(not set)') : '')
-                    + '\nSteamID: ``' + steam.convertToText(steamInfo.steamid) + '``'
-                    + '\nSteamID64: ``' + steamInfo.steamid + '``'
-                    + (steamInfo.profileurl.match(/\/id\//) ? '\nCustomURL: ' + steamInfo.profileurl.match(/\/id\/(\w+)/)[1] : '')
-                    + `\nProfile: [${steamInfo.communityvisibilitystate == '1' ? 'private' : 'public'}](${steamInfo.profileurl})`
-                    + (steamInfo.gmodHours ? `\nGarry\'s Mod hours: ${steamInfo.gmodHours}` : '')
-                    + '\nPlaying: ' + (steamInfo.gameextrainfo ? (steamInfo.gameid ? `[${steamInfo.gameextrainfo}](https://store.steampowered.com/app/${steamInfo.gameid}/)` : steamInfo.gameextrainfo) : 'unknown')
-                    + '\nLast time online: ' + new Date(steamInfo.lastlogoff * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                    '**Display name:** ' + steamInfo.personaname
+
+                    + '\n**Name:** ' + (steamInfo.communityvisibilitystate == 3 ? (steamInfo.realname ? steamInfo.realname : '(not set)') : '(unknown)')
+
+                    + '\n**SteamID:** ``' + steam.convertToText(steamInfo.steamid) + '``'
+
+                    + '\n**SteamID64:** ``' + steamInfo.steamid + '``'
+                    + '\n**CustomURL:** ' + (steamInfo.profileurl.match(/\/id\//) ? `[${steamInfo.profileurl.match(/\/id\/(\w+)/)[1]}](${steamInfo.profileurl})` : '(not set)')
+
+                    + `\n**Profile:** [${steamInfo.communityvisibilitystate !== 3 ? 'private' : 'public'}](${steamInfo.profileurl})`
+
+                    + '\n\n**Garry\'s Mod hours:** ' + (steamInfo.gmodHours ? `${steamInfo.gmodHours}` : '(unknown)')
+
+                    + '\n**Playing:** ' + (steamInfo.gameextrainfo ? (steamInfo.gameserverip ? `[${steamInfo.gameextrainfo}](steam://connect/${steamInfo.gameserverip}/)` : steamInfo.gameextrainfo) : '(unknown)')
+
+                    + '\n\n**Last time online:** ' + (steamInfo.lastlogoff ? '\n' + new Date(steamInfo.lastlogoff * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ` (${timeago.format(new Date(steamInfo.lastlogoff * 1000))})` : '(unknown)')
+
+                    + '\n**Created:** ' + (steamInfo.timecreated ? '\n' + new Date(steamInfo.timecreated * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ` (${timeago.format(new Date(steamInfo.timecreated * 1000))})` : '(unknown)')
                 )
                 .setThumbnail(steamInfo.avatarmedium)
                 .setColor('GREY')
@@ -89,12 +101,11 @@ function sendSteamInfo(msg, input) {
 
     input = input.trim()
 
-    let steamInfo
-    if (input.match(/^STEAM_[0-5]:[01]:\d+$/)) { // SteamID
-        getSteamInfo(steam.convertTo64(input))
+    if (input.match(/STEAM_[0-5]:[01]:\d+/)) { // SteamID
+        getSteamInfo(steam.convertTo64(input.match(/STEAM_[0-5]:[01]:\d+/)[0]))
             .then(steamInfo => sendMessage(msg, steamInfo))
-    } else if (input.match(/^7656119\d{10}$/)) { // SteamID64 
-        getSteamInfo(input)
+    } else if (input.match(/7656119\d{10}/)) { // SteamID64 
+        getSteamInfo(input.match(/7656119\d{10}/)[0])
             .then(steamInfo => sendMessage(msg, steamInfo))
     } else {                                     // CustomURL        
         steam.convertVanity(input, (err, res) => {

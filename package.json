@@ -10,7 +10,8 @@
     "express": "^4.17.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "steamidconvert": "^0.2.4"
+    "steamidconvert": "^0.2.4",
+    "timeago.js": "^4.0.0-beta.2"
   },
   "keywords": [
     "sgstats",
