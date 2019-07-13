@@ -3,7 +3,7 @@ const pkg = require('../../package.json')
 const commands = require('../data/commands.json')
 const servers = require('../data/servers.json')
 
-function getAvailableServers(command) {
+exports.getAvailableServers = (command) => {
     let commandInfo = commands.list[command]  
     let availableServers = []
     let requiredResources = []
@@ -21,7 +21,7 @@ function getAvailableServers(command) {
     return availableServers
 }
 
-function sendHelpMenu(msg, command) {
+exports.sendHelpMenu = (msg, command) => {
     let helpmsg = new Discord.RichEmbed()
     .setFooter('SGStats v' + pkg.version + ' by ' + pkg.author, 'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=32')
 
@@ -56,6 +56,3 @@ function sendHelpMenu(msg, command) {
     }
     msg.channel.send(helpmsg)
 }
-
-exports.getAvailableServers = getAvailableServers
-exports.sendHelpMenu = sendHelpMenu

@@ -3,7 +3,7 @@ const commands = require('../data/commands.json')
 const servers = require('../data/servers.json')
 const getAvailableServers = require('./help').getAvailableServers
 
-function getGraphURL(cmd, period, server) {
+exports.getGraphURL = (cmd, period, server) => {
     switch (cmd) {
         case 'map':
             return `https://cache.gametracker.com/images/graphs/server_maps.php?GSID=${servers[server].gamertrackerID}&start=-1${period}`
@@ -14,7 +14,7 @@ function getGraphURL(cmd, period, server) {
     }
 }
 
-function sendData(msg, cmd, period, server) {
+exports.sendData = (msg, cmd, period, server) => {
     // Data validation
     if (!period && !server) {
         // Missing server
@@ -104,6 +104,3 @@ function sendData(msg, cmd, period, server) {
         .setColor('GOLD')
     )
 }
-
-exports.getGraphURL = getGraphURL
-exports.sendData = sendData

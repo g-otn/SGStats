@@ -4,7 +4,7 @@ const steam = require('steamidconvert')(process.env.STEAMWEBAPI_KEY)
 const timeago = require('timeago.js')
 const commands = require('../data/commands')
 
-async function getSteamInfo(steamID64) {
+exports.getSteamInfo = async (steamID64) => {
     let steamInfo
     let options = {
         qs: {
@@ -86,7 +86,7 @@ function sendMessage(msg, steamInfo) {
         )
 }
 
-function sendSteamInfo(msg, input) {
+exports.sendSteamInfo = (msg, input) => {
     // Data validation
     if (!input) {
         msg.channel.send(
@@ -125,6 +125,3 @@ function sendSteamInfo(msg, input) {
         })
     }
 }
-
-exports.getSteamInfo = getSteamInfo
-exports.sendSteamInfo = sendSteamInfo
