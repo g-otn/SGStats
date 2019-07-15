@@ -57,9 +57,9 @@ bot.on("message", (msg) => {
             let serverNameInCommand = cmd.substr(0, cmd.length - 1)
             if (serverNames.some(serverName => serverName == serverNameInCommand)) {
                 if (cmd[cmd.length - 1] == 'h')
-                    commands.player.sendPlayerGraph(msg, servers[serverNameInCommand], args[0], args.slice(1), 1)
+                    commands.player.sendPlayerGraph(msg, cmd[cmd.length - 1], servers[serverNameInCommand], args[0], args.slice(1).join(' '))
                 else if (cmd[cmd.length - 1] == 's')
-                    commands.player.sendPlayerGraph(msg, servers[serverNameInCommand], args[0], args.slice(1), 2)
+                    commands.player.sendPlayerGraph(msg, cmd[cmd.length - 1], servers[serverNameInCommand], args[0], args.slice(1).join(' '))
                 break
             }
 

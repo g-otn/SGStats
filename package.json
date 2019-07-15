@@ -7,6 +7,7 @@
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.4.2",
     "dotenv": "^8.0.0",
+    "encodeurl": "^1.0.2",
     "express": "^4.17.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
