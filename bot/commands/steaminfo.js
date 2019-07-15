@@ -5,7 +5,7 @@ const timeago = require('timeago.js')
 const commands = require('../data/commands')
 const thumbs = require('../data/thumbnails.json')
 
-exports.getSteamInfo = async (steamID64) => {
+async function getSteamInfo(steamID64) {
     let steamInfo
     let options = {
         qs: {
@@ -123,3 +123,5 @@ exports.sendSteamInfo = (msg, input) => {
         })
     }
 }
+
+exports.getSteamInfo = getSteamInfo
