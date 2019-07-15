@@ -4,7 +4,7 @@ const servers = require('../data/servers.json')
 const thumbs = require('../data/thumbnails.json')
 const getAvailableServers = require('./help').getAvailableServers
 
-exports.getGraphURL = (cmd, period, server) => {
+function getGraphURL(cmd, period, server) {
     switch (cmd) {
         case 'map':
             return `https://cache.gametracker.com/images/graphs/server_maps.php?GSID=${servers[server].gamertrackerID}&start=-1${period}`
@@ -105,3 +105,5 @@ exports.sendData = (msg, cmd, period, server) => {
         .setColor('GOLD')
     )
 }
+
+exports.getGraphURL = getGraphURL
