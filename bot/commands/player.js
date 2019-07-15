@@ -21,7 +21,8 @@ async function searchPlayer(type, server, period, player) {
             foundPlayer.name = selection.eq(0).text().trim()
             if (foundPlayer.name) {
                 foundPlayer.profile = 'https://www.gametracker.com' + selection.eq(0).attr('href')
-                foundPlayer.graphURL = `https://cache.gametracker.com/images/graphs/player_${type == 'h' ? 'time' : 'score'}.php?nameb64=${encodeUrl(Base64.encode(foundPlayer.name))}&host=${server.ip}&start=-1${period}`
+                if (period)
+                    foundPlayer.graphURL = `https://cache.gametracker.com/images/graphs/player_${type == 'h' ? 'time' : 'score'}.php?nameb64=${encodeUrl(Base64.encode(foundPlayer.name))}&host=${server.ip}&start=-1${period}`
             }
         })
     return foundPlayer
