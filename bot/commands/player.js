@@ -3,6 +3,7 @@ const encodeUrl = require('encodeurl')
 const Base64 = require('js-base64').Base64
 const rp = require('request-promise')
 const cheerio = require('cheerio')
+const thumbs = require('../data/thumbnails.json')
 
 async function searchPlayer(type, server, period, player) {
     // Requests to search page instead of generating a direct url so it can work with similar names
@@ -35,7 +36,7 @@ exports.sendPlayerGraph = (msg, type, server, period, player) => {
             new Discord.RichEmbed()
                 .setTitle('Missing player')
                 .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help player' + type + '`` for more information.')
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
+                .setThumbnail(thumbs.giggle)
                 .setColor('RED')
         )
         return
@@ -66,7 +67,7 @@ exports.sendPlayerGraph = (msg, type, server, period, player) => {
                     new Discord.RichEmbed()
                         .setTitle('Player not found')
                         .setDescription(`No player with the name of [${unencodedPlayerName}](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}) was found on [${server.name}](https://www.gametracker.com/server_info/${server.ip}).`)
-                        .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_sad.png?v=1561883974814')
+                        .setThumbnail(thumbs.sad)
                         .setColor('RED')
                 )
         })
@@ -75,7 +76,7 @@ exports.sendPlayerGraph = (msg, type, server, period, player) => {
                 new Discord.RichEmbed()
                     .setTitle('Error')
                     .setDescription(`An error occured while getting ${unencodedPlayerName}'s graph`)
-                    .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_sad.png?v=1561883974814')
+                    .setThumbnail(thumbs.sad)
                     .setColor('DARK_RED')
             )
         })

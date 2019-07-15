@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const commands = require('../data/commands.json')
 const servers = require('../data/servers.json')
+const thumbs = require('../data/thumbnails.json')
 const getAvailableServers = require('./help').getAvailableServers
 
 exports.getGraphURL = (cmd, period, server) => {
@@ -20,9 +21,9 @@ exports.sendData = (msg, cmd, period, server) => {
         // Missing server
         msg.channel.send(
             new Discord.RichEmbed()
-            .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
             .setTitle('Missing server')
             .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+            .setThumbnail(thumbs.giggle)
             .setColor('RED')
         )
         return
@@ -34,9 +35,9 @@ exports.sendData = (msg, cmd, period, server) => {
             // Correct period but missing server name
             msg.channel.send(
                 new Discord.RichEmbed()
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
                 .setTitle('Missing server')
                 .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                .setThumbnail(thumbs.giggle)
                 .setColor('RED')
             )
             return
@@ -50,7 +51,7 @@ exports.sendData = (msg, cmd, period, server) => {
                 new Discord.RichEmbed()
                 .setTitle('Invalid server')
                 .setDescription('\"' + period + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_confusion.png?v=1561883974127')
+                .setThumbnail(thumbs.confused)
                 .setColor('RED')
             )
             return
@@ -74,7 +75,7 @@ exports.sendData = (msg, cmd, period, server) => {
                 new Discord.RichEmbed()
                 .setTitle('Invalid period')
                 .setDescription('\"' + period + '\" is not a valid period!\n' + commands.list[cmd].syntax[1] + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_confusion.png?v=1561883974127')
+                .setThumbnail(thumbs.confused)
                 .setColor('RED')
             )
             return
@@ -87,7 +88,7 @@ exports.sendData = (msg, cmd, period, server) => {
                 new Discord.RichEmbed()
                 .setTitle('Invalid server')
                 .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_confusion.png?v=1561883974127')
+                .setThumbnail(thumbs.sad)
                 .setColor('RED')
             )
             return

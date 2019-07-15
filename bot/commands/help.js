@@ -2,8 +2,9 @@ const Discord = require('discord.js')
 const pkg = require('../../package.json')
 const commands = require('../data/commands.json')
 const servers = require('../data/servers.json')
+const thumbs = require('../data/thumbnails.json')
 
-exports.getAvailableServers = (command) => {
+function getAvailableServers(command) {
     let commandInfo = commands.list[command]  
     let availableServers = []
     let requiredResources = []
@@ -52,7 +53,9 @@ exports.sendHelpMenu = (msg, command) => {
         });
         helpmsg
         .setDescription(description)
-        .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_ok.png?v=1561883974310')
+        .setThumbnail(thumbs.ok)
     }
     msg.channel.send(helpmsg)
 }
+
+exports.getAvailableServers = getAvailableServers

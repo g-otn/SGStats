@@ -3,6 +3,7 @@ const rp = require('request-promise')
 const steam = require('steamidconvert')(process.env.STEAMWEBAPI_KEY)
 const timeago = require('timeago.js')
 const commands = require('../data/commands')
+const thumbs = require('../data/thumbnails.json')
 
 exports.getSteamInfo = async (steamID64) => {
     let steamInfo
@@ -51,7 +52,7 @@ function sendMessage(msg, steamInfo) {
             new Discord.RichEmbed()
                 .setTitle('Error')
                 .setDescription('Something happened while gathering the steamInfo\n' + steamInfo.err)
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_sad.png?v=1561883974814')
+                .setThumbnail(thumbs.sad)
                 .setColor('DARK_RED')
         )
     else
@@ -90,7 +91,7 @@ exports.sendSteamInfo = (msg, input) => {
             new Discord.RichEmbed()
                 .setTitle('Missing input')
                 .setDescription('You must type an input!\n' + commands.list.steaminfo.syntax[1] + '\nType ``' + process.env.PREFIX + 'help steaminfo`` for more information.')
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
+                .setThumbnail(thumbs.giggle)
                 .setColor('RED')
         )
         return
@@ -112,7 +113,7 @@ exports.sendSteamInfo = (msg, input) => {
                         .setTitle('User not found')
                         .setURL(`https://steamcommunity.com/id/${input}`)
                         .setDescription(`No steam user with the custom URL of \"${input}\" was found.`)
-                        .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_sad.png?v=1561883974814')
+                        .setThumbnail(thumbs.sad)
                         .setColor('DARK_RED')
                 )
                 return
