@@ -25,7 +25,7 @@ async function getOnlinePlayers(serverIP) {
                     time: rowCells.eq(3).text().trim().split(':'),
                 }
 
-                // Formats HH:MM:SS to HHh 
+                // Parses hours and minutes
                 player.time = (isNaN(player.time[player.time.length - 3]) ? 0 : Number(player.time[player.time.length - 3]) * 60) + Number(player.time[player.time.length - 2])
 
                 if (player.name) // Discards rows with blank names
@@ -74,7 +74,7 @@ exports.sendOnline = (msg, server) => {
                 onlinePlayers = onlinePlayers.sort((a, b) => { return a.time < b.time ? 1 : (a.time > b.time ? -1 : 0) })
                 msg.channel.send(
                     new Discord.RichEmbed()
-                        .setDescription(`Showing ${servers[server].name} online players\n and population throughout the day. **[Join now!](https://sgstats.glitch.me/redirect?ip=${servers[server].ip})**`)
+                        .setDescription(`Showing ${servers[server].name} online players\n and population throughout the day. **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
                         .addField('Name', onlinePlayers.map(player => player.name).join('\n'), true)
                         .addField('Time played', onlinePlayers.map(player => (player.time / 60 >= 1 ? Math.floor(player.time / 60) + 'h ' : '') + player.time % 60 + 'min').join('\n'), true)
                         .setImage(getGraphURL('population', 'day', server))
@@ -85,7 +85,7 @@ exports.sendOnline = (msg, server) => {
                 msg.channel.send(
                     new Discord.RichEmbed()
                         .setTitle('No players online')
-                        .setDescription(`There are no players online. **[Join now!](https://sgstats.glitch.me/redirect?ip=${servers[server].ip})**`)
+                        .setDescription(`There are no players online. **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
                         .setImage(getGraphURL('population', 'day', server))
                         .setColor('GOLD')
                 )
