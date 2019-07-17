@@ -61,7 +61,7 @@ exports.sendPlayerGraph = (msg, type, server, period, player) => {
                     new Discord.RichEmbed()
                         .setDescription(`Showing [${foundPlayer.name}](${foundPlayer.profile})'s ${type == 'h' ? 'activity' : 'score'} on\n[${server.name}](https://www.gametracker.com/server_info/${server.ip}) throughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}.\nFor similar names, click [here](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}).`)
                         .setImage(foundPlayer.graphURL)
-                        .setColor('GOLD')
+                        .setColor('BLUE')
                 )
             else
                 msg.channel.send(
