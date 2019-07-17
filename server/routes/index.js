@@ -1,5 +1,6 @@
-var express = require('express')
+const express = require('express')
 var app = module.exports = express()
 
-app.use(express.static('public'))
+app.use(express.static('server/public'))
+app.use(require('./steam_redirect'))
 app.use((req, res) => res.redirect('/'))
