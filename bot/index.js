@@ -2,6 +2,7 @@ const Discord = require('discord.js')
 const bot = new Discord.Client()
 const commands = require('./commands')
 const servers = require('./data/servers.json')
+const thumbs = require('./data/thumbnails.json')
 
 bot.on("ready", () => console.log(bot.user.tag + " is online"))
 

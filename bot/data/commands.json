@@ -2,15 +2,18 @@
     "categories": [
         {
             "name": "Server",
-            "color": "GOLD"
+            "color": "GOLD",
+            "language": "http"
         },
         {
             "name": "Player",
-            "color": "BLUE"
+            "color": "BLUE",
+            "language": "elm"
         },
         {
             "name": "Other",
-            "color": "GREY"
+            "color": "GREY",
+            "language": ""
         }
     ],
     "list": {
