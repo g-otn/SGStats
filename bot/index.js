@@ -25,7 +25,7 @@ bot.on("message", (msg) => {
             break
         case 'lb':
         case 'leaderboard':
-            commands.leaderboard.sendLeaderboard(msg, args)
+            commands.leaderboard.sendLeaderboard(msg, args[0], args[1], args.slice(2).join(' '))
             break
         case 'pop':
             cmd = 'population' // Removes abbreviation
