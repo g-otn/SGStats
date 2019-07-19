@@ -11,7 +11,6 @@ async function getLeaderboard(serverIP, sortingMethod, player) {
 }
 
 exports.sendLeaderboard = (msg, server, sortingMethod, player) => {
-    console.log('server:', server, '\nsort:', sortingMethod, '\nplayer:', player)
     // Data validation
     if (!server) {
         msg.channel.send(
@@ -46,6 +45,17 @@ exports.sendLeaderboard = (msg, server, sortingMethod, player) => {
     }
 
     // Data parsing
+    if (!sortingMethod.match(/^(score)$|^(time)$|^(min)$|^s$|^t$|^m$/i)) {
+        // Invalid sorting method, sortingMethod interpreted as player name (or start of it)
+        player = sortingMethod + (player ? ' ' + player : '')
+        sortingMethod = 'score'
+    }
+
+    console.log('\nserver:', server, '\nsort:', sortingMethod, '\nplayer:', player)
+    getLeaderboard(servers[server].ip, sortingMethod, player)
+        .then(leaderboard => {
+
+        })
 }
 
 exports.getLeaderboard = getLeaderboard
