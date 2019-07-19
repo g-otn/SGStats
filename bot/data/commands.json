@@ -23,7 +23,7 @@
             "syntax": [
                 "**``$leaderboard <server> <sorting method> <player>``**",
                 "**Sorting Methods:** ``score``, ``time`` and ``min``.",
-                "**Abbreviation:** ``$lb``"
+                "**Abbreviation:** ``$lb``, ``$lead``"
             ],
             "examples": [
                 "``$leaderboard mcttt score Skeke``",

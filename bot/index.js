@@ -24,6 +24,7 @@ bot.on("message", (msg) => {
             commands.hue.sendTestMessage(msg)
             break
         case 'lb':
+        case 'lead':
         case 'leaderboard':
             commands.leaderboard.sendLeaderboard(msg, args[0], args[1], args.slice(2).join(' '))
             break
