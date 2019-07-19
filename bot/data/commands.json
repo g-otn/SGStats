@@ -22,12 +22,13 @@
             "description": "Shows a leaderboard around a player on a server sorted by total score, time played or score/min.",
             "syntax": [
                 "**``$leaderboard <server> <sorting method> <player>``**",
-                "**Sorting Methods:** ``score``, ``time`` and ``min``.",
+                "**Sorting Methods:** ``s`` score``, ``t`` time`` and ``m`` ``min``.",
                 "**Abbreviation:** ``$lb``, ``$lead``"
             ],
             "examples": [
                 "``$leaderboard mcttt score Skeke``",
-                "``$lb mcttt time Skeke``",
+                "``$lead mcttt time Skeke``",
+                "``$lb mcttt m Skeke``",
                 "``$lb mcttt Skeke``"
             ],
             "notes": "You can ommit the sorting method and just type the player name, it will then sort by score.",
