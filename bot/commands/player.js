@@ -36,7 +36,7 @@ async function searchPlayer(graphType, server, period, player) {
 
 exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
     // Data validation
-    if (!period || (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/) && !player)) {
+    if (!period || (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/i) && !player)) {
         // Missing player name
         msg.channel.send(
             new Discord.RichEmbed()
@@ -48,12 +48,12 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
         return
     }
     // Data parsing
-    if (!period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/)) {
+    if (!period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/i)) {
         // Invalid period, period interpreted as player name (or start of it)
         player = period + (player ? ' ' + player : '')
         period = 'w' // Default when period is ommited
     } else // Valid period
-        period = period[0] /* Abbreviates period to 'd', 'w' or 'm' */
+        period = period[0].toLowerCase() /* Abbreviates period to 'd', 'w' or 'm' */
 
     let unencodedPlayerName = player
     player = encodeUrl(player)
