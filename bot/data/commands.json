@@ -19,10 +19,10 @@
     "list": {
         "leaderboard": {
             "category": "Player",
-            "description": "Shows a leaderboard around a player on a server sorted by total score, time played or score/min.",
+            "description": "Shows a leaderboard around a player displaying total score, time played or score/min.",
             "syntax": [
-                "**``$leaderboard <server> <sorting method> <player>``**",
-                "**Sorting Methods:** ``s`` ``score``, ``t`` ``time`` and ``m`` ``min``.",
+                "**``$leaderboard <server> <display value> <player>``**",
+                "**Display values:** ``s`` ``score``, ``t`` ``time`` and ``m`` ``min``.",
                 "**Abbreviation:** ``$lb``, ``$lead``"
             ],
             "examples": [
@@ -31,7 +31,7 @@
                 "``$lb mcttt m Skeke``",
                 "``$lb mcttt Skeke``"
             ],
-            "notes": "You can ommit the sorting method and just type the player name, it will then sort by score.",
+            "notes": "You can ommit the display value and just type the player name, it will then display the score.\nIt may take more time to generate the leaderboard depending of your rank.",
             "server": {}
         },
         "map": {
