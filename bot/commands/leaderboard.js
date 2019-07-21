@@ -112,7 +112,7 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
                         .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip})'s [leaderboard](${leaderboard.uri}) around [${leaderboard.foundPlayer.name}](${leaderboard.foundPlayer.profile}):`)
                         .addField('Rank and name', leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.rank} - ${player.name}**__` : `**${player.rank}** - ${player.name}`).join('\n'), true)
                         .addField(displayValue == 's' ? 'Score' : (displayValue == 't' ? 'Time played' : 'Score/min'), leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.value}**__` : player.value).join('\n'), true)
-                        .setColor('GOLD')
+                        .setColor('BLUE')
                 )
             else if (leaderboard.foundPlayer && leaderboard.foundPlayer.rank > 25000)
                 msg.channel.send(
