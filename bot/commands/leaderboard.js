@@ -15,42 +15,48 @@ async function getLeaderboard(server, displayValue, player) {
     await searchPlayer(null, server, null, player)
         .then(foundPlayer => leaderboard.foundPlayer = foundPlayer)
 
-    console.log(leaderboard.foundPlayer)
-    if (!leaderboard.foundPlayer.rank)
+    // If player is not found or rank is too low (very low ranks require too many requests)
+    if (!leaderboard.foundPlayer.rank || leaderboard.foundPlayer.rank > 25000)
         return leaderboard
 
-    // Generates URI based on ip and player rank
-    options.uri = `https://www.gametracker.com/server_info/${server.ip}/top_players/?searchpge=${1 + Math.floor((leaderboard.foundPlayer.rank - 1) / 25)}&searchipp=25`
+    // Requests leadboard pages until it finds the table which contains the player
+    for (let notFoundIndex = 0; !leaderboard.players.some(player => player.name == leaderboard.foundPlayer.name); notFoundIndex++) {
+        leaderboard.players = [] // Resets the player every loop so the new rows can be stored
 
-    await rp(options)
-        .then(html => {
-            let $ = cheerio.load(html)
-            let playerRows = $('.table_lst tr').slice(1)
+        // Generates URI based on ip, player rank and notFoundIndex
+        options.uri = `https://www.gametracker.com/server_info/${server.ip}/top_players/?searchpge=${1 + Math.floor((leaderboard.foundPlayer.rank - 1) / 25) + notFoundIndex}&searchipp=25`
 
-            // Marks correct column to scrap
-            switch (displayValue) {
-                case 's':
-                    displayValue = 3
-                    break
-                case 't':
-                    displayValue = 4
-                    break
-                case 'm':
-                    displayValue = 5
-            }            
+        await rp(options)
+            .then(html => {
+                let $ = cheerio.load(html)
+                let playerRows = $('.table_lst tr').slice(1)
 
-            for (let i = 0; i < playerRows.length - 1 /* removes last row with column names */; i++) {
-                let playerRow = playerRows.eq(i).children()
-                let value = playerRow.eq(displayValue).text().trim()
-                leaderboard.players.push({
-                    rank: playerRow.eq(0).text().trim(),
-                    name: playerRow.eq(1).text().trim(),
-                    value: displayValue != 4 ? value : (value.split('.')[1] ? `${value.split('.')[0]}h ${Math.floor(Number(value.split('.')[1]) * 0.6)}min` : value),
-                    profile: 'https://www.gametracker.com' + playerRow.eq(1).children().eq(0).attr('href')
-                })
-            }
-        })
-        .catch(err => {console.log(err); leaderboard.err = err})
+                // Marks correct column to scrap
+                switch (displayValue) {
+                    case 's':
+                        displayValue = 3
+                        break
+                    case 't':
+                        displayValue = 4
+                        break
+                    case 'm':
+                        displayValue = 5
+                }
+
+                // Scraps info from each row
+                for (let i = 0; i < playerRows.length - 1 /* removes last row with column names */; i++) {
+                    let playerRow = playerRows.eq(i).children()
+                    let value = playerRow.eq(displayValue).text().trim()
+                    leaderboard.players.push({
+                        rank: playerRow.eq(0).text().trim(),
+                        name: playerRow.eq(1).text().trim(),
+                        value: displayValue != 4 ? value : (value.split('.')[1] ? `${value.split('.')[0]}h ${Math.floor(Number(value.split('.')[1]) * 0.6)}min` : value),
+                        profile: 'https://www.gametracker.com' + playerRow.eq(1).children().eq(0).attr('href')
+                    })
+                }
+            })
+    }
+
     leaderboard.uri = options.uri
     return leaderboard
 }
@@ -100,21 +106,21 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
 
     getLeaderboard(servers[server], displayValue, player)
         .then(leaderboard => {
-            if (leaderboard.err)
-                msg.channel.send(
-                    new Discord.RichEmbed()
-                        .setTitle('Error')
-                        .setDescription('Something happened while trying to gather the leaderboard.')
-                        .setThumbnail(thumbs.sad)
-                        .setColor('DARK_RED')
-                )
-            else if (leaderboard.players.length > 0)
+            if (leaderboard.players.length > 0)
                 msg.channel.send(
                     new Discord.RichEmbed()
                         .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip})'s [leaderboard](${leaderboard.uri}) around [${leaderboard.foundPlayer.name}](${leaderboard.foundPlayer.profile}):`)
                         .addField('Rank and name', leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.rank} - ${player.name}**__` : `**${player.rank}** - ${player.name}`).join('\n'), true)
                         .addField(displayValue == 's' ? 'Score' : (displayValue == 't' ? 'Time played' : 'Score/min'), leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.value}**__` : player.value).join('\n'), true)
                         .setColor('GOLD')
+                )
+            else if (leaderboard.foundPlayer && leaderboard.foundPlayer.rank > 25000)
+                msg.channel.send(
+                    new Discord.RichEmbed()
+                        .setTitle('Rank too low')
+                        .setDescription(`[${leaderboard.foundPlayer.name}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)})'s rank on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) was too low (${leaderboard.foundPlayer.rank}) it must be at least 25000.`)
+                        .setThumbnail(thumbs.sad)
+                        .setColor('RED')
                 )
             else
                 msg.channel.send(
@@ -124,6 +130,16 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
                         .setThumbnail(thumbs.sad)
                         .setColor('RED')
                 )
+        })
+        .catch((err) => {
+            console.log(err)
+            msg.channel.send(
+                new Discord.RichEmbed()
+                    .setTitle('Error')
+                    .setDescription('Something happened while trying to gather the leaderboard.')
+                    .setThumbnail(thumbs.sad)
+                    .setColor('DARK_RED')
+            )
         })
 }
 
