@@ -13,7 +13,7 @@ async function searchPlayer(graphType, server, period, player) {
         }
     }
     // Tries to find player with similar name
-    options.uri = `https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}`
+    options.uri = `https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${encodeUrl(player)}`
     await rp(options)
         .then(html => {
             let $ = cheerio.load(html)
@@ -77,7 +77,7 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
                         .setColor('RED')
                 )
         })
-        .catch(err => {
+        .catch(() => {
             msg.channel.send(
                 new Discord.RichEmbed()
                     .setTitle('Error')
