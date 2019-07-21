@@ -32,7 +32,10 @@
                 "``$lb mcttt Skeke``"
             ],
             "notes": "You can ommit the display value and just type the player name, it will then display the score.\nIt may take more time to generate the leaderboard depending of your rank.",
-            "server": {}
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
         },
         "map": {
             "category": "Server",
@@ -45,7 +48,8 @@
                 "``$map week mcttt``"
             ],
             "server": {
-                "usesGamertrackerID": true
+                "usesGamertrackerID": true,
+                "usesReebAPI": false
             }
         },
         "online": {
@@ -59,7 +63,10 @@
                 "``$online mcttt``",
                 "``$on mc``"
             ],
-            "server": {}
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
         },
         "playerh": {
             "category": "Player",
@@ -73,7 +80,10 @@
                 "``$mch Skeke``"
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
-            "server": {}
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
         },
         "players": {
             "category": "Player",
@@ -87,7 +97,10 @@
                 "``$mcs m Skeke``"
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
-            "server": {}
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
         },
         "population": {
             "category": "Server",
@@ -103,7 +116,8 @@
             ],
             "notes": "You can ommit the period and just type the server, it will then choose week as the period.",
             "server": {
-                "usesGamertrackerID": true
+                "usesGamertrackerID": true,
+                "usesReebAPI": false
             }
         },
         "rank": {
@@ -119,7 +133,8 @@
             ],
             "notes": "You can ommit the period and just type the server, it will then choose month as the period.",
             "server": {
-                "usesGamertrackerID": true
+                "usesGamertrackerID": true,
+                "usesReebAPI": false
             }
         },
         "server": {
@@ -133,6 +148,7 @@
                 "``$mc``"
             ],
             "server": {
+                "usesGamertrackerID": true,
                 "usesReebAPI": true
             }
         },
@@ -145,7 +161,10 @@
             "examples": [
                 "``$stats mcttt Skeke``"
             ],
-            "server": {}
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
         },
         "steaminfo": {
             "category": "Other",
