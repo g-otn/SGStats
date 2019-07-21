@@ -23,9 +23,10 @@ async function getSteamInfo(steamID64) {
             if (res.response && res.response.players.length !== 0)
                 steamInfo = res.response.players[0]
         })
-        .catch(err => steamInfo = { err: err })
+        .catch(err => { throw err })
 
-    if (steamInfo.err) return steamInfo // Prevent from trying to get gmod hours if there's not basic info
+    if (!steamInfo)
+        return // Prevent from getting gmod hours if there's no basic info (player not found)
 
     // Get gmod hours
     options.uri = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`
@@ -42,16 +43,28 @@ async function getSteamInfo(steamID64) {
             }
         })
         .catch(err => steamInfo.gmodHours = `Error (${err.statusCode})`)
-
+        
     return steamInfo
 }
 
-function sendMessage(msg, steamInfo) {
-    if (steamInfo.err)
+function sendMessage(msg, steamInfo, err) {
+    let input = msg.content.split(' ').slice(1)
+    
+    if (err) {
+        err = err.err.toString()
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Error')
-                .setDescription('Something happened while gathering the steamInfo\n' + steamInfo.err)
+                .setDescription('Something happened while getting ' + input + '\'s Steam information.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.length > 250 ? err.substr(0, 250) + ' [...]' : err) + '\n```')
+                .setThumbnail(thumbs.sad)
+                .setColor('DARK_RED')
+        )
+    }
+    else if (!steamInfo)
+        msg.channel.send(
+            new Discord.RichEmbed()
+                .setTitle('User not found')
+                .setDescription(`No Steam user with the SteamID, SteamID64 or CustomURL of \"${input}\" was found.`)
                 .setThumbnail(thumbs.sad)
                 .setColor('DARK_RED')
         )
@@ -99,27 +112,22 @@ exports.sendSteamInfo = (msg, input) => {
 
     input = input.trim()
 
-    if (input.match(/STEAM_[0-5]:[01]:\d+/)) { // SteamID
-        getSteamInfo(steam.convertTo64(input.match(/STEAM_[0-5]:[01]:\d+/)[0]))
+    if (input.match(/^STEAM_[0-5]:[01]:\d{1,15}$/)) { // SteamID
+        getSteamInfo(steam.convertTo64(input.match(/^STEAM_[0-5]:[01]:\d{1,15}$/)[0]))
             .then(steamInfo => sendMessage(msg, steamInfo))
-    } else if (input.match(/7656119\d{10}/)) { // SteamID64 
-        getSteamInfo(input.match(/7656119\d{10}/)[0])
+            .catch(err => sendMessage(msg, null, { err: err }))
+    } else if (input.match(/^7656119\d{10}$/)) {      // SteamID64
+        getSteamInfo(input.match(/^7656119\d{10}$/)[0])
             .then(steamInfo => sendMessage(msg, steamInfo))
-    } else {                                     // CustomURL        
+            .catch(err => sendMessage(msg, null, { err: err }))
+    } else {                                          // CustomURL
         steam.convertVanity(input, (err, res) => {
-            if (err) { // Invalid CustomURL
-                msg.channel.send(
-                    new Discord.RichEmbed()
-                        .setTitle('User not found')
-                        .setURL(`https://steamcommunity.com/id/${input}`)
-                        .setDescription(`No steam user with the custom URL of \"${input}\" was found.`)
-                        .setThumbnail(thumbs.sad)
-                        .setColor('DARK_RED')
-                )
-                return
-            }
-            getSteamInfo(res)
-                .then(steamInfo => sendMessage(msg, steamInfo))
+            if (err) // Invalid CustomURL
+                sendMessage(msg, null) // No error but no steamInfo (user not found)
+            else
+                getSteamInfo(res)
+                    .then(steamInfo => sendMessage(msg, steamInfo))
+                    .catch(err => sendMessage(msg, null, { err: err }))
         })
     }
 }

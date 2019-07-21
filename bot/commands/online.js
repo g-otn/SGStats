@@ -32,7 +32,6 @@ async function getOnlinePlayers(serverIP) {
                     onlinePlayers.push(player)
             }
         })
-        .catch(err => onlinePlayers.err = err)
     return onlinePlayers
 }
 
@@ -62,19 +61,11 @@ exports.sendOnline = (msg, server) => {
 
     getOnlinePlayers(servers[server].ip)
         .then(onlinePlayers => {
-            if (onlinePlayers.err)
-                msg.channel.send(
-                    new Discord.RichEmbed()
-                        .setTitle('Error')
-                        .setDescription('Something happened while gathering the online players\n' + steamInfo.err)
-                        .setThumbnail(thumbs.sad)
-                        .setColor('DARK_RED')
-                )
-            else if (onlinePlayers.length > 0) {
+            if (onlinePlayers.length > 0) {
                 onlinePlayers = onlinePlayers.sort((a, b) => { return a.time < b.time ? 1 : (a.time > b.time ? -1 : 0) })
                 msg.channel.send(
                     new Discord.RichEmbed()
-                        .setDescription(`Showing ${servers[server].name} online players\n and population throughout the day. **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
+                        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) online players\n and population throughout the day. **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
                         .addField('Name', onlinePlayers.map(player => player.name).join('\n'), true)
                         .addField('Time played', onlinePlayers.map(player => (player.time / 60 >= 1 ? Math.floor(player.time / 60) + 'h ' : '') + player.time % 60 + 'min').join('\n'), true)
                         .setImage(getGraphURL('population', 'day', server))
@@ -85,10 +76,19 @@ exports.sendOnline = (msg, server) => {
                 msg.channel.send(
                     new Discord.RichEmbed()
                         .setTitle('No players online')
-                        .setDescription(`There are no players online. **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
+                        .setDescription(`There are no players online on\n[${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}). **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
                         .setImage(getGraphURL('population', 'day', server))
                         .setColor('GOLD')
                 )
+        })
+        .catch(err => {
+            msg.channel.send(
+                new Discord.RichEmbed()
+                    .setTitle('Error')
+                    .setDescription('Something happened while getting the online players.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
+                    .setThumbnail(thumbs.sad)
+                    .setColor('DARK_RED')
+            )
         })
 }
 

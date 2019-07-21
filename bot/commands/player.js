@@ -78,15 +78,15 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
                         .setColor('RED')
                 )
         })
-        .catch(() => {
+        .catch(err => 
             msg.channel.send(
                 new Discord.RichEmbed()
                     .setTitle('Error')
-                    .setDescription(`An error occured while getting ${unencodedPlayerName}'s graph`)
+                    .setDescription('Something happened while getting ' + unencodedPlayerName + '\'s graph.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
                     .setThumbnail(thumbs.sad)
                     .setColor('DARK_RED')
             )
-        })
+        )
 }
 
 exports.searchPlayer = searchPlayer

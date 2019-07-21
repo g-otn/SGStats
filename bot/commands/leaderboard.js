@@ -131,16 +131,15 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
                         .setColor('RED')
                 )
         })
-        .catch((err) => {
-            console.log(err)
+        .catch(err => 
             msg.channel.send(
                 new Discord.RichEmbed()
                     .setTitle('Error')
-                    .setDescription('Something happened while trying to gather the leaderboard.')
+                    .setDescription('Something happened while getting the leaderboard.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
                     .setThumbnail(thumbs.sad)
                     .setColor('DARK_RED')
             )
-        })
+        )
 }
 
 exports.getLeaderboard = getLeaderboard
