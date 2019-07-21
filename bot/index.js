@@ -12,6 +12,10 @@ bot.on("message", (msg) => {
     let cmd = msg.content.split(' ')[0].substring(process.env.PREFIX.length).toLowerCase()
     if (!cmd) return
     let args = msg.content.split(' ').slice(1)
+    
+    // Removes args first empty positions
+    while (args.length > 0 && !args[0])
+        args = args.slice(1)
 
     switch (cmd) {
         case 'forums':
