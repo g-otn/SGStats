@@ -35,7 +35,7 @@ exports.sendHelpMenu = (msg, command) => {
         .setDescription(commandInfo.description)
 
         if (commandInfo.server) // Command requires specific server info
-            helpmsg.addField('Syntax', commandInfo.syntax.join('\n').split('$').join(process.env.PREFIX) + '\nServers: ' + getAvailableServers(command).join(', '))
+            helpmsg.addField('Syntax', commandInfo.syntax.join('\n').split('$').join(process.env.PREFIX) + '\n**Servers:** ' + getAvailableServers(command).join(', '))
         else
             helpmsg.addField('Syntax', commandInfo.syntax.join('\n').split('$').join(process.env.PREFIX), false)
         helpmsg.addField('Examples', commandInfo.examples.join('\n').split('$').join(process.env.PREFIX), false)
