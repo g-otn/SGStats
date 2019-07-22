@@ -43,7 +43,7 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
             new Discord.RichEmbed()
                 .setTitle('Missing player')
                 .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help player' + graphType + '`` for more information.')
-                .setThumbnail('https://cdn.glitch.com/bcfe2b58-fec3-47dd-9035-1ff2cfe59574%2Fk_giggle.png?v=1561883974179')
+                .setThumbnail(thumbs.giggle)
                 .setColor('RED')
         )
         return
