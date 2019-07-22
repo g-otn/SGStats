@@ -12,7 +12,7 @@ bot.on("message", (msg) => {
     let cmd = msg.content.split(' ')[0].substring(process.env.PREFIX.length).toLowerCase()
     if (!cmd) return
     let args = msg.content.split(' ').slice(1)
-    
+
     // Removes args first empty positions
     while (args.length > 0 && !args[0])
         args = args.slice(1)
@@ -43,6 +43,15 @@ bot.on("message", (msg) => {
         case 'online':
             commands.online.sendOnline(msg, args[0])
             break
+        case 'playerh':
+            commands.help.sendHelpMenu(msg, 'playerh')
+            break
+        case 'players':
+            commands.help.sendHelpMenu(msg, 'players')
+            break
+        case 'server':
+            commands.help.sendHelpMenu(msg, 'server')
+            break
         case 'stats':
             commands.stats.sendPlayerStatus(msg, args)
             break
@@ -52,7 +61,7 @@ bot.on("message", (msg) => {
             break
         default:
             let serverNames = Object.keys(servers)
-            
+
             // server command
             if (serverNames.some(serverName => serverName == cmd)) {
                 commands.server.sendServerInfo(msg, cmd)
@@ -72,10 +81,10 @@ bot.on("message", (msg) => {
             // Unknown command
             msg.channel.send(
                 new Discord.RichEmbed()
-                .setTitle('Unknown command')
-                .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
-                .setThumbnail(thumbs.confused)
-                .setColor('RED')
+                    .setTitle('Unknown command')
+                    .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
+                    .setThumbnail(thumbs.confused)
+                    .setColor('RED')
             )
     }
 })
