@@ -65,7 +65,7 @@ exports.sendOnline = (msg, server) => {
                 onlinePlayers = onlinePlayers.sort((a, b) => { return a.time < b.time ? 1 : (a.time > b.time ? -1 : 0) })
                 msg.channel.send(
                     new Discord.RichEmbed()
-                        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) online players\n and population throughout the day. **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
+                        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) online players\n and population throughout the day. **[Join now!](https://sgstats.glitch.me/redirect/${server})**`)
                         .addField('Name', onlinePlayers.map(player => player.name).join('\n'), true)
                         .addField('Time played', onlinePlayers.map(player => (player.time / 60 >= 1 ? Math.floor(player.time / 60) + 'h ' : '') + player.time % 60 + 'min').join('\n'), true)
                         .setImage(getGraphURL('population', 'day', server))
