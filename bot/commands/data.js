@@ -100,7 +100,7 @@ exports.sendData = (msg, cmd, period, server) => {
     // Send message
     msg.channel.send(
         new Discord.RichEmbed()
-        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) ${cmd == 'map' ? 'maps' : cmd}\nthroughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}. **[Join now!](https://sgstats.glitch.me/redirect/${server})**`)
+        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) ${cmd == 'map' ? 'maps' : cmd}\nthroughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}. **[Join now!](${process.env.BASEURI}/redirect/${server})**`)
         .setImage(graphURL)
         .setColor('GOLD')
     )
