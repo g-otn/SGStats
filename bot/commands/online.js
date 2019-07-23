@@ -76,7 +76,7 @@ exports.sendOnline = (msg, server) => {
                 msg.channel.send(
                     new Discord.RichEmbed()
                         .setTitle('No players online')
-                        .setDescription(`There are no players online on\n[${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}). **[Join now!](https://sgstats.glitch.me/redirect/${servers[server].ip})**`)
+                        .setDescription(`There are no players online on\n[${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}). **[Join now!](https://sgstats.glitch.me/redirect/${server})**`)
                         .setImage(getGraphURL('population', 'day', server))
                         .setColor('GOLD')
                 )
