@@ -53,7 +53,7 @@ bot.on("message", (msg) => {
             commands.help.sendHelpMenu(msg, 'server')
             break
         case 'stats':
-            commands.stats.sendPlayerStatus(msg, args)
+            commands.stats.sendPlayerStats(msg, args[0], args.slice(1).join(' '))
             break
         case 'steam':
         case 'steaminfo':
