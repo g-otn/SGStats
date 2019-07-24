@@ -50,7 +50,7 @@
             "notes": "You can ommit the display value and just type the player name, it will then display the score.\nIt may take more time to generate the leaderboard depending of your rank.",
             "server": {
                 "usesGamertrackerID": false,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "map": {
@@ -65,7 +65,7 @@
             ],
             "server": {
                 "usesGamertrackerID": true,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "online": {
@@ -81,7 +81,7 @@
             ],
             "server": {
                 "usesGamertrackerID": false,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "playerh": {
@@ -98,7 +98,7 @@
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
             "server": {
                 "usesGamertrackerID": false,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "players": {
@@ -115,7 +115,7 @@
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
             "server": {
                 "usesGamertrackerID": false,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "population": {
@@ -133,7 +133,7 @@
             "notes": "You can ommit the period and just type the server, it will then choose week as the period.",
             "server": {
                 "usesGamertrackerID": true,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "rank": {
@@ -150,12 +150,12 @@
             "notes": "You can ommit the period and just type the server, it will then choose month as the period.",
             "server": {
                 "usesGamertrackerID": true,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "server": {
             "category": "Server",
-            "description": "Shows current display name, status, ip and online player count of a server.",
+            "description": "Shows current display name, status, ip and online player count/slots of a server.",
             "syntax": [
                 "**``$<server>``**"
             ],
@@ -165,7 +165,7 @@
             ],
             "server": {
                 "usesGamertrackerID": true,
-                "usesReebAPI": true
+                "usesSmithtainmentStatusAPI": true
             }
         },
         "stats": {
@@ -179,7 +179,7 @@
             ],
             "server": {
                 "usesGamertrackerID": false,
-                "usesReebAPI": false
+                "usesSmithtainmentStatusAPI": false
             }
         },
         "steaminfo": {

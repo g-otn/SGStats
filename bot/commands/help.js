@@ -12,8 +12,8 @@ function getAvailableServers(command) {
     let requiredResources = []
     if (commandInfo.server.usesGamertrackerID)
         requiredResources.push('gamertrackerID')
-    if (commandInfo.server.usesReebAPI)
-        requiredResources.push('reebAPIHTMLTagDiscriminator')
+    if (commandInfo.server.usesSmithtainmentStatusAPI)
+        requiredResources.push('smithtainmentStatusAPIName')
     // Add to availableServers only the servers who match all requiredResources
     Object.keys(servers).forEach(serverKey => {
         if (requiredResources.every(requiredResource => {
