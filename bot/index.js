@@ -63,7 +63,7 @@ bot.on("message", (msg) => {
             let serverKeys = Object.keys(servers)
 
             // server command
-            if (serverKeys.some(serverName => serverName == cmd)) {
+            if (serverKeys.some(serverName => serverName == cmd) && servers[cmd].smithtainmentStatusAPIName) {
                 commands.server.sendServerInfo(msg, servers[cmd])
                 break
             }
