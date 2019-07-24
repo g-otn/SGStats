@@ -60,17 +60,17 @@ bot.on("message", (msg) => {
             commands.steaminfo.sendSteamInfo(msg, args[0])
             break
         default:
-            let serverNames = Object.keys(servers)
+            let serverKeys = Object.keys(servers)
 
             // server command
-            if (serverNames.some(serverName => serverName == cmd)) {
+            if (serverKeys.some(serverName => serverName == cmd)) {
                 commands.server.sendServerInfo(msg, cmd)
                 break
             }
 
             // playerh and players command
             let serverNameInCommand = cmd.substr(0, cmd.length - 1)
-            if (serverNames.some(serverName => serverName == serverNameInCommand)) {
+            if (serverKeys.some(serverName => serverName == serverNameInCommand)) {
                 if (cmd[cmd.length - 1] == 'h')
                     commands.player.sendPlayerGraph(msg, cmd[cmd.length - 1], servers[serverNameInCommand], args[0], args.slice(1).join(' '))
                 else if (cmd[cmd.length - 1] == 's')
