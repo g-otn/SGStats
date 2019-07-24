@@ -4,6 +4,7 @@ module.exports = {
     forums: require('./forums'),
     help: require('./help'),
     hue: require('./hue'),
+    join: require('./join'),
     leaderboard: require('./leaderboard'),
     online: require('./online'),
     server: require('./server'),

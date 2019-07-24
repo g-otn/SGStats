@@ -27,6 +27,10 @@ bot.on("message", (msg) => {
         case 'hue':
             commands.hue.sendTestMessage(msg)
             break
+        case 'j':
+        case 'join':
+            commands.join.sendJoinLink(msg, args[0])
+            break
         case 'lb':
         case 'lead':
         case 'leaderboard':

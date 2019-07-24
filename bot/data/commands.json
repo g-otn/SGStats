@@ -17,6 +17,22 @@
         }
     ],
     "list": {
+        "join": {
+            "category": "Server",
+            "description": "Generates a link to quickly join a server.",
+            "syntax": [
+                "**``$join <server>``**",
+                "**Abbreviation:** ``$j``"
+            ],
+            "examples": [
+                "``$join mc``",
+                "``$j mcttt``"
+            ],
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
+        },
         "leaderboard": {
             "category": "Player",
             "description": "Shows a leaderboard around a player displaying total score, time played or score/min.",
