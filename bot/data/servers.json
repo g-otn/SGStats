@@ -13,60 +13,60 @@
         "name": "5v5 CSGO Competitive",
         "ip": "192.99.4.87:28791",
         "gamertrackerID": "6003210",
-        "smithtainmentStatusAPIName": "1"
+        "smithtainmentStatusAPIName": "csgo5v5"
     },
     "csgo": {
         "name": "5v5 CSGO Competitive",
         "ip": "192.99.4.87:28791",
         "gamertrackerID": "6003210",
-        "smithtainmentStatusAPIName": "2"
+        "smithtainmentStatusAPIName": "csgo5v5"
     },
     "dr": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
         "gamertrackerID": "5493690",
-        "smithtainmentStatusAPIName": "3"
+        "smithtainmentStatusAPIName": "deathrun"
     },
     "deathrun": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
         "gamertrackerID": "5493690",
-        "smithtainmentStatusAPIName": "4"
+        "smithtainmentStatusAPIName": "deathrun"
     },
     "mc": {
         "name": "Minecraft TTT",
         "ip": "192.223.31.40:27015",
         "gamertrackerID": "5086005",
-        "smithtainmentStatusAPIName": "5"
+        "smithtainmentStatusAPIName": "mcttt"
     },
     "mcttt": {
         "name": "Minecraft TTT",
         "ip": "192.223.31.40:27015",
         "gamertrackerID": "5086005",
-        "smithtainmentStatusAPIName": "6"
+        "smithtainmentStatusAPIName": "mcttt"
     },
     "ph": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
         "gamertrackerID": "6022066",
-        "smithtainmentStatusAPIName": "7"
+        "smithtainmentStatusAPIName": "prophunt"
     },
     "prophunt": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
         "gamertrackerID": "6022066",
-        "smithtainmentStatusAPIName": "8"
+        "smithtainmentStatusAPIName": "prophunt"
     },
     "va": {
         "name": "True Vanilla TTT",
         "ip": "192.99.4.87:27200",
         "gamertrackerID": "6022841",
-        "smithtainmentStatusAPIName": "9"
+        "smithtainmentStatusAPIName": "vttt"
     },
     "vanilla": {
         "name": "True Vanilla TTT",
         "ip": "192.99.4.87:27200",
         "gamertrackerID": "6022841",
-        "smithtainmentStatusAPIName": "0"
+        "smithtainmentStatusAPIName": "vttt"
     }
 }
