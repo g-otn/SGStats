@@ -71,7 +71,6 @@ exports.sendPlayerStats = (msg, server, player) => {
 
     getPlayerStats(servers[server], player)
         .then(playerStats => {
-            console.log(playerStats)
             if (!playerStats.name)
                 msg.channel.send(
                     new Discord.RichEmbed()
@@ -90,7 +89,7 @@ exports.sendPlayerStats = (msg, server, player) => {
                             + '\n**Time played:** ' + (playerStats.timePlayed.split('.')[1] ? `${playerStats.timePlayed.split('.')[0]}h ${Math.floor(Number(playerStats.timePlayed.split('.')[1]) * 0.6)}min` : playerStats.timePlayed)
                             + '\n**Score/min:** ' + playerStats.scoreMin
                             + '\n**First joined:** ' + (!isNaN(new Date(playerStats.firstJoined)) ? timeago.format(new Date(playerStats.firstJoined)) + '\n(' + new Date(playerStats.firstJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : playerStats.firstJoined)
-                            + '\n**Last joined:** ' + (playerStats.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[server].ip})**` : (!isNaN(new Date(playerStats.lastJoined)) ? timeago.format(new Date(playerStats.lastJoined)) + '\n(' + new Date(playerStats.firstJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : playerStats.lastJoined))
+                            + '\n**Last joined:** ' + (playerStats.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[server].ip})**` : (!isNaN(new Date(playerStats.lastJoined)) ? timeago.format(new Date(playerStats.lastJoined)) + '\n(' + new Date(playerStats.lastJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : playerStats.lastJoined))
                         )
                         .setColor('BLUE')
                 )
