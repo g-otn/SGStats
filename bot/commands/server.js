@@ -1,22 +1,20 @@
 const Discord = require('discord.js')
 const rp = require('request-promise')
 const cheerio = require('cheerio')
+const servers = require('../data/servers.json')
 const thumbs = require('../data/thumbnails.json')
 const getAvailableServers = require('./help').getAvailableServers
 
 async function getServerInfo(server) {
-    let serverInfo
-    let options = { 
-        uri: 'https://status.smithtainment.com/api/' + server.smithtainmentStatusAPIName,
-        headers: { 'User-Agent': 'Request-Promise' } 
-    }
+    let getServerInfo
+
     await rp('https://status.smithtainment.com/api/' + server.smithtainmentStatusAPIName)
         .then(html => {
             let $ = cheerio.load(html)
             let data = $('.server-status [class*=grohsfabian_game_server_status]').contents()
             serverInfo = {
                 name: data.eq(2).text(),
-                status: data.eq(5).text(),
+                status: data.eq(5).text().trim(),
                 ip: data.eq(8).text(),
                 players: data.eq(11).text(),
             }
@@ -26,11 +24,19 @@ async function getServerInfo(server) {
 }
 
 exports.sendServerInfo = (msg, server) => {
-    getServerInfo(server)
+    getServerInfo(servers[server])
         .then(serverInfo =>
             msg.channel.send(
                 new Discord.RichEmbed()
-                .setDescription()
+                .setTitle(servers[server].name + ' status')
+                .setURL('https://status.smithtainment.com/api/' + server.smithtainmentStatusAPIName)
+                .setDescription(
+                    '**Name:** ' + serverInfo.name
+                    + '\n**Status:** ' + (serverInfo.status == 'Online' ? serverInfo.status + ` **[Join now!](${process.env.BASEURI}/redirect/${server})**` : serverInfo.status)
+                    + '\n**IP:** ' + serverInfo.ip
+                    + '\n**Players:** ' + serverInfo.players
+                    
+                )
                 .setColor('GOLD')
             )
         )
