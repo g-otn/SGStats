@@ -64,7 +64,7 @@ bot.on("message", (msg) => {
 
             // server command
             if (serverKeys.some(serverName => serverName == cmd)) {
-                commands.server.sendServerInfo(msg, cmd)
+                commands.server.sendServerInfo(msg, servers[cmd])
                 break
             }
 
