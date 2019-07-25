@@ -29,7 +29,7 @@ exports.sendServerInfo = (msg, server) => {
             msg.channel.send(
                 new Discord.RichEmbed()
                 .setTitle(servers[server].name + ' status')
-                .setURL('https://status.smithtainment.com/api/' + server.smithtainmentStatusAPIName)
+                .setURL('https://status.smithtainment.com/api/' + servers[server].smithtainmentStatusAPIName)
                 .setDescription(
                     '**Name:** ' + serverInfo.name
                     + '\n**Status:** ' + (serverInfo.status == 'Online' ? serverInfo.status + ` **[Join now!](${process.env.BASEURI}/redirect/${server})**` : serverInfo.status)
