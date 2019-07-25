@@ -2,12 +2,14 @@
     "an": {
         "name": "Anime PropHunt",
         "ip": "209.126.103.165:27045",
-        "gamertrackerID": "6035198"
+        "gamertrackerID": "6035198",
+        "smithtainmentStatusAPIName": "aph"
     },
     "anime": {
         "name": "Anime PropHunt",
         "ip": "209.126.103.165:27045",
-        "gamertrackerID": "6035198"
+        "gamertrackerID": "6035198",
+        "smithtainmentStatusAPIName": "aph"
     },
     "cs": {
         "name": "5v5 CSGO Competitive",
