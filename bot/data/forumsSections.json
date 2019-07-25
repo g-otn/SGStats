@@ -1,0 +1,134 @@
+[
+    {
+        "name": "Smithtainment Gaming",
+        "rolesToPing": [
+            "<@&387409444109025280>"
+        ],
+        "sections": [
+            {
+                "name": "Network Ban Appeal",
+                "fid": "303"
+            },
+            {
+                "name": "Forum Ban Appeal",
+                "fid": "241"
+            },
+            {
+                "name": "Discord Ban Appeal",
+                "fid": "302"
+            }
+        ]
+    },
+    {
+        "serverKey": "prophunt",
+        "rolesToPing": [
+            "<@&421155441519755284>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "268"
+            },
+            {
+                "name": "Donator Support thread",
+                "fid": "336"
+            },
+            {
+                "name": "Application",
+                "fid": "270"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "271"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "272"
+            }
+        ]
+    },
+    {
+        "serverKey": "mcttt",
+        "rolesToPing": [
+            "<@&387409235249594368>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "45"
+            },
+            {
+                "name": "Donator Support thread",
+                "fid": "53"
+            },
+            {
+                "name": "Application",
+                "fid": "48"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "59"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "66"
+            }
+        ]
+    },
+    {
+        "serverKey": "vanilla",
+        "rolesToPing": [
+            "<@&387409354204250122>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "310"
+            },
+            {
+                "name": "Donator Support thread",
+                "fid": "339"
+            },
+            {
+                "name": "Application",
+                "fid": "311"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "312"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "313"
+            }
+        ]
+    },
+    {
+        "serverKey": "anime",
+        "rolesToPing": [
+            "<@&537876007731068940>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "330"
+            },
+            {
+                "name": "Donator Support thread",
+                "fid": "340"
+            },
+            {
+                "name": "Application",
+                "fid": "87"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "81"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "91"
+            }
+        ]
+    }
+]
