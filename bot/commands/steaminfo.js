@@ -48,7 +48,7 @@ async function getSteamInfo(steamID64) {
 }
 
 function sendMessage(msg, steamInfo, err) {
-    let input = msg.content.split(' ').slice(1)
+    let input = msg.content.split(' ').slice(1).join(' ')
     
     if (err) {
         err = err.err.toString()

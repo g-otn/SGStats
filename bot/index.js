@@ -61,7 +61,7 @@ bot.on("message", (msg) => {
             break
         case 'steam':
         case 'steaminfo':
-            commands.steaminfo.sendSteamInfo(msg, args[0])
+            commands.steaminfo.sendSteamInfo(msg, args.join(' '))
             break
         default:
             let serverKeys = Object.keys(servers)
