@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const rp = require('request-promise')
 const cheerio = require('cheerio')
+const steam = require('steamidconvert')(process.env.STEAMWEBAPI_KEY)
 const fs = require('fs')
 const servers = require('../data/servers.json')
 const forumsSections = require('../data/forumsSections.json')
@@ -52,18 +53,31 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
             
             let post = $('#posts > div:first-of-type') // Filters HTML to the first post only
             
-            let author = post.find('.post_author') // no permission / no post: author.length = 0
+            let author = post.find('.post_author') // if no permission / no post: author.length -> 0
             checkInfo.threadInfo.author = {
                 name: author.find('.author_information .largetext').text(),
                 avatar: author.find('.postbit_avatar img').attr('src'),
                 profile: author.find('.postbit_avatar a').attr('href'),
             }
 
-            checkInfo.threadInfo.postDate = post.find('.post_date').text()
+            checkInfo.threadInfo.postDate = post.find('.post_date').text().trim()
 
-            let postBody = post.find('.post_body').text().trim()
-            checkInfo.threadInfo.steamIDinThread = postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/) ? postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0] : null
+            let postBody = post.find('.post_body').text().trim() // post text
+
             checkInfo.threadInfo.preview = postBody.split(' ').slice(0, 50).join(' ')
+
+            // Gets the SteamID/64 inside postBody and converts it to SteamID64
+            if (postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/))
+                try {
+                    checkInfo.threadInfo.steamID64inThread = steam.convertTo64(postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0])
+                } catch (err) {
+                    checkInfo.threadInfo.steamID64inThread = null
+                    console.log('Error converting SteamID in postBody:\n', err)
+                }
+            else if (postBody.match(/7656119\d{10}/))
+                checkInfo.threadInfo.steamID64inThread = postBody.match(/7656119\d{10}/)[0]
+            else
+                console.log('SteamID/64 not found in postBody')
         })
     
     // Old thread check
@@ -75,11 +89,17 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
     }
 
     // Gets Steam info if SteamID was found
-    if (checkInfo.threadInfo.steamIDinThread) {
-        
+    if (checkInfo.threadInfo.steamID64inThread) {
+        console.log('a')
+        await getSteamInfo(checkInfo.threadInfo.steamID64inThread)
+        .then(steamInfo => {
+            console.log('b')
+            checkInfo.steamInfo = steamInfo
+        })
+        .catch(err => console.log('Error getting steamInfo:\n', err))
     }
 
-    console.log(JSON.stringify(checkInfo.threadInfo, null, '  '))
+    console.log(JSON.stringify(checkInfo, null, '\t'))
     return checkInfo
 }
 
@@ -104,4 +124,5 @@ async function checkForums(bot) {
     console.log('== Forums checking end')
 }
 
-checkForums()
+//checkForums()
+checkFID(330, false, false)
