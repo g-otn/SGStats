@@ -25,9 +25,10 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
 
     // No thread check
     if (!checkInfo.threadInfo.tid) {
-        console.log('No thread found')
+        console.log('- No thread found')
         return
     }
+    console.log('Thread found (' + checkInfo.threadInfo.tid + ')')
 
     let repeatedThreads
     
@@ -35,7 +36,7 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
     if (checkRepeated) {
         repeatedThreads = require('../data/repeatedThreads.json')
         if (repeatedThreads.some(tid => tid == checkInfo.threadInfo.tid)) {
-            console.log('Repeated thread (' + tid + ')')
+            console.log('- Repeated thread (' + tid + ')')
             return
         } else {
             repeatedThreads.push(checkInfo.threadInfo.tid)
@@ -49,11 +50,14 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
     await rp('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=' + checkInfo.threadInfo.tid)
         .then(html => {
             let $ = cheerio.load(html)
-            checkInfo.threadInfo.title = $('title').text()
+            checkInfo.threadInfo.title = $('title').text().trim()
             
             let post = $('#posts > div:first-of-type') // Filters HTML to the first post only
             
-            let author = post.find('.post_author') // if no permission / no post: author.length -> 0
+            let author = post.find('.post_author')
+            if (author.length == 0) // No permission or post not found
+                return
+
             checkInfo.threadInfo.author = {
                 name: author.find('.author_information .largetext').text(),
                 avatar: author.find('.postbit_avatar img').attr('src'),
@@ -79,11 +83,17 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
             else
                 console.log('SteamID/64 not found in postBody')
         })
-    
+
+    // Invalid thread check (no thread / no permission)
+    if (!checkInfo.threadInfo.author) {
+        console.log('- Thread not found (' + checkInfo.threadInfo.title + ' )')
+        return
+    }
+
     // Old thread check
     if (checkOld) {
-        if (!checkInfo.threadInfo.postDate.contains('minute')) {
-            console.log('Old thread (' + checkInfo.threadInfo.postDate + ')')
+        if (!checkInfo.threadInfo.postDate.includes('minute')) {
+            console.log('- Old thread (' + checkInfo.threadInfo.postDate + ')')
             return
         }
     }
@@ -116,7 +126,7 @@ async function checkForums(bot) {
             let section = sectionGroup.sections[s]
             console.log(`\n- Section ${section.fid}: ${section.name}`)
             // Checking every section at the same time (not using await) is not necessary since there's no need to check all of them this quick, it also doesn't many resources at once
-            await checkFID(section.fid, false, false)
+            await checkFID(section.fid, true, true)
                 .then(checkInfo => sendMessage(bot, sectionGroup, s, checkInfo))
         }
         console.log('\n\n')
@@ -124,5 +134,5 @@ async function checkForums(bot) {
     console.log('== Forums checking end')
 }
 
-//checkForums()
-checkFID(330, false, false)
+checkForums()
+//checkFID(330, false, true)
