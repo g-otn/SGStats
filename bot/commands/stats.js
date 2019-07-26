@@ -105,3 +105,5 @@ exports.sendPlayerStats = (msg, server, player) => {
 
         })
 }
+
+exports.getPlayerStats = getPlayerStats
