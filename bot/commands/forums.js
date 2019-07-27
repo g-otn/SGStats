@@ -3,14 +3,15 @@ const rp = require('request-promise')
 const cheerio = require('cheerio')
 const steam = require('steamidconvert')(process.env.STEAMWEBAPI_KEY)
 const fs = require('fs')
+const timeago = require('timeago.js')
 const servers = require('../data/servers.json')
 const forumsSections = require('../data/forumsSections.json')
 const thumbs = require('../data/thumbnails.json')
 const getSteamInfo = require('./steaminfo').getSteamInfo
 const getPlayerStats = require('./stats').getPlayerStats
 
-async function checkSection(section, checkRepeated = true, checkOld = true) {
-    let checkInfo = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
+async function checkSection(serverKey, section, checkRepeated = true, checkOld = true) {
+    let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
 
     // Requests section and gets first normal thread link
     await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
@@ -18,39 +19,37 @@ async function checkSection(section, checkRepeated = true, checkOld = true) {
             let $ = cheerio.load(html)
             let threadHref = $('.forumdisplay_regular .threadbit_title div:nth-child(1) a[href^="showthread"]').attr('href')
             // TODO: Ignore Moved threads
-            checkInfo.threadInfo = {
+            c.threadInfo = {
                 tid: threadHref ? threadHref.match(/\d+/)[0] : threadHref
             }
         })
 
     // No thread check
-    if (!checkInfo.threadInfo.tid) {
+    if (!c.threadInfo.tid) {
         console.log('- No thread found')
         return
     }
-    console.log('Thread found (' + checkInfo.threadInfo.tid + ')')
+    console.log('Thread found (' + c.threadInfo.tid + ')')
 
     let repeatedThreads
 
     // Repeated thread check
     if (checkRepeated) {
         repeatedThreads = require('../data/repeatedThreads.json')
-        if (repeatedThreads.some(tid => tid == checkInfo.threadInfo.tid)) {
-            console.log('- Repeated thread (' + tid + ')')
+        if (repeatedThreads.some(tid => tid == c.threadInfo.tid)) {
+            console.log('- Repeated thread (' + section.tid + ')')
             return
         } else {
-            repeatedThreads.push(checkInfo.threadInfo.tid)
-            // Deletes cache so file can be required again with new written data
-            delete require.cache[require.resolve('../data/repeatedThreads.json')]
-            fs.writeFileSync('./bot/data/repeatedThreads.json', JSON.stringify(repeatedThreads))
+            repeatedThreads.push(section.tid)
+            console.log('Not repeated thread found (' + section.tid + ')')
         }
     }
 
     // Requests thread and gets threadInfo and SteamID (if available)
-    await rp('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=' + checkInfo.threadInfo.tid)
+    await rp('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=' + c.threadInfo.tid)
         .then(html => {
             let $ = cheerio.load(html)
-            checkInfo.threadInfo.title = $('title').text().trim()
+            c.threadInfo.title = $('title').text()
 
             let post = $('#posts > div:first-of-type') // Filters HTML to the first post only
 
@@ -58,67 +57,79 @@ async function checkSection(section, checkRepeated = true, checkOld = true) {
             if (author.length == 0) // No permission or post not found
                 return
 
-            checkInfo.threadInfo.author = {
+            c.threadInfo.author = {
                 name: author.find('.author_information .largetext').text(),
                 avatar: author.find('.postbit_avatar img').attr('src'),
                 profile: author.find('.postbit_avatar a').attr('href'),
             }
 
-            checkInfo.threadInfo.postDate = post.find('.post_date').text().trim()
+            c.threadInfo.postDate = post.find('.post_date').text().trim()
 
             let postBody = post.find('.post_body').text().trim() // post text
 
-            checkInfo.threadInfo.preview = postBody.split(' ').slice(0, 50).join(' ')
+            c.threadInfo.preview = postBody.split(' ').slice(0, 50).join(' ')
 
-            // Gets the SteamID/64 inside postBody and converts it to SteamID64
-            if (postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/))
-                try {
-                    checkInfo.threadInfo.steamID64inThread = steam.convertTo64(postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0])
-                } catch (err) {
-                    checkInfo.threadInfo.steamID64inThread = null
-                    console.log('Error converting SteamID in postBody:\n', err)
-                }
-            else if (postBody.match(/7656119\d{10}/))
-                checkInfo.threadInfo.steamID64inThread = postBody.match(/7656119\d{10}/)[0]
-            else
-                console.log('SteamID/64 not found in postBody')
+            if (section.name !== 'General Discussion thread') {
+                // Gets the SteamID/64 inside postBody and converts it to SteamID64
+                if (postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/))
+                    try {
+                        c.threadInfo.steamID64inThread = steam.convertTo64(postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0])
+                    } catch (err) {
+                        c.threadInfo.steamID64inThread = null
+                        console.log('Error converting SteamID in postBody:\n', err)
+                    }
+                else if (postBody.match(/7656119\d{10}/))
+                    c.threadInfo.steamID64inThread = postBody.match(/7656119\d{10}/)[0]
+                else
+                    console.log('SteamID/64 not found in postBody')
+            } else // No need for Steam/GT info in General Discussion threads
+                console.log('steamInfo and gametrackerInfo not needed (' + section.name + ')')
         })
 
     // Invalid thread check (no thread / no permission)
-    if (!checkInfo.threadInfo.author) {
-        console.log('- Invalid thread (' + checkInfo.threadInfo.title + ' )')
+    if (!c.threadInfo.author) {
+        console.log('- Invalid thread (' + c.threadInfo.title + ')')
         return
     }
 
     // Old thread check
     if (checkOld) {
-        if (!checkInfo.threadInfo.postDate.includes('minute')) {
-            console.log('- Old thread (' + checkInfo.threadInfo.postDate + ')')
+        if (!c.threadInfo.postDate.includes('minute')) {
+            console.log('- Old thread (' + c.threadInfo.postDate + ')')
             return
-        }
+        } else
+            console.log('New thread (' + c.threadInfo.postDate + ')')
+    }
+
+    // Updates repeatedThreads.json
+    if (checkRepeated) {
+        // Deletes cache so file can be required again with new written data in the next call
+        delete require.cache[require.resolve('../data/repeatedThreads.json')]
+        fs.writeFileSync('./bot/data/repeatedThreads.json', JSON.stringify(repeatedThreads))
     }
 
     // Gets Steam info if SteamID was found
-    if (checkInfo.threadInfo.steamID64inThread) {
-        if (section.name !== 'General Discussion thread')
-            await getSteamInfo(checkInfo.threadInfo.steamID64inThread)
-                .then(steamInfo => {
-                    console.log('steamInfo found (' + checkInfo.steamInfo.personaname + ')')
-                    checkInfo.steamInfo = steamInfo
-                })
-                .catch(err => console.log('Error getting steamInfo:\n', err))
-        else // No need for Steam/GT info in General Discussion threads
-            console.log('steamInfo not needed (' + section.name + ')\nskipping gametrackerInfo')
+    if (c.threadInfo.steamID64inThread) {
+        await getSteamInfo(c.threadInfo.steamID64inThread)
+            .then(steamInfo => {
+                c.steamInfo = steamInfo
+                console.log('steamInfo found (' + c.steamInfo.personaname + ')')
+            })
+            .catch(err => console.log('Error getting steamInfo (' + c.threadInfo.steamID64inThread + '):\n', err))
     }
 
     // Gets GameTracker info
-    if (checkInfo.steamInfo) {
-        await getPlayerStats()
+    if (c.steamInfo) {
+        if (serverKey)
+            await getPlayerStats(servers[serverKey], c.steamInfo.personaname, 'h', 'w')
+                .then(playerStats => c.gamertrackerInfo = playerStats)
+        else
+            console.log('gametrackerInfo not needed (no serverKey)')
     } else if (section.name !== 'General Discussion thread') // steamInfo was neeeded
-        console.log('steamInfo not found') 
+        console.log('steamInfo not found, unable to get gametrackerInfo')
 
-    console.log(JSON.stringify(checkInfo, null, '  '))
-    return checkInfo
+    console.log(JSON.stringify(c, null, '\t'))
+    return c
 }
 
 function sendMessage(bot, sectionGroup, sectionIndex, checkInfo) {
@@ -134,7 +145,7 @@ async function checkForums(bot) {
             let section = sectionGroup.sections[s]
             console.log(`\n- Section ${section.fid}: ${section.name}`)
             // Checking every section at the same time (not using await) is not necessary since there's no need to check all of them this quick, it also doesn't many resources at once
-            await checkSection(section)
+            await checkSection(sectionGroup.serverKey, section, false, false)
                 .then(checkInfo => sendMessage(bot, sectionGroup, s, checkInfo))
         }
         console.log('\n\n')
@@ -142,5 +153,5 @@ async function checkForums(bot) {
     console.log('== Forums checking end')
 }
 
-//checkForums()
-checkSection(forumsSections.filter(sectionGroup => sectionGroup.sections.some(section => section.fid == 330))[0].sections.filter(section => section.fid == 330)[0], false, false)
+checkForums()
+//checkSection('mcttt', forumsSections.filter(sectionGroup => sectionGroup.sections.some(section => section.fid == 330))[0].sections.filter(section => section.fid == 330)[0], false, false)
