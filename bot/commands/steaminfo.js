@@ -48,7 +48,7 @@ async function getSteamInfo(steamID64) {
 }
 
 function sendMessage(msg, steamInfo, err) {
-    let input = msg.content.split(' ').slice(1)
+    let input = msg.content.split(' ').slice(1).join(' ')
     
     if (err) {
         err = err.err.toString()
@@ -82,7 +82,7 @@ function sendMessage(msg, steamInfo, err) {
                     + '\n**SteamID64:** ``' + steamInfo.steamid + '``'
                     + '\n**CustomURL:** ' + (steamInfo.profileurl.match(/\/id\//) ? `[${steamInfo.profileurl.match(/\/id\/(\w+)/)[1]}](${steamInfo.profileurl})` : '(not set)')
 
-                    + `\n**Profile:** [${steamInfo.communityvisibilitystate !== 3 ? 'private' : 'public'}](${steamInfo.profileurl})`
+                    + `\n**Profile:** [${steamInfo.communityvisibilitystate !== 3 ? 'private' : 'public'}](https://steamcommunity.com/profiles/${steamInfo.steamid}/)`
 
                     + '\n\n**Garry\'s Mod hours:** ' + (steamInfo.gmodHours ? `${steamInfo.gmodHours}` : '(unknown)')
 
@@ -112,12 +112,12 @@ exports.sendSteamInfo = (msg, input) => {
 
     input = input.trim()
 
-    if (input.match(/^STEAM_[0-5]:[01]:\d{1,15}$/)) { // SteamID
-        getSteamInfo(steam.convertTo64(input.match(/^STEAM_[0-5]:[01]:\d{1,15}$/)[0]))
+    if (input.match(/STEAM_[0-5]:[01]:\d{1,15}/)) { // SteamID
+        getSteamInfo(steam.convertTo64(input.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0]))
             .then(steamInfo => sendMessage(msg, steamInfo))
             .catch(err => sendMessage(msg, null, { err: err }))
-    } else if (input.match(/^7656119\d{10}$/)) {      // SteamID64
-        getSteamInfo(input.match(/^7656119\d{10}$/)[0])
+    } else if (input.match(/7656119\d{10}/)) {      // SteamID64
+        getSteamInfo(input.match(/7656119\d{10}/)[0])
             .then(steamInfo => sendMessage(msg, steamInfo))
             .catch(err => sendMessage(msg, null, { err: err }))
     } else {                                          // CustomURL

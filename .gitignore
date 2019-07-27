@@ -4,5 +4,5 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# Thumbnails
-bot/assets/
+# Forums repeated threads list
+bot/data/repeatedThreads.json

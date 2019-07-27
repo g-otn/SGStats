@@ -8,11 +8,11 @@ const getAvailableServers = require('./help').getAvailableServers
 const searchPlayer = require('./player').searchPlayer
 const servers = require('../data/servers.json')
 
-async function getPlayerStats(server, player) {
+async function getPlayerStats(server, player, graphType = 'h', period = 'm') {
     let playerStats
 
     // Gets rank, name, score, score/min and profile link
-    await searchPlayer(null, server, null, player)
+    await searchPlayer(graphType, server, period, player) // graphType and period not required
         .then(foundPlayer => playerStats = foundPlayer)
 
     if (!playerStats || !playerStats.profile) // Player not found
@@ -23,7 +23,7 @@ async function getPlayerStats(server, player) {
         headers: { 'User-Agent': 'Request-Promise' }
     }
 
-    // Gets other info from GameTracker's profile
+    // Gets first and last join from GameTracker's user server profile 
     await rp(options)
         .then(html => {
             let $ = cheerio.load(html)
@@ -84,13 +84,14 @@ exports.sendPlayerStats = (msg, server, player) => {
                     new Discord.RichEmbed()
                         .setTitle(playerStats.name + '\'s stats')
                         .setDescription(
-                            '**Rank:** ' + playerStats.rank
+                            '__**Rank:** ' + playerStats.rank + '__'
                             + '\n**Total score:** ' + playerStats.score
                             + '\n**Time played:** ' + (playerStats.timePlayed.split('.')[1] ? `${playerStats.timePlayed.split('.')[0]}h ${Math.floor(Number(playerStats.timePlayed.split('.')[1]) * 0.6)}min` : playerStats.timePlayed)
                             + '\n**Score/min:** ' + playerStats.scoreMin
                             + '\n**First joined:** ' + (!isNaN(new Date(playerStats.firstJoined)) ? timeago.format(new Date(playerStats.firstJoined)) + '\n(' + new Date(playerStats.firstJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : playerStats.firstJoined)
                             + '\n**Last joined:** ' + (playerStats.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[server].ip})**` : (!isNaN(new Date(playerStats.lastJoined)) ? timeago.format(new Date(playerStats.lastJoined)) + '\n(' + new Date(playerStats.lastJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : playerStats.lastJoined))
                         )
+                        .setThumbnail(playerStats.graphURL)
                         .setColor('BLUE')
                 )
         })
@@ -105,3 +106,5 @@ exports.sendPlayerStats = (msg, server, player) => {
 
         })
 }
+
+exports.getPlayerStats = getPlayerStats
