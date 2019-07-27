@@ -28,5 +28,6 @@ exports.sendJoinLink = (msg, server) => {
     msg.channel.send(
         new Discord.RichEmbed()
         .setDescription(`**[Click here to join ${servers[server].name}!](${process.env.BASEURI}/redirect/${server})**`)
+        .setColor('GOLD')
     )
 }
