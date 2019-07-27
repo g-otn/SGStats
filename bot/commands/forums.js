@@ -9,11 +9,11 @@ const thumbs = require('../data/thumbnails.json')
 const getSteamInfo = require('./steaminfo').getSteamInfo
 const getPlayerStats = require('./stats').getPlayerStats
 
-async function checkFID(fid, checkRepeated = true, checkOld = true) {
-    let checkInfo = {} // Will contain found threadInfo, steamInfo and gamertrackerInfo
+async function checkSection(section, checkRepeated = true, checkOld = true) {
+    let checkInfo = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
 
     // Requests section and gets first normal thread link
-    await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + fid)
+    await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
         .then(html => {
             let $ = cheerio.load(html)
             let threadHref = $('.forumdisplay_regular .threadbit_title div:nth-child(1) a[href^="showthread"]').attr('href')
@@ -31,7 +31,7 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
     console.log('Thread found (' + checkInfo.threadInfo.tid + ')')
 
     let repeatedThreads
-    
+
     // Repeated thread check
     if (checkRepeated) {
         repeatedThreads = require('../data/repeatedThreads.json')
@@ -51,9 +51,9 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
         .then(html => {
             let $ = cheerio.load(html)
             checkInfo.threadInfo.title = $('title').text().trim()
-            
+
             let post = $('#posts > div:first-of-type') // Filters HTML to the first post only
-            
+
             let author = post.find('.post_author')
             if (author.length == 0) // No permission or post not found
                 return
@@ -86,7 +86,7 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
 
     // Invalid thread check (no thread / no permission)
     if (!checkInfo.threadInfo.author) {
-        console.log('- Thread not found (' + checkInfo.threadInfo.title + ' )')
+        console.log('- Invalid thread (' + checkInfo.threadInfo.title + ' )')
         return
     }
 
@@ -100,16 +100,24 @@ async function checkFID(fid, checkRepeated = true, checkOld = true) {
 
     // Gets Steam info if SteamID was found
     if (checkInfo.threadInfo.steamID64inThread) {
-        console.log('a')
-        await getSteamInfo(checkInfo.threadInfo.steamID64inThread)
-        .then(steamInfo => {
-            console.log('b')
-            checkInfo.steamInfo = steamInfo
-        })
-        .catch(err => console.log('Error getting steamInfo:\n', err))
+        if (section.name !== 'General Discussion thread')
+            await getSteamInfo(checkInfo.threadInfo.steamID64inThread)
+                .then(steamInfo => {
+                    console.log('steamInfo found (' + checkInfo.steamInfo.personaname + ')')
+                    checkInfo.steamInfo = steamInfo
+                })
+                .catch(err => console.log('Error getting steamInfo:\n', err))
+        else // No need for Steam/GT info in General Discussion threads
+            console.log('steamInfo not needed (' + section.name + ')\nskipping gametrackerInfo')
     }
 
-    console.log(JSON.stringify(checkInfo, null, '\t'))
+    // Gets GameTracker info
+    if (checkInfo.steamInfo) {
+        await getPlayerStats()
+    } else if (section.name !== 'General Discussion thread') // steamInfo was neeeded
+        console.log('steamInfo not found') 
+
+    console.log(JSON.stringify(checkInfo, null, '  '))
     return checkInfo
 }
 
@@ -126,7 +134,7 @@ async function checkForums(bot) {
             let section = sectionGroup.sections[s]
             console.log(`\n- Section ${section.fid}: ${section.name}`)
             // Checking every section at the same time (not using await) is not necessary since there's no need to check all of them this quick, it also doesn't many resources at once
-            await checkFID(section.fid, true, true)
+            await checkSection(section)
                 .then(checkInfo => sendMessage(bot, sectionGroup, s, checkInfo))
         }
         console.log('\n\n')
@@ -134,5 +142,5 @@ async function checkForums(bot) {
     console.log('== Forums checking end')
 }
 
-checkForums()
-//checkFID(330, false, true)
+//checkForums()
+checkSection(forumsSections.filter(sectionGroup => sectionGroup.sections.some(section => section.fid == 330))[0].sections.filter(section => section.fid == 330)[0], false, false)
