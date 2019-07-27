@@ -40,13 +40,14 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
 
     // Repeated thread check
     if (checkRepeated) {
-        repeatedThreads = require('../data/repeatedThreads.json')
+        // Clones array from require (assigning the require directly results in some cache problems where all the not-repeated threads that failed OTHER checking still stays in repeatedThreads even after exiting the checkSection function scope)
+        repeatedThreads = [...require('../data/repeatedThreads.json')] 
         if (repeatedThreads.some(tid => tid == c.threadInfo.tid)) {
             log('- Repeated thread (' + c.threadInfo.tid + ')')
             return
         } else {
             repeatedThreads.push(c.threadInfo.tid)
-            log('Not repeated thread found (' + c.threadInfo.tid + ')')
+            log('Not-repeated thread found (' + c.threadInfo.tid + ')')
         }
     }
 
@@ -116,7 +117,7 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
         delete require.cache[require.resolve('../data/repeatedThreads.json')]
         console.log('Writing repeatedThreads.json with new tid (' + c.threadInfo.tid + ')')
         fs.writeFileSync('./bot/data/repeatedThreads.json', JSON.stringify(repeatedThreads))
-        log('File written')
+        log('repeatedThreads.json updated (length: ' + repeatedThreads.length + ')')
     }
 
     // Gets Steam info if SteamID was found
@@ -126,14 +127,14 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
                 c.steamInfo = steamInfo
                 log('steamInfo found (' + c.steamInfo.personaname + ')')
             })
-            .catch(err => log('Error getting steamInfo (' + c.threadInfo.steamID64inThread + '):\n', err))
+            .catch(err => log('Error getting steamInfo (' + c.threadInfo.steamID64inThread + '):\n' + err))
     }
 
     // Gets GameTracker info
     if (c.steamInfo) {
         if (serverKey)
             await getPlayerStats(servers[serverKey], c.steamInfo.personaname, 'h', 'w')
-                .then(playerStats => c.gamertrackerInfo = playerStats)
+                .then(playerStats => c.gametrackerInfo = playerStats)
         else
             log('gametrackerInfo not needed (no serverKey)')
     } else if (section.name !== 'General Discussion thread') // steamInfo was neeeded
@@ -146,9 +147,9 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
     if (!c) // One of the checkSection checkings failed
         return // nothing to send
 
-    log(JSON.stringify(c, null, '\t'))
+    log(`Sending message (steamInfo: ${c.steamInfo ? 'true' : 'false' }, gametrackerInfo: ${c.gametrackerInfo ? 'true' : 'false' })`)
+
     let channel = process.env.FORUMS_CHECK_MESSAGE_CHANNEL
-    log('Sending message to ' + channel)
 
     // Pings roles (pinging inside RichEmbed doesn't actually pings)
     bot.channels.get(channel).send(sectionGroup.rolesToPing.join(' '))
@@ -187,18 +188,18 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
                 , true)
 
         // Adds gametrackerInfo to RichEmbed
-        if (c.gamertrackerInfo) {
+        if (c.gametrackerInfo) {
             richEmbed
                 .addField('Gametracker info',
-                    `Name: [${c.gamertrackerInfo.name}](${c.gamertrackerInfo.profile})`
-                    + '\n__**Time played:** ' + (c.gamertrackerInfo.timePlayed.split('.')[1] ? `${c.gamertrackerInfo.timePlayed.split('.')[0]}h ${Math.floor(Number(c.gamertrackerInfo.timePlayed.split('.')[1]) * 0.6)}min__` : c.gamertrackerInfo.timePlayed + '__')
-                    + '\n**First joined:** ' + (!isNaN(new Date(c.gamertrackerInfo.firstJoined)) ? timeago.format(new Date(c.gamertrackerInfo.firstJoined)) + '\n(' + new Date(c.gamertrackerInfo.firstJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gamertrackerInfo.firstJoined)
-                    + '\n**Last joined:** ' + (c.gamertrackerInfo.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[server].ip})**` : (!isNaN(new Date(c.gamertrackerInfo.lastJoined)) ? timeago.format(new Date(c.gamertrackerInfo.lastJoined)) + '\n(' + new Date(c.gamertrackerInfo.lastJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gamertrackerInfo.lastJoined))
+                    `Name: [${c.gametrackerInfo.name}](${c.gametrackerInfo.profile})`
+                    + '\n__**Time played:** ' + (c.gametrackerInfo.timePlayed.split('.')[1] ? `${c.gametrackerInfo.timePlayed.split('.')[0]}h ${Math.floor(Number(c.gametrackerInfo.timePlayed.split('.')[1]) * 0.6)}min__` : c.gametrackerInfo.timePlayed + '__')
+                    + '\n**First joined:** ' + (!isNaN(new Date(c.gametrackerInfo.firstJoined)) ? timeago.format(new Date(c.gametrackerInfo.firstJoined)) + '\n(' + new Date(c.gametrackerInfo.firstJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gametrackerInfo.firstJoined)
+                    + '\n**Last joined:** ' + (c.gametrackerInfo.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[server].ip})**` : (!isNaN(new Date(c.gametrackerInfo.lastJoined)) ? timeago.format(new Date(c.gametrackerInfo.lastJoined)) + '\n(' + new Date(c.gametrackerInfo.lastJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gametrackerInfo.lastJoined))
                     , true)
             if (sectionGroup.sections[sectionIndex].name == 'Application')
                 richEmbed
-                    .addField('Acitvity', 'Showing ' + c.gamertrackerInfo.name + ' activity for the past 7 days:', false)
-                    .setImage(c.gamertrackerInfo.graphURL)
+                    .addField('Acitvity', 'Showing ' + c.gametrackerInfo.name + ' activity for the past 7 days:', false)
+                    .setImage(c.gametrackerInfo.graphURL)
         }
     }
 
