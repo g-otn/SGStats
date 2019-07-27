@@ -7,15 +7,18 @@
         "sections": [
             {
                 "name": "Network Ban Appeal",
-                "fid": "303"
+                "fid": "303",
+                "color": "LUMINOUS_VIVID_PINK"
             },
             {
                 "name": "Forum Ban Appeal",
-                "fid": "241"
+                "fid": "241",
+                "color": "PURPLE"
             },
             {
                 "name": "Discord Ban Appeal",
-                "fid": "302"
+                "fid": "302",
+                "color": "DARK_BLUE"
             }
         ]
     },
@@ -27,23 +30,28 @@
         "sections": [
             {
                 "name": "General Discussion thread",
-                "fid": "268"
+                "fid": "268",
+                "color": "LIGHT_GREY"
             },
             {
                 "name": "Donator Support thread",
-                "fid": "336"
+                "fid": "336",
+                "color": "DARK_GREEN"
             },
             {
                 "name": "Application",
-                "fid": "270"
+                "fid": "270",
+                "color": "AQUA"
             },
             {
                 "name": "Ban Appeal",
-                "fid": "271"
+                "fid": "271",
+                "color": "RED"
             },
             {
                 "name": "Warn Appeal",
-                "fid": "272"
+                "fid": "272",
+                "color": "ORANGE"
             }
         ]
     },
@@ -55,23 +63,28 @@
         "sections": [
             {
                 "name": "General Discussion thread",
-                "fid": "45"
+                "fid": "45",
+                "color": "LIGHT_GREY"
             },
             {
                 "name": "Donator Support thread",
-                "fid": "53"
+                "fid": "53",
+                "color": "DARK_GREEN"
             },
             {
                 "name": "Application",
-                "fid": "48"
+                "fid": "48",
+                "color": "AQUA"
             },
             {
                 "name": "Ban Appeal",
-                "fid": "59"
+                "fid": "59",
+                "color": "RED"
             },
             {
                 "name": "Warn Appeal",
-                "fid": "66"
+                "fid": "66",
+                "color": "ORANGE"
             }
         ]
     },
@@ -83,23 +96,28 @@
         "sections": [
             {
                 "name": "General Discussion thread",
-                "fid": "310"
+                "fid": "310",
+                "color": "LIGHT_GREY"
             },
             {
                 "name": "Donator Support thread",
-                "fid": "339"
+                "fid": "339",
+                "color": "DARK_GREEN"
             },
             {
                 "name": "Application",
-                "fid": "311"
+                "fid": "311",
+                "color": "AQUA"
             },
             {
                 "name": "Ban Appeal",
-                "fid": "312"
+                "fid": "312",
+                "color": "RED"
             },
             {
                 "name": "Warn Appeal",
-                "fid": "313"
+                "fid": "313",
+                "color": "ORANGE"
             }
         ]
     },
@@ -111,23 +129,28 @@
         "sections": [
             {
                 "name": "General Discussion thread",
-                "fid": "330"
+                "fid": "330",
+                "color": "LIGHT_GREY"
             },
             {
                 "name": "Donator Support thread",
-                "fid": "340"
+                "fid": "340",
+                "color": "DARK_GREEN"
             },
             {
                 "name": "Application",
-                "fid": "87"
+                "fid": "87",
+                "color": "AQUA"
             },
             {
                 "name": "Ban Appeal",
-                "fid": "81"
+                "fid": "81",
+                "color": "RED"
             },
             {
                 "name": "Warn Appeal",
-                "fid": "91"
+                "fid": "91",
+                "color": "ORANGE"
             }
         ]
     }
