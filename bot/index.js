@@ -4,7 +4,11 @@ const commands = require('./commands')
 const servers = require('./data/servers.json')
 const thumbs = require('./data/thumbnails.json')
 
-bot.on("ready", () => console.log(bot.user.tag + " is online"))
+bot.on("ready", () => {
+    console.log(bot.user.tag + " is online")
+    bot.user.setPresence({ status: 'away', game: { name: process.env.PREFIX + 'help' } });
+    setInterval(() => { commands.forums.checkForums(bot) }, 600000)
+})
 
 bot.on("message", (msg) => {
     if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX)) return
@@ -19,7 +23,8 @@ bot.on("message", (msg) => {
 
     switch (cmd) {
         case 'forums':
-            commands.forums.checkSection(bot, msg, args)
+            if (msg.author.tag == 'Skeke#2155')
+                commands.forums.checkForums(bot, args[0], args[1])
             break
         case 'help':
             commands.help.sendHelpMenu(msg, args[0])
