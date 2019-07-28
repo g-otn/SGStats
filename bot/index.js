@@ -6,7 +6,7 @@ const thumbs = require('./data/thumbnails.json')
 
 bot.on("ready", () => {
     console.log(bot.user.tag + " is online")
-    bot.user.setPresence({ status: 'away', game: { name: process.env.PREFIX + 'help' } });
+    bot.user.setPresence({ game: { name: process.env.PREFIX + 'help' } })
     setInterval(() => { commands.forums.checkForums(bot) }, 600000)
 })
 
