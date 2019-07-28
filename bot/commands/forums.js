@@ -17,7 +17,7 @@ function log(msg) {
 
 async function checkSection(serverKey, section, checkRepeated = true, checkOld = true) {
     let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
-    throw new Error('test')
+    
     // Requests section and gets first normal thread link
     await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
         .then(html => {
