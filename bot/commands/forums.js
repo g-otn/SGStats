@@ -6,7 +6,6 @@ const fs = require('fs')
 const timeago = require('timeago.js')
 const servers = require('../data/servers.json')
 const forumsSections = require('../data/forumsSections.json')
-const thumbs = require('../data/thumbnails.json')
 const getSteamInfo = require('./steaminfo').getSteamInfo
 const getPlayerStats = require('./stats').getPlayerStats
 
@@ -17,7 +16,7 @@ function log(msg) {
 
 async function checkSection(serverKey, section, checkRepeated = true, checkOld = true) {
     let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
-    
+
     // Requests section and gets first normal thread link
     await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
         .then(html => {
@@ -41,7 +40,7 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
     // Repeated thread check
     if (checkRepeated) {
         // Clones array from require (assigning the require directly results in some cache problems where all the not-repeated threads that failed OTHER checking still stays in repeatedThreads even after exiting the checkSection function scope)
-        repeatedThreads = [...require('../data/repeatedThreads.json')] 
+        repeatedThreads = [...require('../data/repeatedThreads.json')]
         if (repeatedThreads.some(tid => tid == c.threadInfo.tid)) {
             log('- Repeated thread (' + c.threadInfo.tid + ')')
             return
@@ -75,9 +74,9 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
 
             c.threadInfo.preview = postBody.split(' ')
             if (c.threadInfo.preview.length > 50)
-                c.threadInfo.preview = c.threadInfo.preview.slice(0, 50).join(' ').replace('\n\n', '\n') + ' [...]'
+                c.threadInfo.preview = c.threadInfo.preview.slice(0, 50).join(' ').replace('\n\n', '\n').substr(0, 1000) + ' [...]'
             else
-                c.threadInfo.preview = c.threadInfo.preview.slice(0, 50).join(' ').replace('\n\n', '\n')
+                c.threadInfo.preview = c.threadInfo.preview.slice(0, 50).join(' ').replace('\n\n', '\n').substr(0, 1000)
 
             if (section.name !== 'General Discussion thread') {
                 // Gets the SteamID/64 inside postBody and converts it to SteamID64
@@ -147,7 +146,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
     if (!c) // One of the checkSection checkings failed
         return // nothing to send
 
-    log(`Sending message (steamInfo: ${c.steamInfo ? 'true' : 'false' }, gametrackerInfo: ${c.gametrackerInfo ? 'true' : 'false' })`)
+    log(`Sending message (steamInfo: ${c.steamInfo ? 'true' : 'false'}, gametrackerInfo: ${c.gametrackerInfo ? 'true' : 'false'})`)
 
     let channel = process.env.FORUMS_CHECK_MESSAGE_CHANNEL
 
@@ -158,6 +157,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
         - All sections have threadInfo, but Applications don't have the Preview field
         - General Discussions don't have Steam or Gametracker info, all the other sections do (if found)
         - Only Applications have Activity field / Graph Image
+        - If no steamInfo is found, Applications get the Preview field
     */
 
     // Adds threadInfo and color
@@ -201,7 +201,9 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
                     .addField('Acitvity', 'Showing ' + c.gametrackerInfo.name + ' activity for the past 7 days:', false)
                     .setImage(c.gametrackerInfo.graphURL)
         }
-    }
+    } else if (sectionGroup.sections[sectionIndex].name == 'Application')
+        richEmbed
+            .addField('Preview', '```\n' + c.threadInfo.preview + '\n```', false)
 
     bot.channels.get(channel).send(richEmbed)
 }
