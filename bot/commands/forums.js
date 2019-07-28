@@ -17,7 +17,7 @@ function log(msg) {
 
 async function checkSection(serverKey, section, checkRepeated = true, checkOld = true) {
     let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
-
+    throw new Error('test')
     // Requests section and gets first normal thread link
     await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
         .then(html => {
@@ -217,6 +217,17 @@ exports.checkForums = async (bot, checkRepeated, checkOld) => {
             // Checking every section at the same time (not using await) is not necessary since there's no need to check all of them this quick, it also doesn't many resources at once
             await checkSection(sectionGroup.serverKey, section, checkRepeated, checkOld)
                 .then(checkInfo => sendMessage(bot, sectionGroup, s, checkInfo))
+                .catch(err =>
+                    // Sends error
+                    bot.channels.get(process.env.DEBUG_CHANNEL).send(
+                        new Discord.RichEmbed()
+                            .setTitle('Forums check error')
+                            .setDescription('Something happened while checking the forums. Stack trace:\n```js\n' + (err.stack.toString().length > 1900 ? err.stack.toString().substr(0, 1900) + ' [...]' : err.stack.toString()) + '\n```')
+                            .addField('Values', 'section: ```json\n' + JSON.stringify(sectionGroup.sections[s], null, ' ') + '\n```\n s: ' + s + '\ncheckRepeated: ' + checkRepeated + '\ncheckOld: ' + checkOld, true)
+                            .setTimestamp(new Date())
+                            .setColor('DARK_RED')
+                    )
+                )
         }
         log('\n\n')
     }
