@@ -112,8 +112,8 @@ exports.sendSteamInfo = (msg, input) => {
 
     input = input.trim()
 
-    if (input.match(/STEAM_[0-5]:[01]:\d{1,15}/)) { // SteamID
-        getSteamInfo(steam.convertTo64(input.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0]))
+    if (input.match(/[0-5]:[01]:\d{1,15}/)) { // SteamID
+        getSteamInfo(steam.convertTo64(input.match(/[0-5]:[01]:\d{1,15}/)[0]))
             .then(steamInfo => sendMessage(msg, steamInfo))
             .catch(err => sendMessage(msg, null, { err: err }))
     } else if (input.match(/7656119\d{10}/)) {      // SteamID64
