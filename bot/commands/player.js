@@ -29,7 +29,7 @@ async function searchPlayer(graphType, server, period, player) {
             if (foundPlayer.name) {
                 foundPlayer.profile = 'https://www.gametracker.com' + firstRow.eq(1).children().eq(0).attr('href')
                 if (graphType && period)
-                    foundPlayer.graphURL = `https://cache.gametracker.com/images/graphs/player_${graphType == 'h' ? 'time' : 'score'}.php?nameb64=${encodeUrl(Base64.encode(foundPlayer.name))}&host=${server.ip}&start=-1${period}`
+                    foundPlayer.graphURL = `https://cache.gametracker.com/images/graphs/player_${graphType == 'h' ? 'time' : 'score'}.php?nameb64=${encodeUrl(Base64.encode(foundPlayer.name))}&host=${server.ip}&start=-1${period}&request=0${Math.floor(Math.random()*9999999999999999)}`
             }
         })
     return foundPlayer
