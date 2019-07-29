@@ -80,9 +80,9 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
 
             if (section.name !== 'General Discussion thread') {
                 // Gets the SteamID/64 inside postBody and converts it to SteamID64
-                if (postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/))
+                if (postBody.match(/[0-5]:[01]:\d{1,15}/))
                     try {
-                        c.threadInfo.steamID64inThread = steam.convertTo64(postBody.match(/STEAM_[0-5]:[01]:\d{1,15}/)[0])
+                        c.threadInfo.steamID64inThread = steam.convertTo64(postBody.match(/[0-5]:[01]:\d{1,15}/)[0])
                     } catch (err) {
                         c.threadInfo.steamID64inThread = null
                         log('Error converting SteamID in postBody:\n' + err)
@@ -235,5 +235,3 @@ exports.checkForums = async (bot, checkRepeated, checkOld) => {
     }
     log('== Forums checking end')
 }
-
-//checkSection('mcttt', forumsSections.filter(sectionGroup => sectionGroup.sections.some(section => section.fid == 330))[0].sections.filter(section => section.fid == 330)[0], false, false)
