@@ -193,7 +193,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
                 , true)
 
         // Adds gametrackerInfo to RichEmbed
-        if (c.gametrackerInfo) {
+        if (c.gametrackerInfo && c.gametrackerInfo.name) {
             richEmbed
                 .addField('Gametracker info',
                     `Name: [${c.gametrackerInfo.name}](${c.gametrackerInfo.profile})`
