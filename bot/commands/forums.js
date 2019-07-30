@@ -14,7 +14,11 @@ function log(msg) {
         console.log(msg)
 }
 
-async function checkSection(serverKey, section, checkRepeated = true, checkOld = true) {
+async function checkSection(serverKey, section, checkRepeated, checkOld) {
+    // Transforms strings into boolean
+    checkRepeated = checkRepeated == 'false' ? false : true
+    checkOld = checkOld == 'false' ? false : true
+
     let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
 
     // Requests section and gets first normal thread link
@@ -102,6 +106,7 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
     }
 
     // Old thread check
+    console.log('CheckOld: ' + checkOld)
     if (checkOld) {
         if (!c.threadInfo.postDate.includes('minute')) {
             log('- Old thread (' + c.threadInfo.postDate + ')')
@@ -131,7 +136,7 @@ async function checkSection(serverKey, section, checkRepeated = true, checkOld =
 
     // Gets GameTracker info
     if (c.steamInfo) {
-        if (serverKey)
+        if (serverKey) // Section group has a server(Key) (not name)
             await getPlayerStats(servers[serverKey], c.steamInfo.personaname, 'h', 'w')
                 .then(playerStats => c.gametrackerInfo = playerStats)
         else
@@ -194,7 +199,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
                     `Name: [${c.gametrackerInfo.name}](${c.gametrackerInfo.profile})`
                     + '\n__**Time played:** ' + (c.gametrackerInfo.timePlayed.split('.')[1] ? `${c.gametrackerInfo.timePlayed.split('.')[0]}h ${Math.floor(Number(c.gametrackerInfo.timePlayed.split('.')[1]) * 0.6)}min__` : c.gametrackerInfo.timePlayed + '__')
                     + '\n**First joined:** ' + (!isNaN(new Date(c.gametrackerInfo.firstJoined)) ? timeago.format(new Date(c.gametrackerInfo.firstJoined)) + '\n(' + new Date(c.gametrackerInfo.firstJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gametrackerInfo.firstJoined)
-                    + '\n**Last joined:** ' + (c.gametrackerInfo.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[server].ip})**` : (!isNaN(new Date(c.gametrackerInfo.lastJoined)) ? timeago.format(new Date(c.gametrackerInfo.lastJoined)) + '\n(' + new Date(c.gametrackerInfo.lastJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gametrackerInfo.lastJoined))
+                    + '\n**Last joined:** ' + (c.gametrackerInfo.lastJoined == 'Online Now' ? `**[Online Now](https://sgstats.glitch.me/redirect/${servers[sectionGroup.serverKey].ip})**` : (!isNaN(new Date(c.gametrackerInfo.lastJoined)) ? timeago.format(new Date(c.gametrackerInfo.lastJoined)) + '\n(' + new Date(c.gametrackerInfo.lastJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + ')' : c.gametrackerInfo.lastJoined))
                     , true)
             if (sectionGroup.sections[sectionIndex].name == 'Application')
                 richEmbed
@@ -208,7 +213,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
     bot.channels.get(channel).send(richEmbed)
 }
 
-exports.checkForums = async (bot, checkRepeated, checkOld) => {
+exports.checkForums = async (bot, checkRepeated = true, checkOld = true) => {
     log('== Forums checking start (checkRepeated: ' + checkRepeated + ', checkOld: ' + checkOld + ')\n')
     for (let g = 0; g < forumsSections.length; g++) {
         let sectionGroup = forumsSections[g]
