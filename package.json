@@ -5,16 +5,17 @@
   "main": "main.js",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
     "encodeurl": "^1.0.2",
     "express": "^4.17.1",
     "js-base64": "^2.5.1",
     "pug": "^2.0.4",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
+    "request-promise": "^4.2.4",
     "steamidconvert": "^0.2.4",
-    "timeago.js": "^4.0.0-beta.2"
+    "timeago.js": "^4.0.0-beta.2",
+    "merge-descriptors": "^1.0.1"
   },
   "scripts": {
     "start": "node main.js"
