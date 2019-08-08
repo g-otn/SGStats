@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 const timeago = require('timeago.js')
-const pkg = require('../../package.json')
+const version = require('../../package.json').version
 const commands = require('../data/commands.json')
 const servers = require('../data/servers.json')
 const thumbs = require('../data/thumbnails.json')
@@ -26,7 +26,7 @@ function getAvailableServers(command) {
 
 exports.sendHelpMenu = (msg, command) => {
     let helpmsg = new Discord.RichEmbed()
-    .setFooter(`SGStats v${pkg.version} by ${pkg.author} - Online since ${timeago.format(onlineSince)}`, 'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=32')
+    .setFooter(`SGStats v${version} by Skeke#2155 - Online since ${timeago.format(onlineSince)}`, 'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=32')
 
     if (command && commands.list[command]) { // Command exists
         let commandInfo = commands.list[command]
