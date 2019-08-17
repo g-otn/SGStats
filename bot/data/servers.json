@@ -1,14 +1,14 @@
 {
-    "an": {
-        "name": "Anime PropHunt",
-        "ip": "209.126.103.165:27045",
-        "gamertrackerID": "6035198",
+    "cl": {
+        "name": "Classic PropHunt",
+        "ip": "185.249.196.141:27515",
+        "gamertrackerID": "6055306",
         "smithtainmentStatusAPIName": "aph"
     },
-    "anime": {
-        "name": "Anime PropHunt",
-        "ip": "209.126.103.165:27045",
-        "gamertrackerID": "6035198",
+    "classic": {
+        "name": "Classic PropHunt",
+        "ip": "185.249.196.141:27515",
+        "gamertrackerID": "6055306",
         "smithtainmentStatusAPIName": "aph"
     },
     "cs": {
