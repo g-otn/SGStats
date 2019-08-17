@@ -1,6 +1,6 @@
 {
   "name": "sgstats-discord-bot",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "Discord bot for the Smithtainment gaming network to scrap Steam and GamerTracker data",
   "main": "main.js",
   "dependencies": {
@@ -25,7 +25,7 @@
     "smithtainment",
     "discord.js"
   ],
-  "author": "Skeke#2155",
+  "author": "g-otn (https://github.com/g-otn)",
   "license": "ISC",
   "private": true
 }
