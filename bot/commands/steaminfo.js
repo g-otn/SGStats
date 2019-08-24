@@ -43,13 +43,13 @@ async function getSteamInfo(steamID64) {
             }
         })
         .catch(err => steamInfo.gmodHours = `Error (${err.statusCode})`)
-        
+
     return steamInfo
 }
 
 function sendMessage(msg, steamInfo, err) {
     let input = msg.content.split(' ').slice(1).join(' ')
-    
+
     if (err) {
         err = err.err.toString()
         msg.channel.send(
@@ -121,6 +121,11 @@ exports.sendSteamInfo = (msg, input) => {
             .then(steamInfo => sendMessage(msg, steamInfo))
             .catch(err => sendMessage(msg, null, { err: err }))
     } else {                                          // CustomURL
+        // Removes the rest of the URL (if detected)
+        let customURLInLink = input.match(/\/id\/([\w]+)\/{0,1}/) 
+        if (customURLInLink)
+            input = customURLInLink[1]
+        
         steam.convertVanity(input, (err, res) => {
             if (err) // Invalid CustomURL
                 sendMessage(msg, null) // No error but no steamInfo (user not found)
