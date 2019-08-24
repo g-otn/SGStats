@@ -1,0 +1,200 @@
+{
+    "categories": [
+        {
+            "name": "Server",
+            "color": "GOLD",
+            "language": "http"
+        },
+        {
+            "name": "Player",
+            "color": "BLUE",
+            "language": "elm"
+        },
+        {
+            "name": "Other",
+            "color": "GREY",
+            "language": ""
+        }
+    ],
+    "list": {
+        "join": {
+            "category": "Server",
+            "description": "Generates a link to quickly join a server.",
+            "syntax": [
+                "**``$join <server>``**",
+                "**Abbreviation:** ``$j``"
+            ],
+            "examples": [
+                "``$join mc``",
+                "``$j mcttt``"
+            ],
+            "server": {
+                "usesGamertrackerID": false,
+                "usesReebAPI": false
+            }
+        },
+        "leaderboard": {
+            "category": "Player",
+            "description": "Shows a leaderboard around a player displaying total score, time played or score/min.",
+            "syntax": [
+                "**``$leaderboard <server> <display value> <player>``**",
+                "**Display values:** ``s`` ``score``, ``t`` ``time`` and ``m`` ``min``.",
+                "**Abbreviation:** ``$lb``, ``$lead``"
+            ],
+            "examples": [
+                "``$leaderboard mcttt score Skeke``",
+                "``$lead mcttt time Skeke``",
+                "``$lb mcttt m Skeke``",
+                "``$lb mcttt Skeke``"
+            ],
+            "notes": "You can ommit the display value and just type the player name, it will then display the score.\nIt may take more time to generate the leaderboard depending of your rank.",
+            "server": {
+                "usesGamertrackerID": false,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "map": {
+            "category": "Server",
+            "description": "Shows a graph of the most used maps in a server over the last day, week or month.",
+            "syntax": [
+                "**``$map <period> <server>``**",
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+            ],
+            "examples": [
+                "``$map week mcttt``"
+            ],
+            "server": {
+                "usesGamertrackerID": true,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "online": {
+            "category": "Server",
+            "description": "Shows a list of the server's online players and their time played since the last join. Also shows a graph of the server's population through the day.",
+            "syntax": [
+                "**``$online <server>``**",
+                "**Abbreviation:** ``$on``"
+            ],
+            "examples": [
+                "``$online mcttt``",
+                "``$on mc``"
+            ],
+            "server": {
+                "usesGamertrackerID": false,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "playerh": {
+            "category": "Player",
+            "description": "Shows a graph of the minutes played each day on a server over the last day, week or month.",
+            "syntax": [
+                "**``$<server>h <period> <player>``**",
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+            ],
+            "examples": [
+                "``$mcttth week Skeke``",
+                "``$mch Skeke``"
+            ],
+            "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
+            "server": {
+                "usesGamertrackerID": false,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "players": {
+            "category": "Player",
+            "description": "Shows a graph of the score earned on a server over the last day, week or month.",
+            "syntax": [
+                "**``$<server>s <period> <player>``**",
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+            ],
+            "examples": [
+                "``$mcttts day Skeke``",
+                "``$mcs m Skeke``"
+            ],
+            "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
+            "server": {
+                "usesGamertrackerID": false,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "population": {
+            "category": "Server",
+            "description": "Shows a graph of the population of a server over the last day, week or month.",
+            "syntax": [
+                "**``$rank <period> <server>``**",
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``",
+                "**Abbreviation:** ``$pop``"
+            ],
+            "examples": [
+                "``$population week mcttt``",
+                "``$pop mcttt"
+            ],
+            "notes": "You can ommit the period and just type the server, it will then choose week as the period.",
+            "server": {
+                "usesGamertrackerID": true,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "rank": {
+            "category": "Server",
+            "description": "Shows a graph of the server rank over the last day, week or month.",
+            "syntax": [
+                "**``$rank <period> <server>``**",
+                "**Periods:** ``d`` ``day``, ``w`` ``week`` and ``m`` ``month``"
+            ],
+            "examples": [
+                "``$rank month mcttt``",
+                "``$rank mcttt``"
+            ],
+            "notes": "You can ommit the period and just type the server, it will then choose month as the period.",
+            "server": {
+                "usesGamertrackerID": true,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "server": {
+            "category": "Server",
+            "description": "Shows current display name, status, ip and online player count/slots of a server.",
+            "syntax": [
+                "**``$<server>``**"
+            ],
+            "examples": [
+                "``$mcttt``",
+                "``$mc``"
+            ],
+            "server": {
+                "usesGamertrackerID": true,
+                "usesSmithtainmentStatusAPI": true
+            }
+        },
+        "stats": {
+            "category": "Player",
+            "description": "Shows the leaderboard rank, total score, time played and score/min of a player on a server.",
+            "syntax": [
+                "**``$stats <server> <player>``**"
+            ],
+            "examples": [
+                "``$stats mcttt Skeke``"
+            ],
+            "server": {
+                "usesGamertrackerID": false,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
+        "steaminfo": {
+            "category": "Other",
+            "description": "Shows some information from steam of a steam user.",
+            "syntax": [
+                "**``$steaminfo <input>``**",
+                "**Input:** SteamID (``STEAM_X_Y_Z``), SteamID64 (``765611XXXXXXXXXXX``) or profile's custom URL (steamcommunity.com/id/``skeke``/)",
+                "**Abbreviation:** ``$steam``"
+            ],
+            "examples": [
+                "``$steaminfo STEAM_1:0:70936906``",
+                "``$steam 76561198102139540``",
+                "``$steaminfo skeke``"
+            ]
+        }
+    }
+}
