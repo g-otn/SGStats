@@ -1,0 +1,13 @@
+doctype html
+html(lang="en")
+    head
+        title Invalid Server
+    body
+        h1 SGStats redirect
+        p= "There's no server that matches \"" + invalidServer + "\". Please choose one of the servers below to connect:"
+        ul
+            each val in servers
+                li
+                    a(href="steam://connect/" + val.ip)= val.name
+        h3
+            a(href=process.env.BASEURI) Changelog

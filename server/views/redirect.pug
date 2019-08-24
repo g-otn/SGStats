@@ -1,0 +1,11 @@
+doctype html
+html(lang="en")
+    head
+        title= "SGStats: Joining " + name
+        script.
+            window.location.href = "steam://connect/#{ip}"
+    body
+        h1 SGStats redirect
+        p= "You are now being redirected to join " + name + ". If you don't get redirected within the next few seconds, please click "
+            b
+                a(href="steam://connect/" + ip) here 

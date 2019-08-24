@@ -1,0 +1,114 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(to bottom right, black, #0B0B61);
+    padding-left: 150px;
+    padding-right: 100px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    color: grey;
+}
+
+div.log {
+    border: 1px solid green;
+    border-radius: 15px;
+    padding: 5px 0px 0px 15px;
+    margin-top: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+div.log:hover {
+    box-shadow: 0 0 10px white;
+    border: 1px solid cyan;
+    color: white;
+}
+
+div.major {
+    box-shadow: 0 0 5px white;
+    border: 1px solid gold;
+}
+
+div.minor {
+    box-shadow: 0 0 4px cyan;
+    border: 1px solid blue;
+}
+
+div.last {
+    box-shadow: 0 0 10px lime;
+}
+
+p {
+    line-height: 1.2;
+    font-family: Arial;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: none;
+    color: #99ccff;
+}
+
+p:hover {
+    color: white;
+}
+
+h1 {
+    text-align: center;
+    font-size: 30pt;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: lime;
+}
+
+.important {
+    color: #D358F7;
+    font-weight: bold;
+}
+
+p.title {
+    color: #CEECF5;
+    font-weight: bold;
+}
+
+img {
+    position: absolute;
+    border-radius: 50%;
+    width: 150px;
+    left: 0;
+    top: 0;
+    padding: 10px;
+}
+
+img:hover {
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@-moz-keyframes spin {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
