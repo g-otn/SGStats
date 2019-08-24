@@ -6,6 +6,3 @@ node_modules/
 
 # Forums repeated threads list
 bot/data/repeatedThreads.json
-
-# Changelog
-server/public/index.html
