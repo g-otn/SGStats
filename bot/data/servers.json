@@ -70,5 +70,10 @@
         "ip": "192.99.4.87:27200",
         "gamertrackerID": "6022841",
         "smithtainmentStatusAPIName": "vttt"
-    }
+    },
+  "murder": {
+    "name": "SG Horror Murder",
+    "ip": "185.249.196:27210",
+    "smithtainmentStatusAPIName": "md"
+}
 }
