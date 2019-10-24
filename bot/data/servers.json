@@ -61,13 +61,13 @@
     },
     "va": {
         "name": "True Vanilla TTT",
-        "ip": "192.99.4.87:27200",
+        "ip": "185.249.196.5:27015",
         "gamertrackerID": "6022841",
         "smithtainmentStatusAPIName": "vttt"
     },
     "vanilla": {
         "name": "True Vanilla TTT",
-        "ip": "192.99.4.87:27200",
+        "ip": "185.249.196.5:27015",
         "gamertrackerID": "6022841",
         "smithtainmentStatusAPIName": "vttt"
     }
