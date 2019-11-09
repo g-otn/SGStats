@@ -13,7 +13,7 @@ function getAvailableServers(command) {
     if (commandInfo.server.usesGamertrackerID)
         requiredResources.push('gamertrackerID')
     if (commandInfo.server.usesSmithtainmentStatusAPI)
-        requiredResources.push('smithtainmentStatusAPIName')
+        requiredResources.push('supportedBySmithtainmentAPI')
     // Add to availableServers only the servers who match all requiredResources
     Object.keys(servers).forEach(serverKey => {
         if (requiredResources.every(requiredResource => {
@@ -50,7 +50,7 @@ exports.sendHelpMenu = (msg, command) => {
         .setURL('https://sgstats.glitch.me/')
         .setColor('DARK_BLUE')
 
-        let description = 'Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command.\nCheck out the [changelog](https://sgstats.glitch.me/)!'
+        let description = 'Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command.\nCheck out the [changelog](https://sgstats.glitch.me/) and its [GitHub](https://github.com/g-otn/SGStats)!'
         commands.categories.forEach(category => {
             helpmsg.addField(category.name + ' commands', '```' + category.language + '\n' + Object.keys(commands.list).filter(commandKey => {
                 return commands.list[commandKey].category == category.name
