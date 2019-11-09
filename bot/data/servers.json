@@ -2,78 +2,65 @@
     "cl": {
         "name": "Classic PropHunt",
         "ip": "185.249.196.141:27515",
-        "gamertrackerID": "6055306",
-        "smithtainmentStatusAPIName": "aph"
+        "gamertrackerID": "6055306"
     },
     "classic": {
         "name": "Classic PropHunt",
         "ip": "185.249.196.141:27515",
-        "gamertrackerID": "6055306",
-        "smithtainmentStatusAPIName": "aph"
+        "gamertrackerID": "6055306"
     },
     "cs": {
         "name": "5v5 CSGO Competitive",
         "ip": "192.99.4.87:28791",
-        "gamertrackerID": "6003210",
-        "smithtainmentStatusAPIName": "csgo5v5"
+        "gamertrackerID": "6003210"
     },
     "csgo": {
         "name": "5v5 CSGO Competitive",
         "ip": "192.99.4.87:28791",
-        "gamertrackerID": "6003210",
-        "smithtainmentStatusAPIName": "csgo5v5"
+        "gamertrackerID": "6003210"
     },
     "dr": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
-        "gamertrackerID": "5493690",
-        "smithtainmentStatusAPIName": "deathrun"
+        "gamertrackerID": "5493690"
     },
     "deathrun": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
-        "gamertrackerID": "5493690",
-        "smithtainmentStatusAPIName": "deathrun"
+        "gamertrackerID": "5493690"
     },
     "mc": {
         "name": "Minecraft TTT",
         "ip": "192.223.31.40:27015",
-        "gamertrackerID": "5086005",
-        "smithtainmentStatusAPIName": "mcttt"
+        "gamertrackerID": "5086005"
     },
     "mcttt": {
         "name": "Minecraft TTT",
         "ip": "192.223.31.40:27015",
-        "gamertrackerID": "5086005",
-        "smithtainmentStatusAPIName": "mcttt"
+        "gamertrackerID": "5086005"
     },
     "ph": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
-        "gamertrackerID": "6022066",
-        "smithtainmentStatusAPIName": "prophunt"
+        "gamertrackerID": "6022066"
     },
     "prophunt": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
-        "gamertrackerID": "6022066",
-        "smithtainmentStatusAPIName": "prophunt"
+        "gamertrackerID": "6022066"
     },
     "va": {
         "name": "True Vanilla TTT",
         "ip": "185.249.196.5:27015",
-        "gamertrackerID": "6022841",
-        "smithtainmentStatusAPIName": "vttt"
+        "gamertrackerID": "6022841"
     },
     "vanilla": {
         "name": "True Vanilla TTT",
         "ip": "185.249.196.5:27015",
-        "gamertrackerID": "6022841",
-        "smithtainmentStatusAPIName": "vttt"
+        "gamertrackerID": "6022841"
     },
-  "murder": {
-    "name": "SG Horror Murder",
-    "ip": "185.249.196:27210",
-    "smithtainmentStatusAPIName": "md"
-}
+    "murder": {
+        "name": "SG Horror Murder",
+        "ip": "185.249.196:27210"
+    }
 }
