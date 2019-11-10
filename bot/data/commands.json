@@ -84,6 +84,22 @@
                 "usesSmithtainmentStatusAPI": false
             }
         },
+        "online2": {
+            "category": "Server",
+            "description": "Shows a list of the server's online players.",
+            "syntax": [
+                "**``$online2 <server>``**",
+                "**Abbreviation:** ``$on2``"
+            ],
+            "examples": [
+                "``$online2 mcttt``",
+                "``$on2 mc``"
+            ],
+            "server": {
+                "usesGamertrackerID": false,
+                "usesSmithtainmentStatusAPI": false
+            }
+        },
         "playerh": {
             "category": "Player",
             "description": "Shows a graph of the minutes played each day on a server over the last day, week or month.",

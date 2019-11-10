@@ -7,6 +7,7 @@ module.exports = {
     join: require('./join'),
     leaderboard: require('./leaderboard'),
     online: require('./online'),
+    online2: require('./online2'),
     server: require('./server'),
     player: require('./player'),
     server: require('./server'),

@@ -52,6 +52,10 @@ bot.on("message", (msg) => {
         case 'online':
             commands.online.sendOnline(msg, args[0])
             break
+        case 'on2':
+        case 'online2':
+            commands.online2.sendOnline(msg, args[0])
+            break
         case 'playerh':
             commands.help.sendHelpMenu(msg, 'playerh')
             break
