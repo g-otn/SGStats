@@ -33,7 +33,7 @@ exports.sendOnline = (msg, server) => {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Missing server')
-                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('online').join(', ') + '\nType ``' + process.env.PREFIX + 'help online`` for more information.')
+                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('online').join(', ') + '\nType ``' + process.env.PREFIX + 'help online2`` for more information.')
                 .setThumbnail(thumbs.giggle)
                 .setColor('RED')
         )
@@ -44,7 +44,7 @@ exports.sendOnline = (msg, server) => {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Invalid server')
-                .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('online').join(', ') + '\nType ``' + process.env.PREFIX + 'help online`` for more information.')
+                .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('online').join(', ') + '\nType ``' + process.env.PREFIX + 'help online2`` for more information.')
                 .setThumbnail(thumbs.confused)
                 .setColor('RED')
         )
