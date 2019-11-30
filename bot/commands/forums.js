@@ -25,7 +25,7 @@ async function checkSection(serverKey, section, checkRepeated, checkOld) {
     await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
         .then(html => {
             let $ = cheerio.load(html)
-            let threadHref = $('.forumdisplay_regular .threadbit_title div:nth-child(1) a[href^="showthread"]').attr('href')
+            let threadHref = $('.forumdisplay_regular div:nth-child(1) a[href^="showthread"]').attr('href')
             // TODO: Ignore Moved threads
             c.threadInfo = {
                 tid: threadHref ? threadHref.match(/\d+/)[0] : threadHref
