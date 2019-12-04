@@ -5,7 +5,7 @@ const servers = require('./data/servers.json')
 const thumbs = require('./data/thumbnails.json')
 
 bot.on("ready", () => {
-    console.log(bot.user.tag + " is online")
+    console.log(bot.user.tag + " is online with prefix '" + process.env.PREFIX + "'")
     bot.user.setPresence({ game: { name: process.env.PREFIX + 'help' } })
     setInterval(() => { commands.forums.checkForums(bot) }, 600000)
 })
