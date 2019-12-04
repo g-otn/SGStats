@@ -47,6 +47,18 @@
         "gamertrackerID": "5086005",
         "supportedBySmithtainmentAPI": true
     },
+    "mu": {
+        "name": "Horror Murder",
+        "ip": "185.249.196.95:27210",
+        "gamertrackerID": "6075516",
+        "supportedBySmithtainmentAPI": true
+    },
+    "murder": {
+        "name": "Horror Murder",
+        "ip": "185.249.196.95:27210",
+        "gamertrackerID": "6075516",
+        "supportedBySmithtainmentAPI": true
+    },
     "ph": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
@@ -70,9 +82,5 @@
         "ip": "185.249.196.5:27015",
         "gamertrackerID": "6022841",
         "supportedBySmithtainmentAPI": true
-    },
-    "murder": {
-        "name": "SG Horror Murder",
-        "ip": "185.249.196:27210"
     }
 }
