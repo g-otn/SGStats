@@ -33,13 +33,15 @@ PORT=                          # The server port (Ex: 80)
 PREFIX=                        # The prefix character for commands (Ex: !!)
 TOKEN=                         # The Discord bot app token
 STEAMWEBAPI_KEY=               # The Steam Web API key
+
+# Scripts
+GLITCH_NO_SLEEP=false          # true or false, toggles noSleep script for Glitch.com
+
+# Smithtaiment
 SMITHTAINMENT_API_KEY=         # The Smithtainment API v2 key
 DEBUG_CHANNEL=                 # The Discord channel to send startup and specific error messages
 FORUMS_CHECK_MESSAGE_CHANNEL=  # The Discord server channel to send the forums sections logs
 FORUMS_CHECK_LOGGING=          # true or false, toggles logging at bot/commands/forums.js
-
-# Scripts
-GLITCH_NO_SLEEP=               # true or false, toggles noSleep script for Glitch.com
 ```
 
 #### Running
