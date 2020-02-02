@@ -11,18 +11,6 @@
         "gamertrackerID": "6055306",
         "supportedBySmithtainmentAPI": true
     },
-    "cs": {
-        "name": "5v5 CSGO Competitive",
-        "ip": "192.99.4.87:28791",
-        "gamertrackerID": "6003210",
-        "supportedBySmithtainmentAPI": true
-    },
-    "csgo": {
-        "name": "5v5 CSGO Competitive",
-        "ip": "192.99.4.87:28791",
-        "gamertrackerID": "6003210",
-        "supportedBySmithtainmentAPI": true
-    },
     "dr": {
         "name": "Classic Deathrun",
         "ip": "70.42.74.160:27015",
