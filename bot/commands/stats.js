@@ -52,7 +52,7 @@ exports.sendPlayerStats = (msg, server, player) => {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Invalid server')
-                .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('stats').join(', ') + '\nType ``' + process.env.PREFIX + 'help online`` for more information.')
+                .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('stats').join(', ') + '\nType ``' + process.env.PREFIX + 'help stats`` for more information.')
                 .setThumbnail(thumbs.confused)
                 .setColor('RED')
         )
@@ -62,7 +62,7 @@ exports.sendPlayerStats = (msg, server, player) => {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Missing player')
-                .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
+                .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help stats`` for more information.')
                 .setThumbnail(thumbs.giggle)
                 .setColor('RED')
         )
