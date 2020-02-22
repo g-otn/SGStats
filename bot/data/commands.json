@@ -28,10 +28,7 @@
                 "``$join mc``",
                 "``$j mcttt``"
             ],
-            "server": {
-                "usesGamertrackerID": false,
-                "usesReebAPI": false
-            }
+            "requiredProperties": []
         },
         "leaderboard": {
             "category": "Player",
@@ -48,10 +45,9 @@
                 "``$lb mcttt Skeke``"
             ],
             "notes": "You can ommit the display value and just type the player name, it will then display the score.\nIt may take more time to generate the leaderboard depending of your rank.",
-            "server": {
-                "usesGamertrackerID": false,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker"
+            ]
         },
         "map": {
             "category": "Server",
@@ -63,10 +59,10 @@
             "examples": [
                 "``$map week mcttt``"
             ],
-            "server": {
-                "usesGamertrackerID": true,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "online": {
             "category": "Server",
@@ -79,10 +75,10 @@
                 "``$online mcttt``",
                 "``$on mc``"
             ],
-            "server": {
-                "usesGamertrackerID": false,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "online2": {
             "category": "Server",
@@ -95,10 +91,11 @@
                 "``$online2 mcttt``",
                 "``$on2 mc``"
             ],
-            "server": {
-                "usesGamertrackerID": false,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID",
+                "supportedBySmithtainmentAPI"
+            ]
         },
         "playerh": {
             "category": "Player",
@@ -112,10 +109,10 @@
                 "``$mch Skeke``"
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
-            "server": {
-                "usesGamertrackerID": false,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "players": {
             "category": "Player",
@@ -129,10 +126,10 @@
                 "``$mcs m Skeke``"
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
-            "server": {
-                "usesGamertrackerID": false,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "population": {
             "category": "Server",
@@ -147,10 +144,10 @@
                 "``$pop mcttt"
             ],
             "notes": "You can ommit the period and just type the server, it will then choose week as the period.",
-            "server": {
-                "usesGamertrackerID": true,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "rank": {
             "category": "Server",
@@ -164,10 +161,10 @@
                 "``$rank mcttt``"
             ],
             "notes": "You can ommit the period and just type the server, it will then choose month as the period.",
-            "server": {
-                "usesGamertrackerID": true,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "server": {
             "category": "Server",
@@ -179,10 +176,9 @@
                 "``$mcttt``",
                 "``$mc``"
             ],
-            "server": {
-                "usesGamertrackerID": true,
-                "usesSmithtainmentStatusAPI": true
-            }
+            "requiredProperties": [
+                "supportedBySmithtainmentAPI"
+            ]
         },
         "stats": {
             "category": "Player",
@@ -193,10 +189,10 @@
             "examples": [
                 "``$stats mcttt Skeke``"
             ],
-            "server": {
-                "usesGamertrackerID": false,
-                "usesSmithtainmentStatusAPI": false
-            }
+            "requiredProperties": [
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
         },
         "steaminfo": {
             "category": "Other",
@@ -210,7 +206,8 @@
                 "``$steaminfo STEAM_1:0:70936906``",
                 "``$steam 76561198102139540``",
                 "``$steaminfo skeke``"
-            ]
+            ],
+            "requiredProperties": []
         }
     }
 }

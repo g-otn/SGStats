@@ -23,7 +23,7 @@ bot.on("message", (msg) => {
 
     switch (cmd) {
         case 'forums':
-            if (msg.author.tag == 'Skeke#2155')
+            if (msg.author.id == '310491216393404416')
                 commands.forums.checkForums(bot, args[0], args[1])
             break
         case 'help':
@@ -83,7 +83,7 @@ bot.on("message", (msg) => {
 
             // playerh and players command
             let serverNameInCommand = cmd.substr(0, cmd.length - 1)
-            if (serverKeys.some(serverName => serverName == serverNameInCommand)) {
+            if (serverKeys.some(serverName => serverName == serverNameInCommand) && servers[serverNameInCommand].gamertrackerID) {
                 if (cmd[cmd.length - 1] == 'h')
                     commands.player.sendPlayerGraph(msg, cmd[cmd.length - 1], servers[serverNameInCommand], args[0], args.slice(1).join(' '))
                 else if (cmd[cmd.length - 1] == 's')

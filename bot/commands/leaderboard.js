@@ -67,14 +67,14 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Missing server')
-                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('online').join(', ') + '\nType ``' + process.env.PREFIX + 'help online`` for more information.')
+                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('leaderboard').join(', ') + '\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
                 .setThumbnail(thumbs.giggle)
                 .setColor('RED')
         )
         return
     }
     server = server.toLowerCase()
-    if (!servers[server] || !servers[server].gamertrackerID) {
+    if (!servers[server] || getAvailableServers('leaderboard').includes('``' + server + '``')) {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Invalid server')
