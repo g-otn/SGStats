@@ -188,5 +188,136 @@
           
           
         ]
+    },
+    {
+        "serverKey": "trueprophunt",
+        "rolesToPing": [
+            "<@&680210624617250830>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "390",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "391",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "392",
+                "color": "RED"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "393",
+                "color": "ORANGE"
+            }
+        ]
+    },
+    {
+        "serverKey": "euvanilla",
+        "rolesToPing": [
+            "<@&677695960457150464>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "385",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "386",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "387",
+                "color": "RED"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "388",
+                "color": "ORANGE"
+            }
+        ]
+    },
+    {
+        "serverKey": "euvanillattt",
+        "rolesToPing": [
+            "<@&677695966203084800>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "380",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "381",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "382",
+                "color": "RED"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "383",
+                "color": "ORANGE"
+            }
+        ]
+    },
+    {
+        "serverKey": "scpsl",
+        "rolesToPing": [
+            "<@&650632163313844225>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "353",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "327",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "93",
+                "color": "RED"
+            }
+        ]
+    },
+    {
+        "serverKey": "minecraftsurv",
+        "rolesToPing": [
+            "<@&516800697157550081>",
+            "<@&516800012366118923>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "226",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "321",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "229",
+                "color": "RED"
+            }
+        ]
     }
 ]
