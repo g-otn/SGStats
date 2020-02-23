@@ -65,6 +65,10 @@ bot.on("message", (msg) => {
         case 'server':
             commands.help.sendHelpMenu(msg, 'server')
             break
+        case "scp":
+        case "scpsl":
+            commands.kigenSCPSL.sendSCPSLServerInfo(msg, servers['scp'].ip)
+            break
         case 'stats':
             commands.stats.sendPlayerStats(msg, args[0], args.slice(1).join(' '))
             break

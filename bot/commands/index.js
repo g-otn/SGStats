@@ -8,9 +8,9 @@ module.exports = {
     leaderboard: require('./leaderboard'),
     online: require('./online'),
     online2: require('./online2'),
-    server: require('./server'),
     player: require('./player'),
     server: require('./server'),
+    kigenSCPSL: require('./kigen_scpsl'),
     stats: require('./stats'),
     steaminfo: require('./steaminfo')
 }

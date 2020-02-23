@@ -101,13 +101,13 @@
         "name": "SCP:SL Vanilla",
         "ip": "51.79.18.127:7862",
         "supportedByGameTracker": false,
-        "supportedBySmithtainmentAPI": false
+        "supportedBySmithtainmentAPI": true
     },
     "scpsl": {
         "name": "SCP:SL Vanilla",
         "ip": "51.79.18.127:7862",
         "supportedByGameTracker": false,
-        "supportedBySmithtainmentAPI": false
+        "supportedBySmithtainmentAPI": true
     },
     "va": {
         "name": "True Vanilla TTT",
