@@ -109,6 +109,20 @@
         "supportedByGameTracker": false,
         "supportedBySmithtainmentAPI": true
     },
+    "trueph": {
+        "name": "True PropHunt",
+        "ip": "142.44.142.134:27230",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6093321",
+        "supportedBySmithtainmentAPI": true
+    },
+    "trueprophunt": {
+        "name": "True PropHunt",
+        "ip": "142.44.142.134:27230",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6093321",
+        "supportedBySmithtainmentAPI": true
+    },
     "va": {
         "name": "True Vanilla TTT",
         "ip": "185.249.196.5:27015",
