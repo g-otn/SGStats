@@ -62,7 +62,7 @@
         "gametrackerID": "6068612",
         "supportedBySmithtainmentAPI": false
     },
-    "minecraftsurv": {
+    "survival": {
         "name": "Minecraft Survival",
         "ip": "192.99.221.49:2090",
         "supportedByGameTracker": true,
