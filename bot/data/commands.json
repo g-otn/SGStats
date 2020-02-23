@@ -28,7 +28,9 @@
                 "``$join mc``",
                 "``$j mcttt``"
             ],
-            "requiredProperties": []
+            "requiredProperties": [
+                "ip"
+            ]
         },
         "leaderboard": {
             "category": "Player",
@@ -46,6 +48,7 @@
             ],
             "notes": "You can ommit the display value and just type the player name, it will then display the score.\nIt may take more time to generate the leaderboard depending of your rank.",
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker"
             ]
         },
@@ -60,6 +63,7 @@
                 "``$map week mcttt``"
             ],
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
@@ -76,6 +80,7 @@
                 "``$on mc``"
             ],
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
@@ -92,6 +97,7 @@
                 "``$on2 mc``"
             ],
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID",
                 "supportedBySmithtainmentAPI"
@@ -110,6 +116,7 @@
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
@@ -127,6 +134,7 @@
             ],
             "notes": "You can ommit the period and just type the player name, it will then choose week as the period.",
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
@@ -145,6 +153,7 @@
             ],
             "notes": "You can ommit the period and just type the server, it will then choose week as the period.",
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
@@ -162,6 +171,7 @@
             ],
             "notes": "You can ommit the period and just type the server, it will then choose month as the period.",
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
@@ -190,6 +200,7 @@
                 "``$stats mcttt Skeke``"
             ],
             "requiredProperties": [
+                "ip",
                 "supportedByGameTracker",
                 "gametrackerID"
             ]
