@@ -27,6 +27,34 @@
         "gametrackerID": "5493690",
         "supportedBySmithtainmentAPI": false
     },
+    "euva": {
+        "name": "EU Vanilla TTT",
+        "ip": "45.85.194.10:2006",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6091934",
+        "supportedBySmithtainmentAPI": true
+    },
+    "euvanilla": {
+        "name": "EU Vanilla TTT",
+        "ip": "45.85.194.10:2006",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6091934",
+        "supportedBySmithtainmentAPI": true
+    },
+    "euph": {
+        "name": "EU Vanilla Prophunt",
+        "ip": "45.85.194.10:2047",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6091935",
+        "supportedBySmithtainmentAPI": true
+    },
+    "euprophunt": {
+        "name": "EU Vanilla Prophunt",
+        "ip": "45.85.194.10:2047",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6091935",
+        "supportedBySmithtainmentAPI": true
+    },
     "mc": {
         "name": "Minecraft TTT",
         "ip": "192.223.31.40:27015",
@@ -68,6 +96,18 @@
         "supportedByGameTracker": true,
         "gametrackerID": "6022066",
         "supportedBySmithtainmentAPI": true
+    },
+    "scp": {
+        "name": "SCP:SL Vanilla",
+        "ip": "51.79.18.127:7862",
+        "supportedByGameTracker": false,
+        "supportedBySmithtainmentAPI": false
+    },
+    "scpsl": {
+        "name": "SCP:SL Vanilla",
+        "ip": "51.79.18.127:7862",
+        "supportedByGameTracker": false,
+        "supportedBySmithtainmentAPI": false
     },
     "va": {
         "name": "True Vanilla TTT",
