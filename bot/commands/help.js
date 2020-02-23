@@ -6,7 +6,7 @@ const servers = require('../data/servers.json')
 const thumbs = require('../data/thumbnails.json')
 const onlineSince = new Date()
 
-function getAvailableServers(commandName) {
+function getAvailableServers(commandName, serverNameWrapper = '`') {
     let command = commands.list[commandName]  
     let availableServers = []
     let requiredResources = command.requiredProperties
@@ -16,7 +16,7 @@ function getAvailableServers(commandName) {
         if (requiredResources.every(requiredResource => {
                 return servers[serverKey][requiredResource]
             }))
-            availableServers.push('``' + serverKey + '``')
+            availableServers.push(serverNameWrapper ? serverNameWrapper + serverKey + serverNameWrapper : serverKey)
     })
     return availableServers
 }
@@ -47,7 +47,7 @@ exports.sendHelpMenu = (msg, commandName) => {
         .setURL('https://sgstats.glitch.me/')
         .setColor('DARK_BLUE')
 
-        let description = 'Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command.\nCheck out the [changelog](https://sgstats.glitch.me/) and its [GitHub](https://github.com/g-otn/SGStats)!'
+        let description = 'Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command.\nCheck out the [changelog](https://sgstats.glitch.me/) and its [source code](https://github.com/g-otn/SGStats)!'
         commands.categories.forEach(category => {
             helpmsg.addField(category.name + ' commands', '```' + category.language + '\n' + Object.keys(commands.list).filter(commandKey => {
                 return commands.list[commandKey].category == category.name

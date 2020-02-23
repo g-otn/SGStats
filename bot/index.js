@@ -76,14 +76,14 @@ bot.on("message", (msg) => {
             let serverKeys = Object.keys(servers)
 
             // server command
-            if (serverKeys.some(serverName => serverName == cmd) && servers[cmd].supportedBySmithtainmentAPI) {
+            if (commands.help.getAvailableServers('server', null).includes(cmd)) {
                 commands.server.sendServerInfo(msg, cmd)
                 break
             }
 
             // playerh and players command
             let serverNameInCommand = cmd.substr(0, cmd.length - 1)
-            if (serverKeys.some(serverName => serverName == serverNameInCommand) && servers[serverNameInCommand].gamertrackerID) {
+            if (commands.help.getAvailableServers('playerh', null).includes(serverNameInCommand)) {
                 if (cmd[cmd.length - 1] == 'h')
                     commands.player.sendPlayerGraph(msg, cmd[cmd.length - 1], servers[serverNameInCommand], args[0], args.slice(1).join(' '))
                 else if (cmd[cmd.length - 1] == 's')
