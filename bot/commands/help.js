@@ -6,7 +6,7 @@ const servers = require('../data/servers.json')
 const thumbs = require('../data/thumbnails.json')
 const onlineSince = new Date()
 
-function getAvailableServers(commandName, serverNameWrapper = '`') {
+function getAvailableServers(commandName, serverNameWrapper = '``') {
     let command = commands.list[commandName]  
     let availableServers = []
     let requiredResources = command.requiredProperties

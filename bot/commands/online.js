@@ -48,7 +48,7 @@ exports.sendOnline = (msg, server) => {
         return
     }
     server = server.toLowerCase() // Removes case sensitivity
-    if (!getAvailableServers('online').some(avaliableServer => { return avaliableServer == '``' + server + '``' })) {
+    if (!getAvailableServers('online', null).includes(server)) {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Invalid server')

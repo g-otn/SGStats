@@ -74,7 +74,7 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
         return
     }
     server = server.toLowerCase()
-    if (!servers[server] || getAvailableServers('leaderboard').includes('``' + server + '``')) {
+    if (!servers[server] || !getAvailableServers('leaderboard', null).includes(server)) {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Invalid server')

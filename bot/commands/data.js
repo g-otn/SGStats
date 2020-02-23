@@ -7,11 +7,11 @@ const getAvailableServers = require('./help').getAvailableServers
 function getGraphURL(cmd, period, server) {
     switch (cmd) {
         case 'map':
-            return `https://cache.gametracker.com/images/graphs/server_maps.php?GSID=${servers[server].gamertrackerID}&start=-1${period}`
+            return `https://cache.gametracker.com/images/graphs/server_maps.php?GSID=${servers[server].gametrackerID}&start=-1${period}`
         case 'rank':
-            return `https://cache.gametracker.com/images/graphs/server_rank.php?GSID=${servers[server].gamertrackerID}&start=-1${period}`
+            return `https://cache.gametracker.com/images/graphs/server_rank.php?GSID=${servers[server].gametrackerID}&start=-1${period}`
         case 'population':
-            return `https://cache.gametracker.com/images/graphs/server_players.php?GSID=${servers[server].gamertrackerID}&start=-1${period}`
+            return `https://cache.gametracker.com/images/graphs/server_players.php?GSID=${servers[server].gametrackerID}&start=-1${period}`
     }
 }
 
@@ -30,7 +30,7 @@ exports.sendData = (msg, cmd, period, server) => {
     }
     period = period.toLowerCase()
     if (!server) {
-        // server is undefined, so period must contain a server name and if it contains, the server must support/have gamertrackerID
+        // server is undefined, so period must contain a server name and if it contains, the server must support/have gametrackerID
         if (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/)) {
             // Correct period but missing server name
             msg.channel.send(
@@ -42,10 +42,7 @@ exports.sendData = (msg, cmd, period, server) => {
             )
             return
         }
-
-        if (!Object.keys(servers).some(serverName => {
-            return serverName == period
-        }) || !servers[period].gamertrackerID) {
+        if (!getAvailableServers('map', null).includes(period)) {
             // Invalid server name inside period variable
             msg.channel.send(
                 new Discord.RichEmbed()
@@ -80,9 +77,7 @@ exports.sendData = (msg, cmd, period, server) => {
             )
             return
         }
-        if (!Object.keys(servers).some(serverName => {
-            return serverName == server
-        }) || !servers[server].gamertrackerID) {
+        if (!getAvailableServers('map', null).includes(server)) {
             // Invalid server name inside server variable
             msg.channel.send(
                 new Discord.RichEmbed()

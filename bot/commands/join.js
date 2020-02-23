@@ -14,7 +14,7 @@ exports.sendJoinLink = (msg, server) => {
         )
         return
     }
-    if (!servers[server]) {
+    if (!servers[server] || !getAvailableServers('join', null).includes(server)) {
         msg.channel.send(
             new Discord.RichEmbed()
                 .setTitle('Invalid server')
