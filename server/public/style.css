@@ -33,7 +33,7 @@ div.minor {
     border: 1px solid blue;
 }
 
-div.last {
+div.logs div:first-child {
     box-shadow: 0 0 10px lime;
 }
 
