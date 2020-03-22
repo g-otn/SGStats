@@ -297,7 +297,7 @@
         ]
     },
     {
-        "serverKey": "minecraftsurv",
+        "serverKey": "minecraft",
         "rolesToPing": [
             "<@&516800697157550081>",
             "<@&516800012366118923>"
