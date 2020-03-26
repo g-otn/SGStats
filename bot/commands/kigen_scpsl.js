@@ -34,21 +34,31 @@ exports.sendSCPSLServerInfo = (msg, ip) => {
     const server = 'scp'
 
     getSCPSLServerInfo(ip)
-        .then(scpServerInfo =>
-            msg.channel.send(
-                new Discord.RichEmbed()
-                    .setTitle(servers[server].name + ' status')
-                    .setURL(`${process.env.BASEURI}/redirect/${server}`)
-                    .setDescription(
-                        `**Name:** \`${scpServerInfo.titleText}\``
-                        + `\n**IP:** ${servers[server].ip}`
-                        + `\n**[Info](${scpServerInfo.infoPBUrl})**`
-                        + `\n**Players:** ${scpServerInfo.players} **[Join now!](${process.env.BASEURI}/redirect/${server})**`
+        .then(scpServerInfo => {
+            if (scpServerInfo) {
+                msg.channel.send(
+                    new Discord.RichEmbed()
+                        .setTitle(servers[server].name + ' status')
+                        .setURL(`${process.env.BASEURI}/redirect/${server}`)
+                        .setDescription(
+                            `**Name:** \`${scpServerInfo.titleText}\``
+                            + `\n**IP:** ${servers[server].ip}`
+                            + `\n**[Info](${scpServerInfo.infoPBUrl})**`
+                            + `\n**Players:** ${scpServerInfo.players} **[Join now!](${process.env.BASEURI}/redirect/${server})**`
 
-                    )
-                    .setColor('GOLD')
-            )
-        )
+                        )
+                        .setColor('GOLD')
+                )
+            } else {
+                msg.channel.send(
+                    new Discord.RichEmbed()
+                        .setTitle('Error')
+                        .setDescription('Server not found...')
+                        .setThumbnail(thumbs.sad)
+                        .setColor('DARK_RED')
+                )
+            }
+        })
         .catch(err =>
             msg.channel.send(
                 new Discord.RichEmbed()
