@@ -10,7 +10,7 @@ Some of the data gathered for the network members includes:
 - [gametracker.com](https://www.gametracker.com) data and generated images
 - Steam user basic information through [Steam Web API](https://steamcommunity.com/dev)
 - [Smithtainment Forums](https://forums.smithtainment.com/) specific posts
-- Smithtainment server info through [Smithtainment Status API v2](https://status.smithtainment.com/api/)
+- Smithtainment server info through [Smithtainment Status API v2](https://dev.smithtainment.com/api/)
 - SCP:SL server info through Kigen's [SCP:SL Server Browser](https://kigen.co/scpsl/browser.php).
 
 Use the ``help`` command to see how this data is displayed. See [Screenshots](#Screenshots).

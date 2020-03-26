@@ -9,7 +9,7 @@ async function getOnlinePlayers(serverIP) {
     let onlinePlayers = []
 
     await rp({
-        uri: 'https://status.smithtainment.com/api/json.php',
+        uri: 'https://dev.smithtainment.com/api/json.php',
         qs: {
             type: 'players',
             ip: serverIP,

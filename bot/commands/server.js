@@ -9,7 +9,7 @@ async function getServerInfo(server) {
     let getServerInfo
 
     await rp({
-        uri: 'https://status.smithtainment.com/api/json.php',
+        uri: 'https://dev.smithtainment.com/api/json.php',
         qs: {
             type: 'info',
             ip: server.ip,
