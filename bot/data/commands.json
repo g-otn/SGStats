@@ -87,7 +87,7 @@
         },
         "online2": {
             "category": "Server",
-            "description": "Shows a list of the server's online players. The list is more up to date than the online command, and it does not show the activity graph.",
+            "description": "Shows a list of the server's online players. The player/hour playing list is practically real time, compared to the 3-5 minutes old online command. It also does not show the activity graph.",
             "syntax": [
                 "**``$online2 <server>``**",
                 "**Abbreviation:** ``$on2``"
@@ -178,7 +178,7 @@
         },
         "server": {
             "category": "Server",
-            "description": "Shows current display name, status, ip and online player count/slots of a server.",
+            "description": "Shows current display name, status, ip and online player count/slots of a server. The data is practically realtime.",
             "syntax": [
                 "**``$<server>``**"
             ],
