@@ -87,7 +87,7 @@
         },
         "online2": {
             "category": "Server",
-            "description": "Shows a list of the server's online players.",
+            "description": "Shows a list of the server's online players. The list is more up to date than the online command, and it does not show the activity graph.",
             "syntax": [
                 "**``$online2 <server>``**",
                 "**Abbreviation:** ``$on2``"
