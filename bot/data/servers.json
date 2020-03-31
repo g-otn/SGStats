@@ -1,4 +1,18 @@
 {
+    "attt": {
+        "name": "Anarchy TTT",
+        "ip": "185.249.196.5:27025",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6106406",
+        "supportedBySmithtainmentAPI": true
+    },
+    "anarchy": {
+        "name": "Anarchy TTT",
+        "ip": "185.249.196.5:27025",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6106406",
+        "supportedBySmithtainmentAPI": true
+    },
     "cl": {
         "name": "Classic PropHunt",
         "ip": "185.249.196.141:27515",
