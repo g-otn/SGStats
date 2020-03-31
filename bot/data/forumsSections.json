@@ -274,29 +274,6 @@
         ]
     },
     {
-        "serverKey": "scpsl",
-        "rolesToPing": [
-            "<@&650632163313844225>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "353",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "327",
-                "color": "AQUA"
-            },
-            {
-                "name": "Ban Appeal",
-                "fid": "93",
-                "color": "RED"
-            }
-        ]
-    },
-    {
         "serverKey": "minecraft",
         "rolesToPing": [
             "<@&516800697157550081>",
