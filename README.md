@@ -105,6 +105,9 @@ Other commands
         <img width="300" src="https://user-images.githubusercontent.com/44736064/68536784-25c56700-0337-11ea-8dda-f19727cb4ed5.png">
     <p>
 </details>
+
+## Changelog
+The changelog page is [served by the bot](https://sgstats.glitch.me/) and can be found at [`server/public/index.html`](server/public/index.html).
   
 ## Acknowledgments
 Thank you Aryan#6666 for helping me get started on Discord bot development.
