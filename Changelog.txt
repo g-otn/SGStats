@@ -2,6 +2,20 @@ SmithtainmentStats bot made by Skeke#2155
 =========================================================
 Changelog
 =========================================================
+v1.2.0 - 2018Jan18
+ + Added a command that show a player's playtime for a
+server.
+Syntax: playerhours <server> <player name>
+Example: playerhours modded Skeke
+
+----------------------------------------------------------
+v1.1.1 - 2018Jan17
+ * Fixed a error in which names with spaces in the hours
+graph command would break links when sent to discord.
+ * Fixed a error in which the graphs sent in commands 
+were 1 or 2 days off, because of a URL php input. 
+
+----------------------------------------------------------
 v1.1.0 - 2018Jan16
  + Added command that shows which players are online in
 a server and the server population for the last 24h.
@@ -11,6 +25,7 @@ Example: online anime
 day, week or month of a server. Default is day.
 Syntax: population <server> <graphtype (optional)>
 Example: population modded, population vanilla month
+
 ----------------------------------------------------------
 v1.0.0 - 2018Jan11
  + Added command that shows playtime graphs of players 

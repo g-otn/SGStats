@@ -1,6 +1,6 @@
 {
   "name": "SmithtainmentStats",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "HTML Scrapper made for the Smithtainment discord.",
   "main": "bot.js",
   "dependencies": {

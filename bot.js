@@ -56,8 +56,13 @@ bot.on("message", (msg) => {
     //args = ['br, '123']
 
 
-
-
+	/*Everytime you click to show the graph, a new number is generated, but the scraper can't click, 
+	so this number is never scraped and all the graph commands may be sent with delayed hours/days.
+	This is an attempt to make the URL 'request' parameter work by generating a random number with the
+	same number of digits that the original has. */
+	//To deactivate this system hide the first line (the math line) and remove the // from the second line (the "")
+	var requestnumber = Math.floor(Math.random() * 9999999999999990);
+	//var requestnumber = "";
 
 
     //Variables and functions to scrap Gamertracker base64 username
@@ -66,7 +71,7 @@ bot.on("message", (msg) => {
     var rawlink, b64user, GTid, graphtype;
     var scrapertarget, url, serverinfo, scanned;
     /*idk what this is but if I don't do this gamertracker does not let 
-    me connect to the website (HTTP code: 403 (forbidden))*/
+    me connect to the website (HTTP code 403 (forbidden))*/
     var options = { 
         headers: {'user-agent': 'node.js'}
       }
@@ -93,7 +98,7 @@ bot.on("message", (msg) => {
             request(scrapertarget, options, function (error, response, html) {
             	console.log('Scraper started');
             	if (!error && response.statusCode == 200) {
-                	console.log('Website access successful. HTTP Code: ' + response.statusCode);
+                	console.log('Website access successful. HTTP Code ' + response.statusCode);
                 	//console.log(html); Shows the entire page html, just to see if it's connected
                 	var $ = cheerio.load(html);
                 	rawlink = $('img#graph_player_time').attr('src'); //What we want (the link to the graph)
@@ -102,8 +107,8 @@ bot.on("message", (msg) => {
                 	extract_nameb64(server_address);
 
             	} else { //If it can't access
-                	msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.");
-                	console.log('Website access error. HTTP Code: ' + response.statusCode);
+                	msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode);
+                	console.log('Website access error. HTTP Code ' + response.statusCode);
                 	console.log('!! Image not sent because of website error !!');
             		console.log('----------\n');
             	}
@@ -113,19 +118,20 @@ bot.on("message", (msg) => {
     //function to separate the scraped raw link and get the base64 username
     function extract_nameb64(server_address) {
     	if (rawlink !== undefined) {
-    		rawlink = rawlink.trim().split('nameb64=').slice(1,2);
-        	rawlink = rawlink.join('');
+    		rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
         	b64user = rawlink.trim().split('&host=').slice(0,1);
         	console.log('Base64 Username: ' + b64user);
+        	//Fix that sends the correct 'request' image (not working because the loaded html doesn't have this)
+        	/*rawlink = rawlink.trim().split('&request=').slice(1,2).join();
+        	console.log('GT Request number: ' + rawlink);*/
         	
-        	sendimage(server_address);
+        	sendimage(server_address, rawlink);
 
     	} else {
-    		msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.");
+    		msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP code " + response.statusCode);
     		console.log('!! Image not sent because of player name !!');
     		console.log('----------\n');
     	}
-
     }
     //function that selects the type of graph
     function graphtypeselector() {
@@ -151,8 +157,14 @@ bot.on("message", (msg) => {
     function sendimage(ip) {
     	console.log('errorcheck: ' + errorcheck);
     	console.log('Graph type: ' + graphtype);
-		var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + ip + '&start=-' + graphtype + "&request=0";
+    	var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + ip + '&start=-' + graphtype + "&request=0" + requestnumber;
     	console.log('Image to send: ' + finalimage);
+    	//Fix to links that are broken when sent to discord if the player has space in its name
+    	scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
+    	scrapertarget = scrapertarget.split("/" + ip + "/").slice(0,1).join();
+    	scrapertarget = scrapertarget.split(" ").join("%20");
+		scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + ip + "/";
+		//Sends the message
     	msg.channel.send({embed: {
 		  	"description": "Showing [" + args + "](" + scrapertarget + ")'s playtime:",
             "color": 0xFFBF52,
@@ -253,7 +265,8 @@ bot.on("message", (msg) => {
                     });
                 } else {
                     msg.channel.send('The website could not find the user.');
-                    console.log('----------\n');
+					console.log('!! User not found !!');
+					console.log('----------\n');
                 }
             } else {
                 console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
@@ -264,214 +277,349 @@ bot.on("message", (msg) => {
     }
 
 
-
-    function onlineplayers(server) {
-        var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, finaltable, serverid;
-        errorcheck2 = false;
-        switch (server) {
-            case 'anime':
-                server = anime;
-                serverid = animeid;
-                break;
-            case 'modded':
-                server = modded;
-                serverid = moddedid;
-                break;
-            case 'roleplay':
-                server = roleplay;
-                serverid = roleplayid;
-                break;
-            case 'vanilla':
-                server = vanilla;
-                serverid = vanillaid;
-                break;
-            default:
-                errorcheck2 = true;
-        }        
-        console.log('errorcheck2: ' + errorcheck2);
-        if (errorcheck2 !== true) {
-            console.log('Selected server:' + server);
-            gtserverlink = 'https://www.gametracker.com/server_info/' + server;
-            console.log('URL to scrap: ' + gtserverlink);
-            request(gtserverlink, options, function(error, response, html) {
-                if (!error && response.statusCode == 200) {
-                    console.log('Website access successful. HTTP Code: ' + response.statusCode);
-                    var $ = cheerio.load(html);
-                    var scanned = $('#last_scanned').text();
-                    scanned = scanned.trim();
-                    var finder1 = $('div.blocknewhdr').length;
-                    console.log('finder1 length: ' + finder1);
-                    var i;
-                    for (i = 0; i <= finder1; i++) {
-                        tablecount = $('div.blocknewhdr').eq(i).text();
-                        tablecount = tablecount.trim();
-                        if (tablecount == "ONLINE PLAYERS") { break;}
-                    }
-                    console.log("Found 'ONLINE PLAYERS' text at: " + i);
-                    tablecount = $('div.blocknewhdr').eq(i).next().next().children().children().length;
-                    console.log('number of <tr> found: ' + tablecount);
-                    noplayercheck = $('div.blocknewhdr').eq(i).next().next().children().children().first().text();
-                    noplayercheck = noplayercheck.trim();
-                    if (noplayercheck == 'No players Online') {
-                        noplayercheck = true;
-                        console.log('noplayercheck: ' + noplayercheck);
-                        msg.channel.send('There are no players online.');
-                        console.log('----------\n');
-                    } else {
-                        noplayercheck = false;
-                        console.log('noplayercheck: ' + noplayercheck);
-                        tablecount = tablecount - 1;
-                        console.log('Total online players: ' + tablecount);
-                        //Next two lines transform the variables into arrays so they can store the incoming data
-                        playerlist = [];
-                        timelist = [];
-                        var i2;
-                        for (i2 = 0; i2 <= tablecount; i2++) {
-                            var finder2 = i2 + 1;
-                            var finder3 = i2; //This
-                            if (finder2 == tablecount + 1) { break;}
-                            scrapedplayer = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().children('a').text();
-                            scrapedplayer = scrapedplayer.trim() + '';
-                            console.log(scrapedplayer);
-                            scrapedtime = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().eq(3).text();
-                            scrapedtime = scrapedtime.trim();
-                            if (scrapedplayer !== '') { 
-                                playerlist[finder3] = scrapedplayer;
-                                timelist[finder3] = scrapedtime;
-                                timelist[finder3] = timelist[finder3].split(':')
-                                console.log('timelist[finder3] length:' + timelist[finder3].length);
-                                if (timelist[finder3].length == 3) { timelist[finder3] = timelist[finder3].slice(0,2).join('h') + 'min';}
-                                else { timelist[finder3] = timelist[finder3].slice(0,1).join() + 'min';}
-                                console.log('Player #' + finder2 + ': ' + scrapedplayer + '\nPlaytime: ' + scrapedtime);
-                            } else { 
-                                finder3--;
-                                console.log('Player #' + finder2 + ' in blank, ignored.');
-                            }
-                        }
-                        console.log('Playerlist: ' + playerlist);
-                        console.log('Timelist:' + timelist);
-                        var i3;
-                        finaltable = '';
-                        for (i3 = 0; i3 <= playerlist.length - 1; i3++) {
-                            if (timelist[i3] && playerlist[i3] !== undefined) { //This removes those ghost players that gametracker creates for some reason
-                                finaltable = finaltable + timelist[i3] + ' - **' + playerlist[i3] + '**\n';
-                            }
-                        }
-                        console.log(finaltable);
-                        var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + 'start=-1d';
-                        msg.channel.send({embed: {
-                            "description": '__*Time played - Name*__ \n' + finaltable + '\nServer population throughout the day:',
-                            "color": 0xFFBF52,
-                            "footer": {
-                                "text": scanned + " via GT"
-                            },
-                            "image": {
-                                "url": populationgraph
-                            }
-                        }});
-                        console.log('----------\n');
-                    }
-                }
-            });
-        } else {
-            msg.channel.send("'" + server + "' is not a known server. please use anime, modded, roleplay or vanilla.");
-            console.log('!! Info not sent because of wrong server name !!');
-            console.log('----------\n');
-        }
-    }
-
-
-
-function populationgraph(server, graphtype) {
-    var serverid;
-    var errorcheck = false;
-    console.log('Server: ' + server);
-    switch (server) {
-        case 'anime':
-            server = anime;
-            serverid = animeid;
-            break;
-        case 'modded':
-            server = modded;
-            serverid = moddedid;
-            break;
-        case 'roleplay':
-            server = roleplay;
-            serverid = roleplayid;
-            break;
-        case 'vanilla':
-            server = vanilla;
-            serverid = vanillaid;
-            break;
-        default:
-            errorcheck = true;
-    }
-    console.log('errorcheck #1: ' + errorcheck);
-    if (errorcheck !== true) {
-        switch (graphtype) {
-            case 'day':
-                graphtype = '1d';
-                break;
-            case 'week':
-                graphtype = '1w';
-                break;
-            case 'month':
-                graphtype = '1m';
-                break;
-            case undefined:
-                graphtype = '1d';
-                break;
-            default:
-                errorcheck = true;
-        }
-        console.log('Graphtype: ' + graphtype)
-        console.log('errorcheck #2: ' + errorcheck);
-        if (errorcheck !== true) {
-            var serverlink = "https://www.gametracker.com/server_info/" + server;
-            console.log('URL to scrap: ' + serverlink);
-            request(serverlink, options, function(error, response, html) {
-                if (!error && response.statusCode == 200) {
-                    console.log('Website access successful. HTTP Code: ' + response.statusCode);
-                    var $ = cheerio.load(html);
-                    var scanned = $('#last_scanned').text();
-                    scanned = scanned.trim();
-                } else {
-                    console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
-                    console.log('!! Graph not sent because of website error !!');
-                    console.log('----------\n');
-                }
-                var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + '&start=-' + graphtype + '&request=0';
-                console.log('graph link: ' + populationgraph);
-                msg.channel.send({embed: {
-                    "description": 'Showing [server](' + serverlink + ') population:',
-                    "color": 0xFFBF52,
-                    "footer": {
-                        "text": scanned + " via GT"
-                    },
-                    "image": {
-                        "url": populationgraph
-                    }
-                }});
-                console.log('----------\n');
-            });
-        } else {
-            msg.channel.send("'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.");
-            console.log('!! Info not sent because of wrong server name !!');
-            console.log('----------\n');
-        }
-    } else {
-        msg.channel.send("'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
-        console.log('!! Info not sent because of wrong server name !!');
-        console.log('----------\n');
-    }
-}
+	//Function to check online players and population troughtout the day
+	    function onlineplayers(server) {
+	        var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, finaltable, serverid;
+	        errorcheck2 = false;
+	        switch (server) {
+	            case 'anime':
+	                server = anime;
+	                serverid = animeid;
+	                break;
+	            case 'modded':
+	                server = modded;
+	                serverid = moddedid;
+	                break;
+	            case 'roleplay':
+	                server = roleplay;
+	                serverid = roleplayid;
+	                break;
+	            case 'vanilla':
+	                server = vanilla;
+	                serverid = vanillaid;
+					break;
+	            default:
+	                errorcheck2 = true;
+	        }        
+	        console.log('errorcheck2: ' + errorcheck2);
+	        if (errorcheck2 !== true) {
+	            console.log('Selected server:' + server);
+	            gtserverlink = 'https://www.gametracker.com/server_info/' + server;
+	            console.log('URL to scrap: ' + gtserverlink);
+	            request(gtserverlink, options, function(error, response, html) {
+	                if (!error && response.statusCode == 200) {
+	                    console.log('Website access successful. HTTP Code: ' + response.statusCode);
+	                    var $ = cheerio.load(html);
+	                    var scanned = $('#last_scanned').text();
+	                    scanned = scanned.trim();
+	                    var finder1 = $('div.blocknewhdr').length;
+	                    console.log('finder1 length: ' + finder1);
+	                    var i;
+	                    for (i = 0; i <= finder1; i++) {
+	                        tablecount = $('div.blocknewhdr').eq(i).text();
+	                        tablecount = tablecount.trim();
+	                        if (tablecount == "ONLINE PLAYERS") { break;}
+	                    }
+	                    console.log("Found 'ONLINE PLAYERS' text at: " + i);
+	                    tablecount = $('div.blocknewhdr').eq(i).next().next().children().children().length;
+	                    console.log('number of <tr> found: ' + tablecount);
+	                    noplayercheck = $('div.blocknewhdr').eq(i).next().next().children().children().first().text();
+	                    noplayercheck = noplayercheck.trim();
+	                    if (noplayercheck == 'No players Online') {
+	                        noplayercheck = true;
+	                        console.log('noplayercheck: ' + noplayercheck);
+	                        msg.channel.send('There are no players online.');
+	                        console.log('----------\n');
+	                    } else {
+	                        noplayercheck = false;
+	                        console.log('noplayercheck: ' + noplayercheck);
+	                        tablecount = tablecount - 1;
+	                        console.log('Total online players: ' + tablecount);
+	                        //Next two lines transform the variables into arrays so they can store the incoming data
+	                        playerlist = [];
+	                        timelist = [];
+	                        var i2;
+	                        for (i2 = 0; i2 <= tablecount; i2++) {
+	                            var finder2 = i2 + 1;
+	                            var finder3 = i2; //This
+	                            if (finder2 == tablecount + 1) { break;}
+	                            scrapedplayer = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().children('a').text();
+	                            scrapedplayer = scrapedplayer.trim() + '';
+	                            console.log(scrapedplayer);
+	                            scrapedtime = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().eq(3).text();
+	                            scrapedtime = scrapedtime.trim();
+	                            if (scrapedplayer !== '') { 
+	                                playerlist[finder3] = scrapedplayer;
+	                                timelist[finder3] = scrapedtime;
+	                                timelist[finder3] = timelist[finder3].split(':')
+	                                console.log('timelist[finder3] length:' + timelist[finder3].length);
+	                                if (timelist[finder3].length == 3) { timelist[finder3] = timelist[finder3].slice(0,2).join('h') + 'min';}
+	                                else { timelist[finder3] = timelist[finder3].slice(0,1).join() + 'min';}
+	                                console.log('Player #' + finder2 + ': ' + scrapedplayer + '\nPlaytime: ' + scrapedtime);
+	                            } else { 
+	                                finder3--;
+	                                console.log('Player #' + finder2 + ' in blank, ignored.');
+	                            }
+	                        }
+	                        console.log('Playerlist: ' + playerlist);
+	                        console.log('Timelist:' + timelist);
+	                        var i3;
+	                        finaltable = '';
+	                        for (i3 = 0; i3 <= playerlist.length - 1; i3++) {
+	                            if (timelist[i3] && playerlist[i3] !== undefined) { //This removes those ghost players that gametracker creates for some reason
+	                                finaltable = finaltable + timelist[i3] + ' - **' + playerlist[i3] + '**\n';
+	                            }
+	                        }
+	                        console.log(finaltable);
+							var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + '&start=-1d&request=0' + requestnumber;
+							console.log('Graph link: ' + populationgraph + '\nlink not stable because of request parameter. Graph may be send 12h delayed.');
+	                        msg.channel.send({embed: {
+	                            "description": '__*Time played - Name*__ \n' + finaltable + '\nServer population throughout the day:',
+	                            "color": 0xFFBF52,
+	                            "footer": {
+	                                "text": scanned + " via GT"
+	                            },
+	                            "image": {
+	                                "url": populationgraph
+	                            }
+	                        }});
+	                        console.log('----------\n');
+	                    }
+					} else {
+						msg.channel.send("Couldn't access the website. HTTP code " + response.statusCode);
+						console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
+						console.log('!! Info not sent because of website error !!');
+						console.log('----------\n');
+					}
+	            });
+	        } else {
+	            msg.channel.send("'" + server + "' is not a known server. please use anime, modded, roleplay or vanilla.");
+	            console.log('!! Info not sent because of wrong server name !!');
+	            console.log('----------\n');
+	        }
+	    }
 
 
+	//Function to send population graph
+	function populationgraph(server, graphtype) {
+	    var serverid;
+	    var errorcheck = false;
+	    console.log('Server: ' + server);
+	    switch (server) {
+	        case 'anime':
+	            server = anime;
+	            serverid = animeid;
+	            break;
+	        case 'modded':
+	            server = modded;
+	            serverid = moddedid;
+	            break;
+	        case 'roleplay':
+	            server = roleplay;
+	            serverid = roleplayid;
+	            break;
+	        case 'vanilla':
+	            server = vanilla;
+	            serverid = vanillaid;
+	            break;
+	        default:
+	            errorcheck = true;
+	    }
+	    console.log('errorcheck #1: ' + errorcheck);
+	    if (errorcheck !== true) {
+	        switch (graphtype) {
+	            case 'day':
+	                graphtype = '1d';
+	                break;
+	            case 'week':
+	                graphtype = '1w';
+	                break;
+	            case 'month':
+	                graphtype = '1m';
+	                break;
+	            case undefined:
+	                graphtype = '1d';
+	                break;
+	            default:
+	                errorcheck = true;
+	        }
+	        console.log('Graphtype: ' + graphtype)
+	        console.log('errorcheck #2: ' + errorcheck);
+	        if (errorcheck !== true) {
+	            var serverlink = "https://www.gametracker.com/server_info/" + server;
+	            console.log('URL to scrap: ' + serverlink);
+	            request(serverlink, options, function(error, response, html) {
+	                if (!error && response.statusCode == 200) {
+	                    console.log('Website access successful. HTTP Code ' + response.statusCode);
+	                    var $ = cheerio.load(html);
+	                    var scanned = $('#last_scanned').text();
+	                    scanned = scanned.trim();
+	                } else {
+	                    console.log('Website access error. HTTP Code ' + response.statusCode + '\n');
+	                    console.log('!! Graph not sent because of website error !!');
+	                    console.log('----------\n');
+	                }
+	                var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + '&start=-' + graphtype + '&request=0' + requestnumber;
+	                console.log('graph link: ' + populationgraph + '\nlink not stable because of request parameter. Graph may be send 12h delayed.');
+	                msg.channel.send({embed: {
+	                    "description": 'Showing [server](' + serverlink + ') population:',
+	                    "color": 0xFFBF52,
+	                    "footer": {
+	                        "text": scanned + " via GT"
+	                    },
+	                    "image": {
+	                        "url": populationgraph
+	                    }
+	                }});
+	                console.log('----------\n');
+	            });
+	        } else {
+	            msg.channel.send("'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.");
+	            console.log('!! Info not sent because of wrong server name !!');
+	            console.log('----------\n');
+	        }
+	    } else {
+	        msg.channel.send("'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
+	        console.log('!! Info not sent because of wrong server name !!');
+	        console.log('----------\n');
+	    }
+	}
+
+
+
+	//Function to get player's gametracker hours in a server table_lst
+	function playerhours(args) {
+		var server, player, playername, searchlink, serverlink, errorcheck, noplayercheck, playerlink;
+		var scanned, hours;
+		errorcheck = false;
+		server = args[0];
+		args = args.join(' ');
+		console.log('args: ' + args);
+		player = args.split(server).join(' ').trim(); 
+		console.log('Server: ' + server);
+		console.log('Player: ' + player);
+		switch (server) {
+			case 'anime':
+				server = anime;
+				break;
+			case 'modded':
+				server = modded;
+				break;
+			case 'roleplay':
+				server = roleplay;
+				break;
+			case 'vanilla':
+				server = vanilla;
+				break;
+			default:
+				errorcheck = true;
+		}
+		console.log('errorcheck: ' + errorcheck);
+	    if (errorcheck !== true) {
+			serverlink = "https://www.gametracker.com/server_info/" + server;
+			searchlink = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + player;
+			console.log('URLs to scrap: \n' + serverlink + '\n' + searchlink);
+			request(serverlink, options, function(error, response, html) {
+				var $ = cheerio.load(html);
+				scanned = $('#last_scanned').text();
+				scanned = scanned.trim();
+				request(searchlink, options, function(error, response, html) {
+					if (!error && response.statusCode == 200) {
+						console.log('Website access successful. HTTP Code ' + response.statusCode);
+						var $ = cheerio.load(html);
+						noplayercheck = $('.table_lst').children().children().first().children().text();
+						noplayercheck = noplayercheck.trim();
+						//console.log('noplayercheck: ' + noplayercheck);
+						if (noplayercheck !== 'No results found.') {
+							noplayercheck = false;
+							console.log('noplayercheck: ' + noplayercheck);
+							player = $('.table_lst').children().children().eq(1).children().children('a').text();
+							player = player.trim();
+							hours = $('.table_lst').children().children().eq(1).children().eq(4).text();
+							hours = hours.split('.').slice(0,1).join().trim();
+							console.log('player: ' + player);
+							console.log('hours: ' + hours);
+							//If the player name has spaces
+							playername = player;
+							player = player.split(" ").join("%20");
+							playerlink = "https://www.gametracker.com/player/" + player + "/" + server + "/";
+							
+							//Sends the message
+							msg.channel.send({embed: {
+								"description": "[" + playername + "](" + playerlink + ")'s hours: **" + hours + "**",
+							  "color": 0xFFBF52,
+							  "footer": {
+								  "text": scanned + " via GT"
+							  },
+						  }});
+						  console.log('----------\n');
+						} else {
+							msg.channel.send("Player doesn't play on this server or doesn't exist.");
+							console.log('Player not found!');
+							console.log('----------\n');
+						}
+					} else {
+						msg.channel.send("Couldn't access the website. HTTP code " + response.statusCode);
+						console.log('Website access error. HTTP Code ' + response.statusCode);
+						console.log('!! Info not sent because of website error !!');
+						console.log('----------\n');
+					}
+				});
+			});
+		} else {
+	        msg.channel.send("'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
+	        console.log('!! Info not sent because of wrong server name !!');
+	        console.log('----------\n');
+		}
+	}
+
+
+
+	//Function to search for a player gamertracker hours and other info (broken because scraper can't find the text because it isn't between tags)
+	/*function gtplayerinfo(server, playername) {
+		var gtplayerlink, finder1, holder1, joined, last_seen, hours;
+		console.log('Player: ' + playername);
+		gtplayerlink = "https://www.gametracker.com/player/" + playername + "/" + server + "/";
+		console.log('URL to scrap: ' + gtplayerlink);
+		request(gtplayerlink, options, function(error, response, html) {
+			if (!error && response.statusCode == 200) {
+				console.log('Website access successful. HTTP Code ' + response.statusCode);
+				var $ = cheerio.load(html);
+				finder1 = $('.item_color_title') //Shows what it found
+				console.log('finder1 test:\n' + finder1);
+				finder1 = $('.item_color_title').length;
+				console.log('finder1 length: ' + finder1);
+				if (finder1 !== 0) {
+					var i;
+					for (i = 0; i <= finder1 - 1; i++) {
+						joined = $('span.item_color_title').eq(i).text();
+						joined = joined.trim();
+						console.log('Joined finder #' + (i + 1) + ': ' + joined);
+						if (joined == 'Last Seen:') { break;}
+					}
+					console.log(joined);
+					joined = $('span.item_color_title').eq(i).next().text(); //Not working because the text can't be scraped
+					console.log(joined);
+				} else {
+					msg.channel.send("Player '" + playername + "' doesn't exist, doesn't play on a Garry's Mod server or has special characters on its name. HTTP code " + response.statusCode);
+					console.log('!! Info not sent because of player name error (?) !!');
+					console.log('----------\n');
+				}
+			} else {
+				msg.channel.send("Player '" + playername + "' doesn't exist, doesn't play on a Garry's Mod server or has special characters on its name. HTTP code " + response.statusCode);
+				console.log('Website access error. HTTP Code ' + response.statusCode + '\n');
+				console.log('!! Info not sent because of website error !!');
+				console.log('----------\n');
+			}
+		});
+	}*/
 
 
 
 
-    //Commands
+
+
+	//Commands
     switch (cmd) {
         case 'animeh':
             hourscmd_argsorganize(anime, args);
@@ -523,7 +671,10 @@ function populationgraph(server, graphtype) {
             break;
         case 'population':
             populationgraph(args[0], args[1]);
-            break;
+			break;
+		case 'playerhours':
+			playerhours(args);
+			break;
     	case 'hue':
             msg.channel.send('br');
             break;
