@@ -1,12 +1,12 @@
 # SGStats legacy branch
-This branch tracks all the legacy code from the bot, when
+This branch tracks all the legacy code of the project, from when
 git wasn't being used as the version control system 
-(v1.0.0 - v3.7.0) for this project.
+(v1.0.0 - v3.7.0).
 
 It was still being versioned with backup folders, so some tags are available.
 
 Not all versions were recovered, and some code may be 
-slightly altered to remove hard-coded API codes or similar:
+slightly altered to remove hard-coded API keys or similar:
 
 <details>
 
