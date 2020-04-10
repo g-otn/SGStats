@@ -14,8 +14,8 @@ const cheerio = require('cheerio');
 bot.on("ready", () => {
 	console.clear();
 	bot.channels.get("413088508819800064").send('SmithtainmentStats has started.');
-	bot.user.setUsername("SmithtainmentStats");
 	bot.user.setPresence({ status: 'online', game: { name: config.prefix + 'help' } });
+	bot.user.setUsername("SmithtainmentStats");
 	console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + botinfo.author);
 	console.log('Prefix: ' + config.prefix);
 	console.log('============================\n');
@@ -30,8 +30,8 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
-		msg.content = '!!check start';
-		//msg.content = '!!check 130';
+		//msg.content = '!!check start';
+		msg.content = '!!hue';
 	}
 
     if (msg.content)
@@ -106,7 +106,7 @@ bot.on("message", (msg) => {
     //variables
     var errorcheck;
     var rawlink, b64user, graphtype;
-    var scrapertarget, url, serverinfo, scanned;
+    var scrapertarget, url, serverinfo, scanned, playersearch;
     //function to separate the graphtype and the player name
     function hourscmd_argsorganize(server, command_args, requesttype) { 
         //Example: !!moddedh week Skeke
@@ -114,7 +114,7 @@ bot.on("message", (msg) => {
         graphtype = args[0]; // graphtype = week
         args = command_args.slice(1); // args = Skeke 
         args = args.join(' ');  // this is for names with spaces, it will join the array with a space
-        scrapertarget = "https://www.gametracker.com/player/" + args + "/" + server + "/";
+        playersearch = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + args;
         serverinfo = "https://www.gametracker.com/server_info/" + server;
 		console.log("URL to scrap: " + scrapertarget);
     }
@@ -122,6 +122,7 @@ bot.on("message", (msg) => {
     function scrapGT(server_address, requesttype) {
 		if (requesttype == 'autoreq') {
 			server_address = servertype[0];
+			playersearch = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + args;
 			scrapertarget = "https://www.gametracker.com/player/" + checkdata[1] + "/" + servertype[0] + "/";
 			serverinfo = "https://www.gametracker.com/server_info/" + servertype[0];
 			graphtype = '1w';
@@ -129,28 +130,47 @@ bot.on("message", (msg) => {
 			console.log('scrapertarget: ' + scrapertarget);
 			console.log('graphtype: ' + graphtype);
 		}
-    	//This first request just scraps the 'last scanned: x minutes ago' thing
-    	request(serverinfo, options, function (error, response, html) {
-    		var $ = cheerio.load(html);
-    		scanned = $('#last_scanned').text().trim();
-            //I have to put this request inside the other or this one finishes first o.O
-            //This request gets what we want (the info to make the graph URL)
-            request(scrapertarget, options, function (error, response, html) {
-            	console.log('Scraper started');
-            	if (!error && response.statusCode == 200) {
-            		console.log('Website access successful. HTTP Code ' + response.statusCode);
-                	//console.log(html); Shows the entire page html, just to see if it's connected
-                	var $ = cheerio.load(html);
-                	rawlink = $('img#graph_player_time').attr('src'); //What we want (the link to the graph)
-					console.log('Raw scraped link: ' + rawlink);
-					//separate the scraped raw link and get the base64 username
-					if (rawlink !== undefined) {
+		request(playersearch, options, function(error, response, html) {
+			if (requesttype !== 'autoreq') {
+				var $ = cheerio.load(html);
+				var noplayercheck = $('.table_lst').children().children().first().children().text().trim();
+				if (noplayercheck !== 'No results found.') {
+					noplayercheck = false;
+					console.log('noplayercheck: ' + noplayercheck);
+					var player = $('.table_lst').children().children().eq(1).children().children('a').text().trim();
+					var hours = $('.table_lst').children().children().eq(1).children().eq(4).text().split('.').slice(0,1).join().trim();
+					scrapertarget = "https://www.gametracker.com/player/" + player + "/" + server_address + "/";
+				} else { //If it can't access
+					msg.channel.send({embed: { 
+						"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+						}
+					}});
+					console.log('Website access error. HTTP Code ' + response.statusCode);
+					console.log('!! Image not sent because of website error !!');
+					console.log('----------\n');
+            	}			
+			}
+			//I have to put this request inside the other or this one finishes first o.O
+			//This request just scraps the 'last scanned: x minutes ago' thing
+			request(serverinfo, options, function (error, response, html) {
+	    		var $ = cheerio.load(html);
+	    		scanned = $('#last_scanned').text().trim();
+	            //This request gets what we want (the info to make the graph URL)
+	            request(scrapertarget, options, function (error, response, html) {
+	            	console.log('Scraper started');
+	            	if (!error && response.statusCode == 200) {
+	            		console.log('Website access successful. HTTP Code ' + response.statusCode);
+	                	//console.log(html); Shows the entire page html, just to see if it's connected
+	                	var $ = cheerio.load(html);
+	                	rawlink = $('img#graph_player_time').attr('src'); //What we want (the link to the graph)
+						console.log('Raw scraped link: ' + rawlink);
+						//separate the scraped raw link and get the base64 username
 						rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
 						b64user = rawlink.trim().split('&host=').slice(0,1);
 						console.log('Base64 Username: ' + b64user);
-						//Fix that sends the correct 'request' image (not working because the loaded html doesn't have this)
-						/*rawlink = rawlink.trim().split('&request=').slice(1,2).join();
-						console.log('GT Request number: ' + rawlink);*/
 						var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + server_address + '&start=-' + graphtype + "&request=0" + requestnumber;
 						if (requesttype == 'autoreq') {
 							checkdata[6] = finalimage;
@@ -167,7 +187,7 @@ bot.on("message", (msg) => {
 							scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
 							//Sends the message
 							msg.channel.send({embed: {
-								"description": "Showing [" + args + "](" + scrapertarget + ")'s playtime:",
+								"description": "Showing [" + player + "](" + scrapertarget + ")'s playtime:",
 								"color": 0xFFBF52,
 								"footer": {
 									"text": scanned + " via GT"
@@ -191,23 +211,12 @@ bot.on("message", (msg) => {
 							console.log('----------\n');
 						} else { 
 							checkdata[6] = 'notfound';
-							console.log('---End of serverh function');
+							console.log('---End of serverh function (not found)');
 						}
 					}
-            	} else { //If it can't access
-					msg.channel.send({embed: { 
-						"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
-						"color": 0x0000ff,	
-						"thumbnail": { 
-							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
-						}
-					}});
-					console.log('Website access error. HTTP Code ' + response.statusCode);
-					console.log('!! Image not sent because of website error !!');
-					console.log('----------\n');
-            	}
-        	});
-        });
+	        	});
+	        });
+		});
     }
     //function that selects the type of graph
     function graphtypeselector() {
@@ -715,6 +724,7 @@ bot.on("message", (msg) => {
 			server = checkserver;
 			player = checkplayer;
 		}
+		player = player.split(' ').join('+');
 		console.log('errorcheck: ' + errorcheck);
 		if (errorcheck !== true) {
 			serverlink = "https://www.gametracker.com/server_info/" + server;
@@ -1184,18 +1194,22 @@ bot.on("message", (msg) => {
 							console.log('waiting for scrap of post date...');
 							await sleep2(1500); //Waits for the request to finish
 							//Checks if thread is recent (<1h) to avoid spamming when bot starts
-							if (postdate.includes('minute') === true) { //Change condition to "... == true" to work proprely
+							if (/*postdate.includes('minute') === */true) { //Change condition to "... == true" to work proprely
 								if (checkdata[0] == 'notneeded') { 
 									checksender();
 									return;
 								}
 								console.log('New recent thread found.');
-								poststeamid = $('.post_body').first().text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
+								//Tries to get SteamID from post text
+								poststeamid = 'STEAM_' + $('.post_body').first().text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
+								if (poststeamid === undefined || poststeamid === 'STEAM_') { 
+									//Tries to get SteamID64 from post text
+									poststeamid = '765611' + $('.post_body').first().text().trim().split('765611').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
+								}
 								console.log('SteamID written in post: STEAM_' + poststeamid);
 								//Checks if the author wrote a SteamID or not (even if it's broken)
-								if (poststeamid !== undefined && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
+								if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
 									console.log('SteamID written in post found');
-									poststeamid = 'STEAM_' + poststeamid;
 									console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
 									steaminfo(poststeamid, 'autoreq', postlink);
 								} else {
@@ -1217,7 +1231,7 @@ bot.on("message", (msg) => {
 				await sleep(3000);
 
 				//If a new post is found
-				if (postlink !== undefined && postdate.includes('minute') === true) { //change second condition to '... == true'
+				if (postlink !== undefined/* && postdate.includes('minute') === true*/) { //change second condition to '... == true'
 					await sleep(8000);
 					if (checkdata[0] == 'appl') {
 						console.log('---Starting serverh function');
@@ -1290,10 +1304,10 @@ bot.on("message", (msg) => {
 		}
 		//Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
 		//spam_spam_spam -> "409458470610403338"
-		//test -> "403969093595693066"
-		//test private -> "413088508819800064"
 		//announcements staff -> "409456414654726156"
 		//announcements public -> "348548140087115776"
+		//test -> "403969093595693066"
+		//test private -> "413088508819800064"
 		const target = "403969093595693066";
 		const target2 = ["413088508819800064","413088508819800064"];
 		
