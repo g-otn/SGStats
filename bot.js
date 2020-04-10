@@ -1,5 +1,5 @@
-//Auto ping so Glitch doesn't sleep
-const http = require('http');
+//Auto ping so Glitch doesn't sleep (DEACTIVATED WHEN NOT ON HOST)
+/*const http = require('http');
 const express = require('express');
 const app = express();
 app.get("/", (request, response) => {
@@ -9,7 +9,7 @@ app.get("/", (request, response) => {
 app.listen(process.env.PORT);
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-}, 280000);
+}, 280000);*/
 //===========================================================================
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -18,7 +18,7 @@ const botinfo = require('./package.json');
 const request = require('request');
 const cheerio = require('cheerio');
 
-    /* Bot made by Skeke#2155 in Jan 2018 | Special thanks: Hades */
+    /* Bot made by Skeke#2155 in Jan 2018 | Special thanks: Hades#6871 */
 
 //Console bot iniciation confirmation
 bot.on("ready", () => {
@@ -528,7 +528,7 @@ bot.on("message", (msg) => {
 
 	//Function to get player's gametracker hours in a server table_lst
 	function playerhours(args) {
-		var server, player, playername, searchlink, serverlink, errorcheck, noplayercheck, playerlink;
+		var server, player, playername, searchlink, serverlink, errorcheck, noplayercheck, playerlink, servername;
 		var scanned, hours;
 		errorcheck = false;
 		server = args[0];
@@ -540,15 +540,19 @@ bot.on("message", (msg) => {
 		switch (server) {
 			case 'anime':
 				server = anime;
+        servername = 'Anime TTT';
 				break;
 			case 'modded':
 				server = modded;
+        servername = 'MC TTT';
 				break;
 			case 'roleplay':
 				server = roleplay;
+        servername = 'DarkRP';
 				break;
 			case 'vanilla':
 				server = vanilla;
+        servername = 'Vanilla TTT';
 				break;
 			default:
 				errorcheck = true;
@@ -585,7 +589,7 @@ bot.on("message", (msg) => {
 							
 							//Sends the message
 							msg.channel.send({embed: {
-								"description": "[" + playername + "](" + playerlink + ")'s hours: **" + hours + "**",
+								"description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**",
 							  	"color": 0xFFBF52,
 							  	"footer": {
 								  	"text": scanned + " via GT"
@@ -655,12 +659,13 @@ bot.on("message", (msg) => {
 
 
 
-	//Temporary help command for Pluto discord server
+	//help command
 	function help(command) {
 		var desc, syntax, ex, notes;
 		var defaultcheck = false;
 		var commandlist = [
 			, //idk why but without this it sends without the first value "serverh"
+      "server (soon)",
 			"serverh",
 			"steaminfo",
 			"online",
@@ -672,6 +677,12 @@ bot.on("message", (msg) => {
 		console.log('Command to help: ' + command);
 		notes = " ";
 		switch (command) {
+      case 'server':
+        desc = "Shows info about a specific server (not yet implemented)";
+        syntax = "<server>";
+        notes = "Servers: 'anime', 'modded', 'roleplay' or 'vanilla'"
+        ex = config.prefix + "modded; " + config.prefix + "vanilla";
+        break;
 			case 'serverh':
 				desc = "Shows a graph of a player playtime of a Smithtainment server in a specific period of time.";
 				syntax = "<server>h <period> <playername>";
@@ -720,10 +731,10 @@ bot.on("message", (msg) => {
 			default:
 				defaultcheck = true;
 				msg.channel.send({embed: {
-					"description": 'Showing SmitainmentGTStats commands, type ' + config.prefix + 'help "command" for specific info.\n```' + commandlist + "```",
+					"description": '**Showing SmitainmentGTStats commands** \n*Type ' + config.prefix + 'help <command> for specific info.* \n```' + commandlist + "```",
 					"color": 0x0000ff,
 					"footer": {
-						"text": "This is a temporary help command"
+						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
 					}
 				}});
 				break;
@@ -735,7 +746,7 @@ bot.on("message", (msg) => {
 				"description": desc,
 				"color": 0x0000ff,
 				"footer": {
-					"text": "This is a temporary help command"
+					"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
 				},
 				"fields": [
 					{
@@ -749,6 +760,7 @@ bot.on("message", (msg) => {
 				  ]
 			}});
 		}
+    console.log('----------\n');
 	}
 
 
@@ -757,84 +769,89 @@ bot.on("message", (msg) => {
 
 
 	//Commands
-    switch (cmd) {
-        case 'animeh':
-            hourscmd_argsorganize(anime, args);
-            graphtypeselector();
-            if (errorcheck !== true) {
-    			scrapGT(anime);
-      		} else {
-    			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-    		}
-        	break;
-        case 'moddedh':
-            hourscmd_argsorganize(modded, args);
-            graphtypeselector();
-            if (errorcheck !== true) {
-    			scrapGT(modded);
-      		} else {
-    			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-    		}
-        	break;
-        case 'roleplayh':
-            hourscmd_argsorganize(roleplay, args);
-            graphtypeselector();
-            if (errorcheck !== true) {
-    			scrapGT(roleplay);
-      		} else {
-    			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-    		}
-        	break;
-        case 'vanillah':
-            hourscmd_argsorganize(vanilla, args);
-            graphtypeselector();
-            if (errorcheck !== true) {
-    			scrapGT(vanilla);
-      		} else {
-    			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-    		}
-        	break;
-        case 'steaminfo':
-            args = args.join(' ');
-            steaminfo(args);
-            break;
-        case 'online':
-            args = args.join('').trim();
-            onlineplayers(args);
-            break;
-        case 'population':
-            populationgraph(args[0], args[1]);
+  switch (cmd) {
+    case 'animeh':
+      hourscmd_argsorganize(anime, args);
+      graphtypeselector();
+      if (errorcheck !== true) {
+    	  scrapGT(anime);
+      } else {
+    	  msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
+        console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+    	}
+      break;
+    case 'moddedh':
+      hourscmd_argsorganize(modded, args);
+      graphtypeselector();
+      if (errorcheck !== true) {
+    	  scrapGT(modded);
+      } else {
+    	  msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
+        console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+    	}
+      break;
+    case 'roleplayh':
+      hourscmd_argsorganize(roleplay, args);
+      graphtypeselector();
+      if (errorcheck !== true) {
+    	  scrapGT(roleplay);
+      } else {
+    		msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
+        console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+    	}
+      break;
+    case 'vanillah':
+      hourscmd_argsorganize(vanilla, args);
+      graphtypeselector();
+      if (errorcheck !== true) {
+    	  scrapGT(vanilla);
+      } else {
+        msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
+        console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+    	}
+      break;
+    case 'steaminfo':
+      args = args.join(' ');
+      steaminfo(args);
+      break;
+    case 'online':
+      args = args.join('').trim();
+      onlineplayers(args);
+      break;
+    case 'population':
+      populationgraph(args[0], args[1]);
 			break;
 		case 'playerhours':
 			playerhours(args);
 			break;
     	case 'hue':
-            msg.channel.send('br');
-            break;
-        //Temporary help command for Pluto discord
-        
-        case 'help':
+      msg.channel.send('br');
+      break;   
+    case 'help':
 			args = args.join(' ').trim();
 			help(args);
-        	break;
-        
-        //Commands of the python bot that this bot will ignore
-        case 'anime':
-            break;
-        case 'modded':
-            break;
-        case 'vanilla':
-            break;
-        default:
-            msg.channel.send("'" + cmd + "' is not a known command.")
-            console.log('!! Invalid command !!');
-            console.log('----------\n');
-    }
+      break;
+    case 'serverh':
+      msg.channel.send('Please select a server. Use ``' + config.prefix + 'help serverh`` for more information.');
+    //Commands of the python bot that this bot will ignore
+    case 'anime':
+      msg.channel.send('command coming soon');
+      break;
+    case 'modded':
+      msg.channel.send('command coming soon');
+      break;
+    case 'roleplay':
+      msg.channel.send('command coming soon');
+      break;
+    case 'vanilla':
+      msg.channel.send('command coming soon');
+      break;
+    default:
+      msg.channel.send("'" + cmd + "' is not a known command.")
+      console.log('!! Invalid command !!');
+      console.log('----------\n');
+  }
 });
 
 //Makes the bot go online I guess
-bot.login(process.env.TOKEN);
+bot.login(config.token);

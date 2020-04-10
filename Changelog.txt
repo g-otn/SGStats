@@ -2,6 +2,21 @@ SmithtainmentStats bot made by Skeke#2155
 =========================================================
 Changelog
 =========================================================
+v1.3.1 - 2018Feb05
+ + Added more helpful syntax error responses
+ * Temporary help command is now permanent
+ * Minor changes to commands text
+
+----------------------------------------------------------
+v1.3.0 - 2018Jan31
+ + Added a temporary help command (for Pluto discord),
+disabled by default.
+ * Fixed blank line in embed message when GT sends it in
+blank, in the online command.
+ * Optimized code and changed output layout of the online
+command.
+
+----------------------------------------------------------
 v1.2.1 - 2018Jan27
  * Fixed a crash after asking for hours graph
 
