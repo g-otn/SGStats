@@ -1,15 +1,5 @@
-//Auto ping so Glitch doesn't sleep
-/*const http = require('http');
-const express = require('express');
-const app = express();
-app.get("/", (request, response) => {
-  console.log(Date.now() + " Ping Received");
-  response.sendStatus(200);
-});
-app.listen(process.env.PORT);
-setInterval(() => {
-  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-}, 280000);*/
+/*const autoping = require('./autoping.js');
+autoping.autopingfunction();*/
 //===========================================================================
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -18,24 +8,33 @@ const botinfo = require('./package.json');
 const request = require('request');
 const cheerio = require('cheerio');
 
-/* Bot created by Skeke#2155 in Jan 2018 | Special thanks: Hades#6871 */
+/* Bot made by Skeke#2155 in Jan 2018 | Special thanks: Hades#6871 */
 
 //Console bot iniciation confirmation
 bot.on("ready", () => {
 	console.clear();
+	bot.channels.get("403969093595693066").send('SmithtainmentStats has started.');
+	bot.user.setUsername("SmithtainmentStats");
 	console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + botinfo.author);
 	console.log('Prefix: ' + config.prefix);
 	console.log('============================\n');
 });
 
+
+
 //Detect messages
 bot.on("message", (msg) => {
-	//test();
-    //Ignore the message if it doesn't start with the prefix or it's from a bot
-    if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
-    
+	//Ignore the message if it doesn't start with the prefix or it's from a bot
+	if (msg.content !== 'SmithtainmentStats has started.') {
+		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
+	}
+	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
+		msg.content = '!!check start';
+	}
+
+    if (msg.content)
     //Log in the console about the command
-    console.log('Command by ' + msg.author.username+'#'+msg.author.discriminator + ' in #' + msg.channel.name + ': ' + msg.content);
+    console.log('=> Command by ' + msg.author.username+'#'+msg.author.discriminator + ' in #' + msg.channel.name + ': ' + msg.content);
 
 
 
@@ -49,9 +48,11 @@ bot.on("message", (msg) => {
     //Separate command (['hue', 'br', '123'] -> ['hue'])
     var cmd = cmd_arg.trim().split(' ').slice(0,1);
     var cmd = cmd.toString();
-    console.log('Command: ' + cmd);
-    console.log('Arguments: ' + args);
-
+    console.log('=> Command: ' + cmd);
+    console.log('=> Arguments: ' + args);
+    //Output of the operations above:
+    //cmd = ['hue'];
+    //args = ['br, '123']
 
 
     //Server Addresses
@@ -65,17 +66,26 @@ bot.on("message", (msg) => {
     const moddedid = "5086005";
     const roleplayid = "5493690";
     const vanillaid = "5052174";
-    //cmd = ['hue'];
-    //args = ['br, '123']
+    
 
 
 	/*Everytime you click to show the graph, a new number is generated, but the scraper can't click, 
 	so this number is never scraped and all the graph commands may be sent with delayed hours/days.
 	This is an attempt to make the URL 'request' parameter work by generating a random number with the
 	same number of digits that the original has. */
-	//To deactivate this system hide the first line (the math line) and remove the // from the second line (the "")
+	//To deactivate this system hide the first line (the Math line) and remove the // from the second line (the "")
 	var requestnumber = Math.floor(Math.random() * 9999999999999990);
 	//var requestnumber = "";
+	
+	/*idk what this is but if I don't do this gamertracker does not let 
+    me connect to the website (HTTP code 403 (forbidden))*/
+    var options = { 
+    	headers: {'user-agent': 'node.js'}
+    }
+
+
+
+
 
 
     //Variables and functions to scrap Gamertracker base64 username
@@ -83,11 +93,6 @@ bot.on("message", (msg) => {
     var errorcheck;
     var rawlink, b64user, GTid, graphtype;
     var scrapertarget, url, serverinfo, scanned;
-    /*idk what this is but if I don't do this gamertracker does not let 
-    me connect to the website (HTTP code 403 (forbidden))*/
-    var options = { 
-    	headers: {'user-agent': 'node.js'}
-    }
     //function to separate the graphtype and the player name
     function hourscmd_argsorganize(server, command_args) { 
         //Example: !!moddedh week Skeke
@@ -192,6 +197,9 @@ bot.on("message", (msg) => {
 
 
 
+
+
+
 	function steaminfo(input, requesttype)  {
 		console.log('Request type: ' + requesttype);
         var steamid, name, profilelink, profilestate, steamid64, customURL; //scraped in steamidfinder
@@ -259,7 +267,11 @@ bot.on("message", (msg) => {
                         	gmodh = 'unknown';
                         	customID = name;
                         	console.log("Gmod hours private");
-                        }
+						}
+						if (gmodh == "") {
+							gmodh = 'not found';
+							console.log('gmod tab not found in main profile page.');
+						}
                         //Again I need to put this inside otherwise it tries to send the message before the request above finishes
 						switch (requesttype) {
 							case 'main':
@@ -273,11 +285,13 @@ bot.on("message", (msg) => {
 										"url": profileicon
 									}
 								}});
+								console.log('----------\n');
 								break;
 							case 'autoreq':
+								console.log('---Ending steaminfo function, starting steamdataorganizer...')
+								steamdataorganizer(name, profilelink, profileicon, gmodh, profilestate, steamid);
 								break;
 						}
-						console.log('----------\n');
                     });
                 } else {
 					if (requesttype == "main") {
@@ -286,6 +300,7 @@ bot.on("message", (msg) => {
 						console.log('----------\n');
 					} else { 
 						console.log('steaminfo command could not find the user');
+						steamdataorganizer('notfound');
 					}
 
                 }
@@ -296,10 +311,14 @@ bot.on("message", (msg) => {
 					console.log('----------\n');
 				} else { 
 					console.log('steaminfo command could not access the website');
+					steamdataorganizer('notfound');
 				}
             }
         });
 	}
+
+
+
 
 
 
@@ -451,6 +470,9 @@ bot.on("message", (msg) => {
 
 
 
+
+
+
 	//Function to send population graph
 	function populationgraph(server, graphtype) {
 		var serverid, servername;
@@ -541,6 +563,9 @@ bot.on("message", (msg) => {
 
 
 
+
+
+
 	//Function to get player's gametracker hours in a server table_lst
 	function playerhours(args) {
 		var server, player, playername, searchlink, serverlink, errorcheck, noplayercheck, playerlink, servername;
@@ -600,7 +625,7 @@ bot.on("message", (msg) => {
 							
 							//Sends the message
 							msg.channel.send({embed: {
-								"description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**",
+								"description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**\nFor players with similar names, click [here](" + searchlink + ").",
 								"color": 0xFFBF52,
 								"footer": {
 									"text": scanned + " via GT"
@@ -626,6 +651,9 @@ bot.on("message", (msg) => {
 			console.log('----------\n');
 		}
 	}
+
+
+
 
 
 
@@ -703,7 +731,7 @@ bot.on("message", (msg) => {
 			default:
 				defaultcheck = true;
 				msg.channel.send({embed: {
-					"description": '**Showing SmitainmentGTStats commands** \nType ``' + config.prefix + 'help <command>`` for specific info.\n```' + commandlist + "```",
+					"description": '**Showing SmitainmentStats commands** \nType ``' + config.prefix + 'help <command>`` for specific info.\n```' + commandlist + "```",
 					"color": 0x0000ff,
 					"footer": {
 						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
@@ -737,6 +765,9 @@ bot.on("message", (msg) => {
 
 
 
+
+
+
 	//function from Hades old bot that shows server info
 	function server(server, name2) {
 		var serverlink = "https://www.gametracker.com/server_info/" + server;
@@ -763,15 +794,12 @@ bot.on("message", (msg) => {
 					"url": serverlink,
 					"color": 0xFFBF52,
 					"footer": {
-					  "text": scanned + " via GT"
+					  "text": scanned + "via GT"
 					},
 					"thumbnail": {
 					  "url": mapimg
 					}
-				  }
-				}
-
-				)
+				}});
 			} else { //If it can't access
 			msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode);
 			console.log('Website access error. HTTP Code ' + response.statusCode);
@@ -783,16 +811,172 @@ bot.on("message", (msg) => {
 
 
 
-	function test() {
-		/*var link = "http://forums.smithtainment.com/forumdisplay.php?fid=133";
-		request(link, options, function(error, response, html) {
-			var $ = cheerio.load(html);
-			var testlast = $('.inline_row').text();
-			testlast = testlast.trim().split('  ').join('\n');
-			console.log(testlast);
-		});*/
-    console.log(Date());
+
+
+
+	var interval;
+	function autocheckstop() { //Stop checker
+		clearInterval(interval);
+		breaker = false;
+		console.log('Auto checker stopped. breaker: ' + breaker);
+	} 
+	function autocheckstart() { //Runs checker
+		interval = setInterval(function() { check('auto');}, 600000); //60000 = 1min; 600000 = 10min;
+		breaker = true;
+		console.log('Auto checker started. breaker: ' + breaker);
+	} 
+	//Makes possible for the automatic async function test() to wait itself to finish to loop itself
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
+	//Auto check for new applications and appeals
+	//Variables and functions that scrap and send thread info
+	var postname, postauthor, postlink, postdate, seclink;
+	var selector, forbreaker;
+	const sectionlist = [241,130,133,134,48,59,66,87,93,36,40,41];
+	const sectiontype = ['Network Appeal','Application','Ban Appeal','Warn Appeal','Application','Ban Appeal','Warn Appeal','Application','Ban Appeal','Application','Ban Appeal','Warn Appeal'];
+	const sectionfrom = ['Global Section','Anime TTT','Anime TTT','Anime TTT','MC TTT','MC TTT','MC TTT','Vanila TTT','Vanila TTT','DarkRP','DarkRP','DarkRP'];
+	async function check(fid) {
+		//Checks for manual test (with fid)
+		var i;
+		var fidcheck = false;
+		for (i = 0; i < sectionlist.length; i++) { 
+			if (fid == sectionlist[i]) {
+				fidcheck = true;
+				console.log('fidcheck: ' + fidcheck);
+			}
+		}
+		//loop for each forums section
+		for (selector = 0; selector < sectionlist.length; selector++) {
+			console.log("--Starting forums search #" + selector);
+			//condition below is function to select a specific section and set vars for testing
+			if (fidcheck == true) { //Checks if fid is a number
+				forbreaker = true;
+				console.log('forbreaker: ' + forbreaker);
+				seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + fid;
+			} else {
+				seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + sectionlist[selector];
+			}
+			console.log('fid: ' + fid);
+			console.log('selector: ' + selector);
+			console.log('sectionlist: ' + sectionlist[selector]);
+			console.log('sectiontype: ' + sectiontype[selector]);
+			console.log('sectionfrom: ' + sectionfrom[selector]);
+			console.log('Forum link: ' + seclink);
+			var poststeamid;
+			request(seclink, options, function(error, response, html) {
+				var $ = cheerio.load(html); 
+				//Selects the post from the forum. eq(2) for first thread, eq(8) for second (lines below)
+				postname = $('.forumdisplay_regular').eq(2).children().children('span').children('span').eq(0).children('a').text();
+				postlink = $('.forumdisplay_regular').eq(2).children().children('span').children('span').eq(0).attr('id');
+				postauthor = $('.forumdisplay_regular').eq(2).children().children('div').children().text();
+				console.log("Thread name: " + postname);
+				console.log("Thread link: " + postlink);
+				console.log("Thread author: " + postauthor);
+				//If there is a post
+				if (postname !==  undefined && postlink !== undefined && postauthor !== undefined) {
+					postname = postname.trim();
+					postlink = postlink.trim().split('tid_').join("").trim();
+					postauthor = postauthor.trim();
+					console.log('Repeated Threads: ' + repeatedthreads.join(', '));
+					//Checks if thread has already been seen or if there is a thread
+					if (repeatedthreads.join(' ').includes(postlink) == false) { //".indexOf(postlink) == -1" instead of ".includes(postlink) == false" also works
+						console.log('New thread, adding to repeatedthreads');
+						repeatedthreads.push(postlink); //Marks thread as already seen
+						console.log('Repeated threads from now: ' + repeatedthreads);
+						postlink = "http://forums.smithtainment.com/showthread.php?tid=" + postlink;
+						console.log("Thread link: " + postlink);
+						//Goes to the post
+						request(postlink, options, function(error, response, html) {
+							var $ = cheerio.load(html);
+							//Scraps date and SteamID if the author wrote it
+							postdate = $('.post_date').first().text().trim();
+							console.log('Post date: ' + postdate);
+							//Checks if thread is recent (<1h) to avoid spamming when bot starts
+							if (postdate.includes('minute') == true) { //Change condition to "... == true" to work proprely
+								console.log('New recent thread found.');
+								console.log('----------');
+								poststeamid = $('.post_body').text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
+								console.log('SteamID written in post: ' + poststeamid);
+								//Checks if the author wrote a SteamID or not (even if it's broken)
+								if (poststeamid !== undefined && poststeamid !== null && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
+									console.log('SteamID written in post found');
+									poststeamid = 'STEAM_' + poststeamid;
+									console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
+									steaminfo(poststeamid, "autoreq", postlink);
+								} else {
+									console.log('SteamID in thread not found, skipping steaminfo function');
+									steamdataorganizer('notfound');
+								}
+							} else {
+								console.log('New thread found, but not recent.');
+								console.log('End of loop #' + selector);
+							}
+						});
+					} else {
+						console.log('Thread found, but not new.');
+						console.log('End of loop #' + selector);
+					}
+				} else {
+					console.log('No thread found.');
+					console.log('End of loop #' + selector);
+				}
+			});
+			if (forbreaker == true) { break;}
+			//Waits the scraper and function to end to start again to prevent rewrite of variables in the wrong time
+			await sleep(7000);
+		}
+		if (forbreaker == false || fid == undefined) {
+			console.log('End of automatic forums checking');
+			console.log('----------\n');	
+		}
+		if (fid == 'start') {
+			console.log('----------');
+			console.log('First automatic bot command, starting autocheck')
+			autocheckstart();
+			console.log('----------\n');
+		}
+	}
+	//Collects the data from the checking and steaminfo function and send it
+	function steamdataorganizer(sname, sproflink, sprofimg, gmodhrs, sprofstat, steamid) {
+		//spam_channel -> 409458470610403338
+		//test_channel -> 403969093595693066
+		if (sname == "notfound") {
+		console.log('Steam info failed (' + sname + '). Sending without...');
+			bot.channels.get("409458470610403338").send({embed: {
+				"title": "New " + sectiontype[selector] + "!",
+				"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! The respective staff should check it out.",
+				"color": 0x0000ff,
+				"footer": {
+					"text": "Steam info from player not found because of missing SteamID in thread."
+				}
+			}});	
+		} else {
+			console.log("Data recevied: \n name: " + sname +'\n profile link: '+ sproflink +'\n profile image: found\n gmod hours: '+ gmodhrs +'\n profile state: ' + sprofstat);
+			if (gmodhrs == undefined || gmodhrs == "" || gmodhrs == 'notfound') { gmodhrs == 'unknown';}
+			console.log('Steam info recieved. Sending message...');
+			bot.channels.get("409458470610403338").send({embed: {
+				"title": "New " + sectiontype[selector] + "!",
+				"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! The respective staff should check it out.",
+				"color": 0x0000ff,
+				"footer": {
+					"text": "Steam info may be wrong depending of how the user wrote the SteamID." 
+				},
+				"thumbnail": {
+					"url": sprofimg
+				},
+				"fields": [
+					{
+						"name": postauthor + "'s Steam info",
+						"value": "Steam name: " + sname + "\nProfile state: [" + sprofstat + "](" + sproflink + ") \nGarry's Mod hours: " + gmodhrs,
+					}
+				]
+			}});
+		}
+		if (forbreaker == true) { console.log('----------\n');	
+		}
+	} 
+	
 
 
 
@@ -876,41 +1060,43 @@ bot.on("message", (msg) => {
 	    	break;
 		case 'hue':
 			msg.channel.send('br');
+			console.log('----------\n');
 			break;
-		case 'test':
-			test();
+		case 'check':
+			check(args);
+			break;
+		case 'startauto':
+			console.log('breaker: ' + breaker);
+			if (breaker == false) {	
+				autocheckstart();
+				msg.channel.send('Forums auto checker is now running.');
+			} else {
+				msg.channel.send('Forums auto checker is already running!');
+			}
+			break;
+		case 'stopauto':
+			console.log('breaker: ' + breaker);
+			if (breaker == true) {
+				autocheckstop();
+				msg.channel.send('Forums auto checker is now disabled.');
+			} else {
+				msg.channel.send('Forums auto checker is already disabled.');
+			}			
 			break;
 	    default:
-	    	msg.channel.send("'" + cmd + "' is not a known command.")
+	    	msg.channel.send("'" + cmd + "' is not a known command. Type ``" + config.prefix + "help`` for a list of commands.");
 	    	console.log('!! Invalid command !!');
 	    	console.log('----------\n');
 	}
 });
+//Variables that can't be changed in every message
+var repeatedthreads = ["hi"];
+var breaker = false; //Prevents autocheck to run twice at the same time
 
 
 
-
-//Auto check for new applications and appeals (WIP)
-/* notes http://forums.smithtainment.com/forumdisplay.php?fid=
-Anime TTT
-Applications: 130
-Appeals: 133
-
-MC TTT
-Applications: 48
-Appeals: 59
-
-Vanilla TTT
-Applications: 87
-Appeals: 93
-
-DarkRP
-Applications: 36
-Appeals: 40
-*/
 
 
 
 //Makes the bot go online I guess
-//bot.login(process.env.TOKEN);
 bot.login(config.token);
