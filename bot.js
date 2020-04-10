@@ -30,8 +30,8 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
-		msg.content = '!!check start';
-		msg.content = '!!checkbypass 48';
+		//msg.content = '!!check start';
+		//msg.content = '!!checkbypass 48';
 	}
 
     if (msg.content)
@@ -204,6 +204,7 @@ bot.on("message", (msg) => {
 								console.log('----------\n');
 							}
 						}
+						waitscrap();
 					} else {
 						if (requesttype !== 'autoreq') {
 							msg.channel.send({embed: { 
@@ -1176,13 +1177,6 @@ bot.on("message", (msg) => {
 		M_va,M_va
 		//M_sw,M_sw,M_sw,M_sw
 	];
-	/*
-	Info to send
-	Basic info: All Threads
-	Steam info: All Threads
-	GT info: All Threads
-	GT graph: Only Applications
-	*/
 	async function check(fid) {
 		checkdata = [];
 		//Checks for manual test (with fid)
@@ -1366,7 +1360,7 @@ bot.on("message", (msg) => {
 					console.log('--End of loop #' + selector + '\n');
 				}
 
-				await sleep(4000);
+				await sleep(4500);
 
 				//If a new post is found
 				if (postlink !== undefined && (postdate.includes('minute') === true || checkbypass == true)) { //change second condition to '... == true'
