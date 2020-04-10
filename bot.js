@@ -30,8 +30,8 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
-		//msg.content = '!!check start';
-		msg.content = '!!checkbypass start';
+		msg.content = '!!check start';
+		//msg.content = '!!checkbypass 48';
 	}
 
     if (msg.content)
@@ -63,14 +63,14 @@ bot.on("message", (msg) => {
     const anime = "70.42.74.129:27015";
     const modded = "192.223.31.40:27015";
     const prophunt = "192.99.239.40:27015";   
-    const roleplay = "70.42.74.160:27015";
+    const starwars = "70.42.74.160:27015";
     const vanilla = "192.223.24.186:27015";
 
     //A ID gamertracker generates and uses
     const animeid = "5704089";
     const moddedid = "5086005";
     const prophuntid = "5709398";
-    const roleplayid = "5493690";
+	const starwarsid = "5493690";
     const vanillaid = "5052174";
     
 	//Roles ID of each server
@@ -78,7 +78,7 @@ bot.on("message", (msg) => {
 	const M_an = '<@&387409402250002434>';
 	const M_mc = '<@&387409235249594368>';
 	const M_ph = '<@&421155441519755284>';
-	const M_rp = '<@&417461132748652544> <@153550726793003008>';
+	const M_sw = '';
 	const M_va = '<@&387409354204250122>';
 
 
@@ -121,7 +121,7 @@ bot.on("message", (msg) => {
     function scrapGT(server_address, requesttype) {
 		if (requesttype == 'autoreq') {
 			server_address = servertype[0];
-			playersearch = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + args;
+			playersearch = 'https://www.gametracker.com/server_info/' + servertype[0] + '/top_players/?query=' + args;
 			scrapertarget = "https://www.gametracker.com/player/" + checkdata[1] + "/" + servertype[0] + "/";
 			serverinfo = "https://www.gametracker.com/server_info/" + servertype[0];
 			graphtype = '1w';
@@ -456,12 +456,12 @@ bot.on("message", (msg) => {
 				serverid = prophuntid;
 				servername = 'PropHunt';
 				break;
-			case 'rp':
-			case 'darkrp':
-			case 'roleplay':
-				server = roleplay;
-				serverid = roleplayid;
-				servername = 'DarkRP';    
+			case 'sw':
+			case 'starw':
+			case 'starwars':
+				server = starwars;
+				serverid = starwarsid;
+				servername = 'Star Wars TTT';    
 				break;
 			case 'va':
 			case 'vanilla':
@@ -604,7 +604,7 @@ bot.on("message", (msg) => {
 					break;
 				default:
 					msg.channel.send({embed: { 
-						"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
+						"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'prophunt', 'starwars' or 'vanilla'.", 
 						"color": 0x0000ff,	
 						"thumbnail": { 
 							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
@@ -645,12 +645,12 @@ bot.on("message", (msg) => {
 				serverid = prophuntid;
 				servername = 'PropHunt';
 				break;
-			case 'rp':
-			case 'darkrp':
-			case 'roleplay':
-				server = roleplay;
-				serverid = roleplayid;
-				servername = "DarkRP";
+			case 'sw':
+			case 'starw':
+			case 'starwars':
+				server = starwars;
+				serverid = starwarsid;
+				servername = "Star Wars TTT";
 				break;
 			case 'va':
 			case 'vanilla':
@@ -748,7 +748,7 @@ bot.on("message", (msg) => {
 					break;
 				default:
 					msg.channel.send({embed: { 
-						"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
+						"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'starwars' or 'vanilla'.", 
 						"color": 0x0000ff,	
 						"thumbnail": { 
 							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
@@ -794,11 +794,12 @@ bot.on("message", (msg) => {
 					server = prophunt;
 					servername = 'PropHunt';
 					break;
-				case 'darkrp':
-				case 'roleplay':
-					server = roleplay;
-					servername = 'DarkRP';
+				case 'sw':
+				case 'starwars':
+					server = starwars;
+					servername = 'Star Wars TTT';
 					break;
+				case 'va':
 				case 'vanilla':
 					server = vanilla;
 					servername = 'Vanilla TTT';
@@ -899,7 +900,7 @@ bot.on("message", (msg) => {
 						break;
 					default:
 						msg.channel.send({embed: { 
-							"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
+							"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'starwars' or 'vanilla'.", 
 							"color": 0x0000ff,	
 							"thumbnail": { 
 								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
@@ -943,7 +944,7 @@ bot.on("message", (msg) => {
 			"hue"
 			];
 		commandlist = commandlist.join('\n');
-		notes_srv = "Servers: 'anime', 'prophunt', 'modded', 'roleplay' or 'vanilla'";
+		notes_srv = "Servers: 'anime', 'prophunt', 'modded', 'starwars' or 'vanilla'";
 		notes_per = "Period: 'day', 'week' or 'month'";
 		notes = " ";
 		switch (command) {
@@ -1051,7 +1052,7 @@ bot.on("message", (msg) => {
 
 
 	//function from Hades old bot that shows server info
-	function server(server, name2) {
+	function server_fun(server, name2) {
 		var serverlink = "https://www.gametracker.com/server_info/" + server;
 		var name, status, players, map, mapimg, scanned;
 		request(serverlink, options, function(error, response, html) {
@@ -1137,8 +1138,8 @@ bot.on("message", (msg) => {
 		130,132,133,134, //Anime
 		51,53,48,59,66, //Modded
 		270,271,272,283, //PropHunt
-		87,93, //Vanilla
-		34,36,40,41 //DarkRP
+		87,93 //Vanilla
+		//34,36,40,41 //Star Wars TTT
 	];
 	const sectiontype = [
 		'Appeal','Application', //Global
@@ -1147,28 +1148,28 @@ bot.on("message", (msg) => {
 		'Application','Report','Ban Appeal','Warn Appeal', //Anime
 		'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
 		'Application','Ban Appeal','Warn Appeal','Report', //PropHunt
-		'Application','Ban Appeal', //Vanilla
-		'Report','Application','Ban Appeal','Warn Appeal' //DarkRP
+		'Application','Ban Appeal' //Vanilla
+		//'Report','Application','Ban Appeal','Warn Appeal' //Star Wars TTT
 	];
 	const sectionfrom = [
 		'Forums/Network Appeals','Forum Moderator Applications',
-		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums','PropHunt',
-		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums','PropHunt',
+		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'Star Wars TTT', 'Forums','PropHunt',
+		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'Star Wars TTT', 'Forums','PropHunt',
 		'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
 		'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
 		'PropHunt','PropHunt','PropHunt','PropHunt',
-		'Vanila TTT','Vanila TTT',
-		'DarkRP','DarkRP','DarkRP','DarkRP'
+		'Vanila TTT','Vanila TTT'
+		//'Star Wars TTT','Star Wars TTT','Star Wars TTT','Star Wars TTT'
 	];
 	const sectionmention = [
 		M_gl,M_gl,
-		M_mc,M_va,M_an,M_rp,M_gl,M_ph,
-		M_mc,M_va,M_an,M_rp,M_gl,M_ph,
+		M_mc,M_va,M_an,M_sw,M_gl,M_ph,
+		M_mc,M_va,M_an,M_sw,M_gl,M_ph,
 		M_an,M_an,M_an,M_an,
 		M_mc,M_mc,M_mc,M_mc,M_mc,
 		M_ph,M_ph,M_ph,M_ph,
-		M_va,M_va,
-		M_rp,M_rp,M_rp,M_rp
+		M_va,M_va
+		//M_sw,M_sw,M_sw,M_sw
 	];
 	/*
 	Info to send
@@ -1274,9 +1275,9 @@ bot.on("message", (msg) => {
 						case 93:
 							servertype = [vanilla,'Vanilla TTT'];
 							break;
-						//DarkRP
+						//Star Wars TTT
 						case 36: 
-							servertype = [roleplay,'DarkRP'];
+							servertype = [starwars,'Star Wars TTT'];
 							checkdata[0] = 'appl';
 							break;
 						//Threads that don't need Steam/GT info
@@ -1308,7 +1309,7 @@ bot.on("message", (msg) => {
 						console.log('Post date: ' + postdate);
 						async function reqwait() {
 							console.log('waiting for scrap of post date...');
-							await sleep2(2250); //Waits for the request to finish
+							await sleep2(3000); //Waits for the request to finish
 							//Checks if thread is recent (<1h) to avoid spamming when bot starts
 							if (postdate.includes('minute') === true || checkbypass == true) { //Change condition to "... == true" to work proprely
 								if (checkdata[0] == 'notneeded') { 
@@ -1360,7 +1361,7 @@ bot.on("message", (msg) => {
 					console.log('--End of loop #' + selector + '\n');
 				}
 
-				await sleep(3000);
+				await sleep(4000);
 
 				//If a new post is found
 				if (postlink !== undefined && (postdate.includes('minute') === true || checkbypass == true)) { //change second condition to '... == true'
@@ -1641,12 +1642,12 @@ bot.on("message", (msg) => {
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(prophunt);} 
 			break;
-		case 'rph':
-		case 'darkrph':
-		case 'roleplayh':
-			hourscmd_argsorganize(roleplay, args);
+		case 'swh':
+		case 'starwh':
+		case 'starwarsh':
+			hourscmd_argsorganize(starwars, args);
 			graphtypeselector();
-			if (errorcheck !== true) { scrapGT(roleplay);}
+			if (errorcheck !== true) { scrapGT(starwars);}
 			break;
 		case 'vah':
 		case 'vanillah':
@@ -1679,24 +1680,24 @@ bot.on("message", (msg) => {
 			break;
 		case 'an':
 		case 'anime':
-			server(anime, 'Anime TTT');
+			server_fun(anime, 'Anime TTT');
 			break;
 		case 'mc':
 		case 'modded':
-			server(modded, 'MC TTT');
+			server_fun(modded, 'MC TTT');
 			break;
 		case 'ph':
 		case 'prophunt':
-			server(prophunt, 'PropHunt');
+			server_fun(prophunt, 'PropHunt');
 			break;
-		case 'rp':
-		case 'darkrp':
-		case 'roleplay':
-			server(roleplay, 'DarkRP');
+		case 'sw':
+		case 'starw':
+		case 'starwars':
+			server_fun(starwars, 'Star Wars TTT');
 			break;
 		case 'va':
 		case 'vanilla':
-			server(vanilla, 'Vanilla TTT');
+			server_fun(vanilla, 'Vanilla TTT');
 	    	break;
 		case 'help':
 			args = args.join(' ').trim();
