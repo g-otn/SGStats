@@ -29,6 +29,7 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
+		//msg.content = '!!check start';
 		msg.content = '!!check start';
 	}
 
@@ -67,6 +68,13 @@ bot.on("message", (msg) => {
     const roleplayid = "5493690";
     const vanillaid = "5052174";
     
+	//Roles ID of each server
+	const M_gl = '<@&387409444109025280>';
+	const M_an = '<@&387409402250002434>';
+	const M_mc = '<@&387409235249594368>';
+	const M_rp = '<@153550726793003008>';
+	const M_va = '<@&387409354204250122>';
+
 
 
 	/*Everytime you click to show the graph, a new number is generated, but the scraper can't click, 
@@ -94,7 +102,7 @@ bot.on("message", (msg) => {
     var rawlink, b64user, GTid, graphtype;
     var scrapertarget, url, serverinfo, scanned;
     //function to separate the graphtype and the player name
-    function hourscmd_argsorganize(server, command_args) { 
+    function hourscmd_argsorganize(server, command_args, requesttype) { 
         //Example: !!moddedh week Skeke
         //server = ad_modded; args = ['week', 'Skeke'];
         graphtype = args[0]; // graphtype = week
@@ -102,10 +110,19 @@ bot.on("message", (msg) => {
         args = args.join(' ');  // this is for names with spaces, it will join the array with a space
         scrapertarget = "https://www.gametracker.com/player/" + args + "/" + server + "/";
         serverinfo = "https://www.gametracker.com/server_info/" + server;
-        console.log("URL to scrap: " + scrapertarget);    
+		console.log("URL to scrap: " + scrapertarget);
     }
     //function to scrap the gamertracker base64 username'
-    function scrapGT(server_address) {
+    function scrapGT(server_address, requesttype) {
+		if (requesttype == 'autoreq') {
+			server_address = servertype[0];
+			scrapertarget = "https://www.gametracker.com/player/" + checkdata[1] + "/" + servertype[0] + "/";
+			serverinfo = "https://www.gametracker.com/server_info/" + servertype[0];
+			graphtype = '1w';
+			console.log('server_address: ' + server_address);
+			console.log('scrapertarget: ' + scrapertarget);
+			console.log('graphtype: ' + graphtype);
+		}
     	//This first request just scraps the 'last scanned: x minutes ago' thing
     	request(serverinfo, options, function (error, response, html) {
     		var $ = cheerio.load(html);
@@ -119,48 +136,72 @@ bot.on("message", (msg) => {
                 	//console.log(html); Shows the entire page html, just to see if it's connected
                 	var $ = cheerio.load(html);
                 	rawlink = $('img#graph_player_time').attr('src'); //What we want (the link to the graph)
-                	console.log('Raw scraped link: ' + rawlink);
-
-                	extract_nameb64(server_address);
-
-            	} else { //If it can't access
-				msg.channel.send({embed: { 
-					"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
-					"color": 0x0000ff,	
-					"thumbnail": { 
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+					console.log('Raw scraped link: ' + rawlink);
+					//separate the scraped raw link and get the base64 username
+					if (rawlink !== undefined) {
+						rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
+						b64user = rawlink.trim().split('&host=').slice(0,1);
+						console.log('Base64 Username: ' + b64user);
+						//Fix that sends the correct 'request' image (not working because the loaded html doesn't have this)
+						/*rawlink = rawlink.trim().split('&request=').slice(1,2).join();
+						console.log('GT Request number: ' + rawlink);*/
+						var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + server_address + '&start=-' + graphtype + "&request=0" + requestnumber;
+						if (requesttype == 'autoreq') {
+							checkdata[6] = finalimage;
+							console.log('---End of serverh function');
+						} else {
+							//(finnally) send the image
+							console.log('errorcheck: ' + errorcheck);
+							console.log('Graph type: ' + graphtype);
+							console.log('Image to send: ' + finalimage);
+							//Fix to links that are broken when sent to discord if the player has space in its name
+							scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
+							scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
+							scrapertarget = scrapertarget.split(" ").join("%20");
+							scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
+							//Sends the message
+							msg.channel.send({embed: {
+								"description": "Showing [" + args + "](" + scrapertarget + ")'s playtime:",
+								"color": 0xFFBF52,
+								"footer": {
+									"text": scanned + " via GT"
+								},
+								"image": {
+									"url": finalimage
+								}
+							}});
+							console.log('----------\n');
+						}
+					} else {
+						if (requesttype !== 'autoreq') {
+							msg.channel.send({embed: { 
+								"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.", 
+								"color": 0x0000ff,	
+								"thumbnail": { 
+									"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+								}
+							}});
+							console.log('!! Image not sent because of player name !!');
+							console.log('----------\n');
+						} else { 
+							checkdata[6] = 'notfound';
+							console.log('---End of serverh function');
+						}
 					}
-				}});
-            	console.log('Website access error. HTTP Code ' + response.statusCode);
-            	console.log('!! Image not sent because of website error !!');
-            	console.log('----------\n');
-            }
+            	} else { //If it can't access
+					msg.channel.send({embed: { 
+						"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+						}
+					}});
+					console.log('Website access error. HTTP Code ' + response.statusCode);
+					console.log('!! Image not sent because of website error !!');
+					console.log('----------\n');
+            	}
+        	});
         });
-        });
-    }
-    //function to separate the scraped raw link and get the base64 username
-    function extract_nameb64(server_address) {
-    	if (rawlink !== undefined) {
-    		rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
-    		b64user = rawlink.trim().split('&host=').slice(0,1);
-    		console.log('Base64 Username: ' + b64user);
-        	//Fix that sends the correct 'request' image (not working because the loaded html doesn't have this)
-        	/*rawlink = rawlink.trim().split('&request=').slice(1,2).join();
-        	console.log('GT Request number: ' + rawlink);*/
-        	
-        	sendimage(server_address, rawlink);
-
-        } else {
-			msg.channel.send({embed: { 
-				"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
-				}
-			}});
-        	console.log('!! Image not sent because of player name !!');
-        	console.log('----------\n');
-        }
     }
     //function that selects the type of graph
     function graphtypeselector() {
@@ -182,30 +223,6 @@ bot.on("message", (msg) => {
 		    	break;
 		    }
 		}
-    //function to (finnally) send the image
-    function sendimage(ip) {
-    	console.log('errorcheck: ' + errorcheck);
-    	console.log('Graph type: ' + graphtype);
-    	var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + ip + '&start=-' + graphtype + "&request=0" + requestnumber;
-    	console.log('Image to send: ' + finalimage);
-    	//Fix to links that are broken when sent to discord if the player has space in its name
-    	scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
-    	scrapertarget = scrapertarget.split("/" + ip + "/").slice(0,1).join();
-    	scrapertarget = scrapertarget.split(" ").join("%20");
-    	scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + ip + "/";
-		//Sends the message
-		msg.channel.send({embed: {
-			"description": "Showing [" + args + "](" + scrapertarget + ")'s playtime:",
-			"color": 0xFFBF52,
-			"footer": {
-				"text": scanned + " via GT"
-			},
-			"image": {
-				"url": finalimage
-			}
-		}});
-		console.log('----------\n');
-	}
 	function wronggraphtype() {
 		msg.channel.send({embed: {
 			"description": "'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.",
@@ -266,7 +283,7 @@ bot.on("message", (msg) => {
                     request(profilelink, options, function(error, response, html) {
                     	var $ = cheerio.load(html);
                     	profileicon = $('.playerAvatarAutoSizeInner').children().attr('src').trim() + "";
-                    	console.log(profileicon);
+                    	//console.log(profileicon);
                         //double-check if the profile is private (sometimes steamidfinder gets it wrong)
                         privatecheck = $('body').hasClass('private_profile');
                         console.log('privatecheck: ' + privatecheck);
@@ -281,7 +298,7 @@ bot.on("message", (msg) => {
                         	gmodh = $('div.game_name').children('a').eq(i).text(); 
                                 if (gmodh == "Garry's Mod") { break;} //Check which scraped game of the recent games is Garry's mod
                             }
-                            console.log('i: ' + i);
+                            //console.log('i: ' + i);
                             gmodh = $('div.game_name').children('a').eq(i).parent().prev().text();
                             gmodh = gmodh.trim().split(' ').slice(0,1).join();
                             console.log("Gmod hours: " + gmodh);
@@ -310,8 +327,9 @@ bot.on("message", (msg) => {
 								console.log('----------\n');
 								break;
 							case 'autoreq':
-								console.log('---Ending steaminfo function, starting steamdataorganizer...')
-								steamdataorganizer(name, profilelink, profileicon, gmodh, profilestate, steamid);
+								checkdata.push(name, profilelink, profileicon, gmodh, profilestate);
+								//console.log('\n'+checkdata+'\n');
+								console.log('---End of steaminfo function');
 								break;
 						}
                     });
@@ -328,7 +346,7 @@ bot.on("message", (msg) => {
 						console.log('----------\n');
 					} else { 
 						console.log('steaminfo command could not find the user');
-						steamdataorganizer('notfound');
+						checkdata[0] = 'notfound';
 					}
 
                 }
@@ -346,7 +364,7 @@ bot.on("message", (msg) => {
 					console.log('----------\n');
 				} else { 
 					console.log('steaminfo command could not access the website');
-					steamdataorganizer('notfound');
+					checkdata[0] = 'notfound';
 				}
             }
         });
@@ -628,42 +646,47 @@ bot.on("message", (msg) => {
 
 
 	//Function to get player's gametracker hours in a server table_lst
-	function playerhours(args) {
+	function playerhours(args, requesttype, checkserver, checkplayer) {
 		var server, player, playername, searchlink, serverlink, errorcheck, noplayercheck, playerlink, servername;
 		var scanned, hours;
 		errorcheck = false;
-		server = args[0];
-		args = args.join(' ');
-		console.log('args: ' + args);
-		player = args.split(server).join(' ').trim(); 
-		console.log('Server: ' + server);
-		console.log('Player: ' + player);
-		switch (server) {
-			case 'anime':
-				server = anime;
-				servername = 'Anime TTT';
-				break;
-			case 'modded':
-				server = modded;
-				servername = 'MC TTT';
-				break;
-			case 'darkrp':
-			case 'roleplay':
-				server = roleplay;
-				servername = 'DarkRP';
-				break;
-			case 'vanilla':
-				server = vanilla;
-				servername = 'Vanilla TTT';
-				break;
-			default:
-				errorcheck = true;
+		if (requesttype !== 'autoreq') {
+			server = args[0];
+			args = args.join(' ');
+			console.log('args: ' + args);
+			player = args.split(server).join(' ').trim(); 
+			console.log('Server: ' + server);
+			console.log('Player: ' + player);
+			switch (server) {
+				case 'anime':
+					server = anime;
+					servername = 'Anime TTT';
+					break;
+				case 'modded':
+					server = modded;
+					servername = 'MC TTT';
+					break;
+				case 'darkrp':
+				case 'roleplay':
+					server = roleplay;
+					servername = 'DarkRP';
+					break;
+				case 'vanilla':
+					server = vanilla;
+					servername = 'Vanilla TTT';
+					break;
+				default:
+					errorcheck = true;
+			}
+		} else { //Check function
+			server = checkserver;
+			player = checkplayer;
 		}
 		console.log('errorcheck: ' + errorcheck);
 		if (errorcheck !== true) {
 			serverlink = "https://www.gametracker.com/server_info/" + server;
 			searchlink = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + player;
-			console.log('URLs to scrap: \n' + serverlink + '\n' + searchlink);
+			console.log('URLs to scrap: \nserverlink: ' + serverlink + '\nsearchlink: ' + searchlink);
 			request(serverlink, options, function(error, response, html) {
 				var $ = cheerio.load(html);
 				scanned = $('#last_scanned').text().trim();
@@ -680,39 +703,50 @@ bot.on("message", (msg) => {
 							hours = $('.table_lst').children().children().eq(1).children().eq(4).text().split('.').slice(0,1).join().trim();
 							console.log('player: ' + player);
 							console.log('hours: ' + hours);
-							//If the player name has spaces
-							playername = player;
-							player = player.split(" ").join("%20");
-							playerlink = "https://www.gametracker.com/player/" + player + "/" + server + "/";
-							searchlink = searchlink.split(" ").join("%20");
-							//Sends the message
-							msg.channel.send({embed: {
-								"description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**\nFor players with similar names, click [here](" + searchlink + ").",
-								"color": 0xFFBF52,
-								"footer": {
-									"text": scanned + " via GT"
-								},
-							}});
-							console.log('----------\n');
+							if (requesttype !== 'autoreq') {
+								//If the player name has spaces
+								playername = player;
+								player = player.split(" ").join("%20");
+								playerlink = "https://www.gametracker.com/player/" + player + "/" + server + "/";
+								searchlink = searchlink.split(" ").join("%20");
+								//Sends the message
+								msg.channel.send({embed: {
+									"description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**\nFor players with similar names, click [here](" + searchlink + ").",
+									"color": 0xFFBF52,
+									"footer": {
+										"text": scanned + " via GT"
+									},
+								}});
+								console.log('----------\n');
+							} else {
+								checkdata[9] = searchlink;
+								checkdata[8] = player;
+								checkdata[7] = hours; //Check function wanted data
+								console.log('---End of playerhours function');
+							}
 						} else {
+							if (requesttype !== 'autoreq') {
+								msg.channel.send({embed: { 
+									"description": "Player doesn't play on this server or doesn't exist.", 
+									"color": 0x0000ff,	
+									"thumbnail": { 
+										"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+									}
+								}});
+							} else { checkdata[7] = 'not found\nPlayer not found in GT!';}
+							console.log('Player not found!');
+							console.log('----------\n');
+						}
+					} else {
+						if (requesttype !== 'autoreq') {
 							msg.channel.send({embed: { 
-								"description": "Player doesn't play on this server or doesn't exist.", 
+								"description": "Couldn't access the website. HTTP code " + response.statusCode, 
 								"color": 0x0000ff,	
 								"thumbnail": { 
 									"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
 								}
 							}});
-							console.log('Player not found!');
-							console.log('----------\n');
 						}
-					} else {
-						msg.channel.send({embed: { 
-							"description": "Couldn't access the website. HTTP code " + response.statusCode, 
-							"color": 0x0000ff,	
-							"thumbnail": { 
-								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
-							}
-						}});
 						console.log('Website access error. HTTP Code ' + response.statusCode);
 						console.log('!! Info not sent because of website error !!');
 						console.log('----------\n');
@@ -819,7 +853,7 @@ bot.on("message", (msg) => {
 			default:
 				defaultcheck = true;
 				msg.channel.send({embed: {
-					"description": '**Showing SmitainmentStats commands** \nType ``' + config.prefix + 'help <command>`` for specific info.\n```' + commandlist + "```",
+					"description": '**Showing SmitainmentStats commands** \nType ``' + config.prefix + 'help <command>`` for specific info.\n```' + commandlist + "```\n[Changelog](https://discordbot-smithtainmentstats-changelog.glitch.me/)",
 					"color": 0x0000ff,
 					"footer": {
 						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
@@ -933,28 +967,45 @@ bot.on("message", (msg) => {
 	//Variables and functions that scrap and send thread info
 	var postname, postauthor, postlink, postdate, seclink;
 	var selector, forbreaker;
+	var servertype = [];
+	var checkdata = [1];
 	const sectionlist = [
-							241,213, //Global
-							130,132,133,134, //Anime
-							51,53,48,59,66, //Modded
-							87,93, //Vanilla
-							34,36,40,41 //DarkRP
-						];
+		241,213, //Global
+		130,132,133,134, //Anime
+		51,53,48,59,66, //Modded
+		87,93, //Vanilla
+		34,36,40,41 //DarkRP
+	];
 	const sectiontype = [
-							'Appeal','Application', //Global
-							'Application','Report','Ban Appeal','Warn Appeal', //Anime
-							'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
-							'Application','Ban Appeal', //Vanilla
-							'Report','Application','Ban Appeal','Warn Appeal' //DarkRP
-						];
+		'Appeal','Application', //Global
+		'Application','Report','Ban Appeal','Warn Appeal', //Anime
+		'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
+		'Application','Ban Appeal', //Vanilla
+		'Report','Application','Ban Appeal','Warn Appeal' //DarkRP
+	];
 	const sectionfrom = [
-							'Forums/Network Appeals','Forum Moderator Applications',
-							'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
-							'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
-							'Vanila TTT','Vanila TTT',
-							'DarkRP','DarkRP','DarkRP','DarkRP'
-						];
+		'Forums/Network Appeals','Forum Moderator Applications',
+		'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
+		'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
+		'Vanila TTT','Vanila TTT',
+		'DarkRP','DarkRP','DarkRP','DarkRP'
+	];
+	const sectionmention = [
+		M_gl,M_gl,
+		M_an,M_an,M_an,M_an,
+		M_mc,M_mc,M_mc,M_mc,M_mc,
+		M_va,M_va,
+		M_rp,M_rp,M_rp,M_rp
+	];
+	/*
+	Info to send
+	Basic info: All Threads
+	Steam info: All Threads
+	GT info: All Threads
+	GT graph: Only Applications
+	*/
 	async function check(fid) {
+		checkdata = [];
 		//Checks for manual test (with fid)
 		var i;
 		var fidcheck = false;
@@ -972,6 +1023,11 @@ bot.on("message", (msg) => {
 				forbreaker = true;
 				console.log('forbreaker: ' + forbreaker);
 				seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + fid;
+				for (i = 0; i < sectionlist.length; i++) { 
+					if (fid == sectionlist[i]) {
+						selector = i;
+					}
+				}
 			} else {
 				seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + sectionlist[selector];
 			}
@@ -997,52 +1053,111 @@ bot.on("message", (msg) => {
 					postlink = postlink.trim().split('tid_').join("").trim();
 					postauthor = postauthor.trim();
 					console.log('Repeated Threads: ' + repeatedthreads.join(', '));
-					//Checks if thread has already been seen or if there is a thread
-					if (repeatedthreads.join(' ').includes(postlink) == false) { //".indexOf(postlink) == -1" instead of ".includes(postlink) == false" also works
-						console.log('New thread, adding to repeatedthreads');
-						repeatedthreads.push(postlink); //Marks thread as already seen
-						console.log('Repeated threads from now: ' + repeatedthreads);
-						postlink = "http://forums.smithtainment.com/showthread.php?tid=" + postlink;
-						console.log("Thread link: " + postlink);
-						//Goes to the post
-						request(postlink, options, function(error, response, html) {
-							var $ = cheerio.load(html);
-							//Scraps date and SteamID if the author wrote it
-							postdate = $('.post_date').first().text().trim();
-							console.log('Post date: ' + postdate);
-							//Checks if thread is recent (<1h) to avoid spamming when bot starts
-							if (postdate.includes('minute') == true) { //Change condition to "... == true" to work proprely
-								console.log('New recent thread found.');
-								console.log('----------');
-								poststeamid = $('.post_body').text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
-								console.log('SteamID written in post: ' + poststeamid);
-								//Checks if the author wrote a SteamID or not (even if it's broken)
-								if (poststeamid !== undefined && poststeamid !== null && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
-									console.log('SteamID written in post found');
-									poststeamid = 'STEAM_' + poststeamid;
-									console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
-									steaminfo(poststeamid, "autoreq", postlink);
-								} else {
-									console.log('SteamID in thread not found, skipping steaminfo function');
-									steamdataorganizer('notfound');
-								}
-							} else {
-								console.log('New thread found, but not recent.');
-								console.log('End of loop #' + selector);
-							}
-						});
-					} else {
-						console.log('Thread found, but not new.');
-						console.log('End of loop #' + selector);
-					}
 				} else {
 					console.log('No thread found.');
-					console.log('End of loop #' + selector);
+					console.log('End of loop #' + selector + '\n');
 				}
 			});
-			if (forbreaker == true) { break;}
 			//Waits the scraper and function to end to start again to prevent rewrite of variables in the wrong time
-			await sleep(7000);
+			await sleep(3000); //Waits for the first scrap to search for post
+
+			if (postname !==  undefined && postlink !== undefined && postauthor !== undefined) {
+				//Checks if thread has already been seen or if there is a thread
+				if (repeatedthreads.join(' ').includes(postlink) == false) { //".indexOf(postlink) == -1" instead of ".includes(postlink) == false" also works
+					console.log('New thread, adding to repeatedthreads');
+					repeatedthreads.push(postlink); //Marks thread as already seen
+					console.log('Repeated threads from now: ' + repeatedthreads);
+					checkdata[0] = 'notappl'; //replaces undefined
+					servertype[1] = 'Server'; //replaces undefined
+					switch (sectionlist[selector]) {
+						//Anime
+						case 130:
+							checkdata[0] = 'appl';
+						case 132:
+						case 133:
+						case 134:
+							servertype = [anime,'Anime TTT'];
+							break;
+						//Modded
+						case 48: 
+							checkdata[0] = 'appl';
+							
+						case 51:
+						case 53:
+						case 59:
+						case 66:
+							servertype = [modded,'MC TTT'];
+							break;
+						//Vanilla
+						case 87: 
+							checkdata[0] = 'appl';
+						case 93:
+							servertype = [vanilla,'Vanilla TTT'];
+							break;
+						//DarkRP
+						case 36: 
+							servertype = [roleplay,'DarkRP'];
+							checkdata[0] = 'appl';
+							break;
+					}
+					console.log('servertype: '+servertype);
+					//checkdata[0] tells if it's an application or if info is found to send
+					console.log('checkdata[0]: ' + checkdata[0]);
+					postlink = "http://forums.smithtainment.com/showthread.php?tid=" + postlink;
+					console.log("Thread link: " + postlink);
+					//Goes to the post
+					request(postlink, options, function(error, response, html) {
+						var $ = cheerio.load(html);
+						//Scraps date and SteamID if the author wrote it
+						postdate = $('.post_date').first().text().trim();
+						console.log('Post date: ' + postdate);
+						//Checks if thread is recent (<1h) to avoid spamming when bot starts
+						if (postdate.includes('minute') == true) { //Change condition to "... == true" to work proprely
+							console.log('New recent thread found.');
+							poststeamid = $('.post_body').text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
+							console.log('SteamID written in post: STEAM_' + poststeamid);
+							//Checks if the author wrote a SteamID or not (even if it's broken)
+							if (poststeamid !== undefined && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
+								console.log('SteamID written in post found');
+								poststeamid = 'STEAM_' + poststeamid;
+								console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
+								steaminfo(poststeamid, 'autoreq', postlink);
+							} else {
+								console.log('SteamID in thread not found, skipping steaminfo function');
+								checkdata[0] = 'notfound';
+							}
+						} else {
+							console.log('New thread found, but not recent.');
+							console.log('End of loop #' + selector + '\n');
+						}
+					});
+				} else {
+					console.log('Thread found, but not new.');
+					console.log('End of loop #' + selector + '\n');
+				}
+
+				await sleep(3000);
+
+				//If a new post is found
+				if (postlink !== undefined && postdate.includes('minute') == true) { //change second condition to '... == true'
+					await sleep(8000);
+					if (checkdata[0] == 'appl') {
+						console.log('---Starting serverh function');
+						scrapGT(null,'autoreq');
+						await sleep(5000);
+						console.log('---Starting playerhours function');
+						playerhours(null, 'autoreq', servertype[0], checkdata[1]);
+						await sleep(5000);
+						checksender();
+					} else {
+						console.log('---Starting playerhours function');
+						playerhours(null, 'autoreq', servertype[0], checkdata[1]);
+						await sleep(5000);
+						checksender();
+					}
+				} else { await sleep(500);}
+			}
+			if (forbreaker == true) { break;}
 		}
 		if (forbreaker == false || fid == undefined) {
 			console.log('End of automatic forums checking');
@@ -1056,45 +1171,145 @@ bot.on("message", (msg) => {
 		}
 	}
 	//Collects the data from the checking and steaminfo function and send it
-	function steamdataorganizer(sname, sproflink, sprofimg, gmodhrs, sprofstat, steamid) {
-		//spam_channel -> 409458470610403338
-		//test_channel -> 403969093595693066
-		if (sname == "notfound") {
-		console.log('Steam info failed (' + sname + '). Sending without...');
-			bot.channels.get("409458470610403338").send({embed: {
+	function checksender() {
+		console.log('checkdata[0]: ' + checkdata[0]);
+		var i;
+		for (i=1;i<9;i++) { //Transforms undefined into 'not found' to stop some erros
+			if (checkdata[i] == undefined) { checkdata[i] = 'not found';}
+		}
+		//if (isNaN(checkdata[]) == false) { checkdata[]].split(" ").join("%20");}
+		
+		console.log("Data recevied: \n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n servertype: ' + servertype);
+		//Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
+		//spam_channel -> "409458470610403338"
+		//test_channel -> "403969093595693066"
+		var target = "409458470610403338";
+		
+		if (checkdata[0] == "notfound") {
+		console.log('Steam info failed (' + checkdata[0] + '). Sending without...\n');
+			bot.channels.get(target).send({embed: {
 				"title": "New " + sectiontype[selector] + "!",
-				"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! The respective staff should check it out.",
+				"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
 				"color": 0x0000ff,
 				"footer": {
-					"text": "Steam info from player not found because of missing SteamID in thread."
+					"text": "Info from player not found because of missing SteamID in thread."
 				}
 			}});	
 		} else {
-			console.log("Data recevied: \n name: " + sname +'\n profile link: '+ sproflink +'\n profile image: found\n gmod hours: '+ gmodhrs +'\n profile state: ' + sprofstat);
-			if (gmodhrs == undefined || gmodhrs == "" || gmodhrs == 'notfound') { gmodhrs == 'unknown';}
-			console.log('Steam info recieved. Sending message...');
-			bot.channels.get("409458470610403338").send({embed: {
-				"title": "New " + sectiontype[selector] + "!",
-				"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! The respective staff should check it out.",
-				"color": 0x0000ff,
-				"footer": {
-					"text": "Steam info may be wrong depending of how the user wrote the SteamID." 
-				},
-				"thumbnail": {
-					"url": sprofimg
-				},
-				"fields": [
-					{
-						"name": postauthor + "'s Steam info",
-						"value": "Steam name: " + sname + "\nProfile state: [" + sprofstat + "](" + sproflink + ") \nGarry's Mod hours: " + gmodhrs,
-					}
-				]
-			}});
+			console.log('Steam info recieved (' + checkdata[0] + '). Sending message...\n');
+			if (checkdata[4] == undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
+			if (checkdata[0] == 'notappl' || checkdata[6] == 'notfound') {
+				bot.channels.get(target).send({embed: {
+					"title": "New " + sectiontype[selector] + "!",
+					"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+					"color": 0x0000ff,
+					"footer": {
+						"text": "Info may be wrong depending of SteamID written and multiple/similar names." 
+					},
+					"thumbnail": {
+						"url": checkdata[3]
+					},
+					"fields": [
+						{
+							"name": "Steam info",
+							"value": "Steam name: " + checkdata[1] + "\nProfile state: [" + checkdata[5] + "](" + checkdata[2] + ") \nGarry's Mod hours: " + checkdata[4],
+							"inline": true
+						},
+						{
+							"name": "Gamertracker info",
+							"value": 'Name: [' + checkdata[8] + '](https://www.gametracker.com/player/' + checkdata[1].split(" ").join("%20") + '/' + servertype[0] + '/)\n' + servertype[1] + " hours: " + checkdata[7],
+							"inline": true
+						}
+					]
+				}});
+			} else {
+				if (checkdata[0] == 'appl' || checkdata[6] !== undefined) {
+					bot.channels.get(target).send({embed: {
+						"title": "New " + sectiontype[selector] + "!",
+						"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+						"color": 0x0000ff,
+						"footer": {
+							"text": "Info may be wrong depending of SteamID written and multiple/similar names." 
+						},
+						"thumbnail": {
+							"url": checkdata[3]
+						},
+						"image": {
+							"url": checkdata[6]
+						},
+						"fields": [
+							{
+								"name": "Steam info",
+								"value": "Steam name: " + checkdata[1] + "\nProfile state: [" + checkdata[5] + "](" + checkdata[2] + ") \nGarry's Mod hours: " + checkdata[4],
+								"inline": true
+							},
+							{
+								"name": "Gamertracker info",
+								"value": 'Name: [' + checkdata[8] + '](https://www.gametracker.com/player/' + checkdata[1].split(" ").join("%20") + '/' + servertype[0] + '/)\n' + servertype[1] + " hours: " + checkdata[7],
+								"inline": true
+							},
+							{
+								"name": servertype[1] + " Activity",
+								"value": 'Showing last 7 days activity of ' + checkdata[8] + '. Similar names [here](' + checkdata[9].split(" ").join("%20") + ')',
+							}
+						]
+					}});
+				} else {
+					bot.channels.get(target).send({embed: {
+						"title": "New " + sectiontype[selector] + "!",
+						"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+						"color": 0x0000ff,
+						"footer": {
+							"text": "Info may be wrong depending of SteamID written and multiple/similar names." 
+						},
+						"thumbnail": {
+							"url": checkdata[3]
+						},
+						"image": {
+							"url": checkdata[6]
+						},
+						"fields": [
+							{
+								"name": "Steam info",
+								"value": "Steam name: " + checkdata[1] + "\nProfile state: [" + checkdata[5] + "](" + checkdata[2] + ") \nGarry's Mod hours: " + checkdata[4],
+								"inline": true
+							},
+							{
+								"name": "Gamertracker info",
+								"value": 'Name: [' + checkdata[8] + '](https://www.gametracker.com/player/' + checkdata[1].split(" ").join("%20") + '/' + servertype[0] + '/)\n' + servertype[1] + " hours: " + checkdata[7],
+								"inline": true
+							},
+							{
+								"name": servertype[1] + " Activity",
+								"value": 'Activity not found because either the player do not play on the server or it has special characters in its name.',
+							}
+						]
+					}});
+				}
+			}
 		}
-		if (forbreaker == true) { console.log('----------\n');	
-		}
-	} 
-	
+		checkdata = [];
+		if (forbreaker == true) { console.log('----------\n');}
+	}
+
+
+
+
+
+
+	function test() {
+		/*bot.channels.get("409456414654726156").send({embed: { 
+			"description": "@everyone, Reeb enslaved me and I couldn't be happier! This is a test message!", 
+			"color": 0xff0000,
+			"footer": {
+				"text": "THIS IS NOT A TEST HELP ME" 
+			},
+			"image": { 
+				"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2F%C3%ADndice.jpg?1519610355021"
+			}
+		}});*/
+		bot.channels.get("409456414654726156").send("@everyone, sorry for the ping, this is a test. -Reeb (?)");
+	}
 
 
 
@@ -1172,6 +1387,9 @@ bot.on("message", (msg) => {
 		case 'hue':
 			msg.channel.send('br');
 			console.log('----------\n');
+			break;
+		case 'test':
+			test();
 			break;
 		case 'check':
 			check(args);
