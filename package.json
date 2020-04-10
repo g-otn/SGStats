@@ -1,18 +1,17 @@
 {
   "name": "SmithtainmentStats",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "description": "HTML Scrapper made for the Smithtainment discord.",
   "main": "bot.js",
   "engines": { "node": "8.9.3" },
   "dependencies": {
-    "express": "^4.15.5",
   	"discord.js": "^11.2.1",
     "request": "^2.83.0",
     "cheerio": "^1.0.0-rc.2"
   },
+  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bot.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Skeke#2155",
   "license": "ISC"

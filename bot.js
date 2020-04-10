@@ -1,5 +1,5 @@
-const autoping = require('./autoping.js');
-autoping.autopingfunction();
+/*const autoping = require('./autoping.js');
+autoping.autopingfunction();*/
 //===========================================================================
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -116,7 +116,6 @@ bot.on("message", (msg) => {
         args = args.join(' ');  // this is for names with spaces, it will join the array with a space
         playersearch = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + args;
         serverinfo = "https://www.gametracker.com/server_info/" + server;
-		console.log("URL to scrap: " + scrapertarget);
     }
     //function to scrap the gamertracker base64 username'
     function scrapGT(server_address, requesttype) {
@@ -130,6 +129,7 @@ bot.on("message", (msg) => {
 			console.log('scrapertarget: ' + scrapertarget);
 			console.log('graphtype: ' + graphtype);
 		}
+		console.log("Search URL: " + playersearch);
 		request(playersearch, options, function(error, response, html) {
 			if (requesttype !== 'autoreq') {
 				var $ = cheerio.load(html);
@@ -159,6 +159,7 @@ bot.on("message", (msg) => {
 	    		var $ = cheerio.load(html);
 	    		scanned = $('#last_scanned').text().trim();
 	            //This request gets what we want (the info to make the graph URL)
+	            console.log("Player profile URL: " + scrapertarget);
 	            request(scrapertarget, options, function (error, response, html) {
 	            	console.log('Scraper started');
 	            	if (!error && response.statusCode == 200) {
@@ -233,20 +234,48 @@ bot.on("message", (msg) => {
 		        graphtype = '1m';
 		        errorcheck = false; 
 		        break;
-		    default: //If does not match with one of those 3 above
+		    case '':
+		    case ' ':
+		    case undefined: //No graph type
 		    	errorcheck = true; //Blocks the function to send the image since with the typing error a broken link/image will be generated   
-		    	break;
-		    }
+				msg.channel.send({embed: {
+					"description": "You have to select a graph type and a player username. Type ``!!help serverh`` for more information.",
+					"color": 0x0000ff,
+					"thumbnail": {
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+					}
+				}});
+				console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+				break;
+		    default: //incorrect graph type
+		    	errorcheck = true;  
+				msg.channel.send({embed: {
+					"description": "'" + graphtype + "' is not a valid graphtype. Please use ``day``, ``week`` or ``month``. Type ``!!help serverh`` for more information.",
+					"color": 0x0000ff,
+					"thumbnail": {
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+					}
+				}});
+				console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+				break;
 		}
-	function wronggraphtype() {
-		msg.channel.send({embed: {
-			"description": "'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.",
-			"color": 0x0000ff,
-			"thumbnail": {
-			  "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+		if (errorcheck === false) {
+			switch (args) {
+				case '':
+				case ' ':
+				case undefined:
+					errorcheck = true;
+					msg.channel.send({embed: {
+						"description": "You have to type a player username! Type ``!!help serverh`` for more information.",
+						"color": 0x0000ff,
+						"thumbnail": {
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+						}
+					}});
+					console.log('!! Image not sent because of no player name !!\n----------\n');
+				break;
 			}
-		}});
-		console.log('!! Image not sent because of wrong graph type !!\n----------\n');
+		}
 	}
 
 
@@ -256,133 +285,147 @@ bot.on("message", (msg) => {
 
 	function steaminfo(input, requesttype)  {
 		console.log('Request type: ' + requesttype);
-        var steamid, name, profilelink, profilestate, steamid64, customURL; //scraped in steamidfinder
-        var profileicon, gmodh, privatecheck; //scraped from steam
-        var customID, gameslist; //made with scraped values
-        var idfinderlink = 'https://steamidfinder.com/lookup/' + input;
-        console.log('URL to scrap: ' + idfinderlink);
-        request(idfinderlink, options, function (error, response, html) {
-        	console.log('Scraper started');
-        	if (!error && response.statusCode == 200) {
-        		console.log('Website access successful. HTTP Code: ' + response.statusCode);
-        		var $ = cheerio.load(html);
-                //gathers the steamid (if it's found)
-                steamid = $('title').text();
-                steamid = steamid.split(' ').slice(0,1).join();
-                console.log('Steam ID: ' + steamid);
-                if (steamid !== 'Steam') {
-                    //gathers the name
-                    name = $('title').text();
-                    name = name.split('(').slice(1,2).join();
-                    name = name.split(')').slice(0,1).join();
-                    //if (name.indexOf(' ') > -1) { name = name.split(' ').join('%20');}
-                    console.log('Name: ' + name);
-                    //Gathers the steam profile link
-                    profilelink = $('code').children('a').text().trim().split('http://steamcommunity.com/profiles/').slice(1,2).join();
-                    profilelink = 'http://steamcommunity.com/profiles/' + profilelink;
-                    console.log('Profile link: ' + profilelink);
-                    //Gathers the steam profile state (public or private) //%20
-                    profilestate = $('code').children('a').last().parent().next().next().text();
-                    console.log('Profile state: ' + profilestate);
-                    //Gathers the steamid64 (who knows if you might need it)
-                    steamid64 = $('code').children('a').first().parent().prev().prev().text();
-                    console.log('SteamID64: ' + steamid64);
-                    gameslist = "https://steamcommunity.com/profiles/" + steamid64 + "/games/?tab=all";
-                    //Gathers customURL (for gmod hours which uses custom URL)
-                    customURL = $('code').children('a').first().attr('href');
-                    console.log('Custom URL: ' + customURL);
-                    customID = customURL.split('http://steamcommunity.com/id/').slice(1,2).join();
-                    if (profilelink == customURL) { customID = name;}
-                    console.log('Player custom ID: ' + customID);
-                    //Gathers the avatar icon from the steam profile
-                    request(profilelink, options, function(error, response, html) {
-                    	var $ = cheerio.load(html);
-                    	profileicon = $('.playerAvatarAutoSizeInner').children().attr('src').trim() + "";
-                    	//console.log(profileicon);
-                        //double-check if the profile is private (sometimes steamidfinder gets it wrong)
-                        privatecheck = $('body').hasClass('private_profile');
-                        console.log('privatecheck: ' + privatecheck);
-                        if (profilestate !== 'not set') {
-                        	if (privatecheck === true) { profilestate = 'private';}
-                        }
-                        //Gathers Garry's Mod hours
-                        if (profilestate == 'public' && profilestate !== 'private' && profilestate !== 'not set') { //This doesn't work if the profile is private nor if Garry's mod isn't in the profile main page
-                            var recentgamesl = $('div.game_name').children('a').length; //Check for how many recent games there are in the page
-                        var i;
-                        for (i = 0; i <= recentgamesl; i++) {
-                        	gmodh = $('div.game_name').children('a').eq(i).text(); 
-                                if (gmodh == "Garry's Mod") { break;} //Check which scraped game of the recent games is Garry's mod
-                            }
-                            //console.log('i: ' + i);
-                            gmodh = $('div.game_name').children('a').eq(i).parent().prev().text();
-                            gmodh = gmodh.trim().split(' ').slice(0,1).join();
-                            console.log("Gmod hours: " + gmodh);
-                        } else {
-                        	gmodh = 'unknown';
-                        	customID = name;
-                        	console.log("Gmod hours private");
+		input = input + "";
+		console.log('input: ' + input);
+		if ((input !== "" && requesttype !== 'autoreq') || requesttype == 'autoreq') {
+	        var steamid, name, profilelink, profilestate, steamid64, customURL; //scraped in steamidfinder
+	        var profileicon, gmodh, privatecheck; //scraped from steam
+	        var customID, gameslist; //made with scraped values
+	        var idfinderlink = 'https://steamidfinder.com/lookup/' + input;
+	        console.log('URL to scrap: ' + idfinderlink);
+	        request(idfinderlink, options, function (error, response, html) {
+	        	console.log('Scraper started');
+	        	if (!error && response.statusCode == 200) {
+	        		console.log('Website access successful. HTTP Code: ' + response.statusCode);
+	        		var $ = cheerio.load(html);
+	                //gathers the steamid (if it's found)
+	                steamid = $('title').text();
+	                steamid = steamid.split(' ').slice(0,1).join();
+	                console.log('Steam ID: ' + steamid);
+	                if (steamid !== 'Steam') {
+	                    //gathers the name
+	                    name = $('title').text();
+	                    name = name.split('(').slice(1,2).join();
+	                    name = name.split(')').slice(0,1).join();
+	                    //if (name.indexOf(' ') > -1) { name = name.split(' ').join('%20');}
+	                    console.log('Name: ' + name);
+	                    //Gathers the steam profile link
+	                    profilelink = $('code').children('a').text().trim().split('http://steamcommunity.com/profiles/').slice(1,2).join();
+	                    profilelink = 'http://steamcommunity.com/profiles/' + profilelink;
+	                    console.log('Profile link: ' + profilelink);
+	                    //Gathers the steam profile state (public or private) //%20
+	                    profilestate = $('code').children('a').last().parent().next().next().text();
+	                    console.log('Profile state: ' + profilestate);
+	                    //Gathers the steamid64 (who knows if you might need it)
+	                    steamid64 = $('code').children('a').first().parent().prev().prev().text();
+	                    console.log('SteamID64: ' + steamid64);
+	                    gameslist = "https://steamcommunity.com/profiles/" + steamid64 + "/games/?tab=all";
+	                    //Gathers customURL (for gmod hours which uses custom URL)
+	                    customURL = $('code').children('a').first().attr('href');
+	                    console.log('Custom URL: ' + customURL);
+	                    customID = customURL.split('http://steamcommunity.com/id/').slice(1,2).join();
+	                    if (profilelink == customURL) { customID = name;}
+	                    console.log('Player custom ID: ' + customID);
+	                    //Gathers the avatar icon from the steam profile
+	                    request(profilelink, options, function(error, response, html) {
+	                    	var $ = cheerio.load(html);
+	                    	profileicon = $('.playerAvatarAutoSizeInner').children().attr('src').trim() + "";
+	                    	//console.log(profileicon);
+	                        //double-check if the profile is private (sometimes steamidfinder gets it wrong)
+	                        privatecheck = $('body').hasClass('private_profile');
+	                        console.log('privatecheck: ' + privatecheck);
+	                        if (profilestate !== 'not set') {
+	                        	if (privatecheck === true) { profilestate = 'private';}
+	                        }
+	                        //Gathers Garry's Mod hours
+	                        if (profilestate == 'public' && profilestate !== 'private' && profilestate !== 'not set') { //This doesn't work if the profile is private nor if Garry's mod isn't in the profile main page
+	                            var recentgamesl = $('div.game_name').children('a').length; //Check for how many recent games there are in the page
+	                        var i;
+	                        for (i = 0; i <= recentgamesl; i++) {
+	                        	gmodh = $('div.game_name').children('a').eq(i).text(); 
+	                                if (gmodh == "Garry's Mod") { break;} //Check which scraped game of the recent games is Garry's mod
+	                            }
+	                            //console.log('i: ' + i);
+	                            gmodh = $('div.game_name').children('a').eq(i).parent().prev().text();
+	                            gmodh = gmodh.trim().split(' ').slice(0,1).join();
+	                            console.log("Gmod hours: " + gmodh);
+	                        } else {
+	                        	gmodh = 'unknown';
+	                        	customID = name;
+	                        	console.log("Gmod hours private");
+							}
+							if (gmodh == "") {
+								gmodh = 'not found';
+								console.log('gmod tab not found in main profile page.');
+							}
+	                        //Again I need to put this inside otherwise it tries to send the message before the request above finishes
+							switch (requesttype) {
+								case 'main':
+									msg.channel.send({embed: {
+										"description": "'"+input+"' info: \n\nName: **"+name+"** ("+customID+")\nProfile: ["+profilestate+"]("+profilelink+")\nSteamID: `"+steamid+"`\nSteamID64: `"+steamid64+"`\nGmod hours: "+gmodh+" [(check)]("+gameslist+")",
+										"color": 0x293956,
+										"footer": {
+											"text": "Searched via steamidfinder.com | Use SteamIDs for more accurate searches!"
+										},
+										"thumbnail": {
+											"url": profileicon
+										}
+									}});
+									console.log('----------\n');
+									break;
+								case 'autoreq':
+									checkdata.push(name, profilelink, profileicon, gmodh, profilestate);
+									//console.log('\n'+checkdata+'\n');
+									console.log('---End of steaminfo function');
+									break;
+							}
+	                    });
+	                } else {
+						if (requesttype == "main") {
+							msg.channel.send({embed: { 
+								"description": "The website could not find the user.", 
+								"color": 0x0000ff,	
+								"thumbnail": { 
+									"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+								}
+							}});
+							console.log('!! User not found !!');
+							console.log('----------\n');
+						} else { 
+							console.log('steaminfo command could not find the user');
+							checkdata[0] = 'notfound';
 						}
-						if (gmodh == "") {
-							gmodh = 'not found';
-							console.log('gmod tab not found in main profile page.');
-						}
-                        //Again I need to put this inside otherwise it tries to send the message before the request above finishes
-						switch (requesttype) {
-							case 'main':
-								msg.channel.send({embed: {
-									"description": "'"+input+"' info: \n\nName: **"+name+"** ("+customID+")\nProfile: ["+profilestate+"]("+profilelink+")\nSteamID: `"+steamid+"`\nSteamID64: `"+steamid64+"`\nGmod hours: "+gmodh+" [(check)]("+gameslist+")",
-									"color": 0x293956,
-									"footer": {
-										"text": "Searched via steamidfinder.com | Use SteamIDs for more accurate searches!"
-									},
-									"thumbnail": {
-										"url": profileicon
-									}
-								}});
-								console.log('----------\n');
-								break;
-							case 'autoreq':
-								checkdata.push(name, profilelink, profileicon, gmodh, profilestate);
-								//console.log('\n'+checkdata+'\n');
-								console.log('---End of steaminfo function');
-								break;
-						}
-                    });
-                } else {
+
+	                }
+	            } else {
 					if (requesttype == "main") {
 						msg.channel.send({embed: { 
-							"description": "The website could not find the user.", 
+							"description": "Could not access the website. HTTP Code: " + response.statusCode, 
 							"color": 0x0000ff,	
 							"thumbnail": { 
 								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
 							}
 						}});
-						console.log('!! User not found !!');
+						console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
+						console.log('!! Steam info not sent because of website error !!');
 						console.log('----------\n');
 					} else { 
-						console.log('steaminfo command could not find the user');
+						console.log('steaminfo command could not access the website');
 						checkdata[0] = 'notfound';
 					}
-
-                }
-            } else {
-				if (requesttype == "main") {
-					msg.channel.send({embed: { 
-						"description": "Could not access the website. HTTP Code: " + response.statusCode, 
-						"color": 0x0000ff,	
-						"thumbnail": { 
-							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
-						}
-					}});
-					console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
-					console.log('!! Steam info not sent because of website error !!');
-					console.log('----------\n');
-				} else { 
-					console.log('steaminfo command could not access the website');
-					checkdata[0] = 'notfound';
+	            }
+	        });
+		} else {
+			msg.channel.send({embed: {
+				"description": "You have to insert a input! Type ``!!help steaminfo`` for more information.",
+				"color": 0x0000ff,
+				"thumbnail": {
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
 				}
-            }
-        });
+				}});
+				console.log('!! Info not sent because of no input !!\n----------\n');
+		}
+
 	}
 
 
@@ -547,14 +590,28 @@ bot.on("message", (msg) => {
 				}
 	        });
 		} else {
-			msg.channel.send({embed: { 
-				"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
-				}
-			}});
-			console.log('!! Info not sent because of wrong server name !!');
+			switch (server) {
+				case "":
+				case " ":
+				case undefined:
+					msg.channel.send({embed: { 
+						"description": "You have to select a server! Type ``!!help online`` for more information.", 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+						}
+					}});
+					break;
+				default:
+					msg.channel.send({embed: { 
+						"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+						}
+					}});
+			}
+			console.log('!! Info not sent because of wrong/missing server name !!');
 			console.log('----------\n');
 		}
 	}
@@ -617,8 +674,8 @@ bot.on("message", (msg) => {
 					graphtype = '1m';
 					break;
 				case undefined:
-					graphtype = '1d';
-					break;
+				case "":
+				case " ":
 				default:
 					errorcheck = true;
 			}
@@ -652,25 +709,53 @@ bot.on("message", (msg) => {
 					console.log('----------\n');
 				});
 			} else {
-				msg.channel.send({embed: { 
-					"description": "'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.", 
-					"color": 0x0000ff,	
-					"thumbnail": { 
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
-					}
-				}});
-				console.log('!! Info not sent because of wrong server name !!');
+				switch (graphtype) {
+					case "":
+					case " ":
+					case undefined:
+						msg.channel.send({embed: { 
+							"description": "You have to select a graph type! Type ``!!help population`` for more information.", 
+							"color": 0x0000ff,	
+							"thumbnail": { 
+								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+							}
+						}});
+						break;
+					default:
+						msg.channel.send({embed: { 
+							"description": "'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.", 
+							"color": 0x0000ff,	
+							"thumbnail": { 
+								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+							}
+						}});
+				}
+				console.log('!! Info not sent because of wrong/missing graph type !!');
 				console.log('----------\n');
 			}
 		} else {
-			msg.channel.send({embed: { 
-				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
-				}
-			}});
-			console.log('!! Info not sent because of wrong server name !!');
+			switch (server) {
+				case "":
+				case " ":
+				case undefined:
+					msg.channel.send({embed: { 
+						"description": "You have to select a server and a graph type! Type ``!!help population`` for more information.", 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+						}
+					}});
+					break;
+				default:
+					msg.channel.send({embed: { 
+						"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+						}
+					}});
+			}
+			console.log('!! Info not sent because of wrong/missing server name !!');
 			console.log('----------\n');
 		}
 	}
@@ -682,9 +767,10 @@ bot.on("message", (msg) => {
 
 	//Function to get player's gametracker hours in a server table_lst
 	function playerhours(args, requesttype, checkserver, checkplayer) {
-		var server, player, playername, searchlink, serverlink, errorcheck, noplayercheck, playerlink, servername;
+		var server, player, playername, searchlink, serverlink, noplayercheck, playerlink, servername;
 		var scanned, hours;
-		errorcheck = false;
+		var errorcheck = false;
+		var errorcheck2 = false;
 		if (requesttype !== 'autoreq') {
 			server = args[0];
 			args = args.join(' ');
@@ -720,12 +806,14 @@ bot.on("message", (msg) => {
 				default:
 					errorcheck = true;
 			}
+			if ((player == undefined || player == "" || player == " ") && errorcheck !== true) { errorcheck2 = true;}
 		} else { //Check function
 			server = checkserver;
 			player = checkplayer;
 		}
+		player = player.split(' ').join('+');
 		console.log('errorcheck: ' + errorcheck);
-		if (errorcheck !== true) {
+		if (errorcheck !== true && errorcheck2 !== true) {
 			serverlink = "https://www.gametracker.com/server_info/" + server;
 			searchlink = 'https://www.gametracker.com/server_info/' + server + '/top_players/?query=' + player;
 			console.log('URLs to scrap: \nserverlink: ' + serverlink + '\nsearchlink: ' + searchlink);
@@ -769,7 +857,7 @@ bot.on("message", (msg) => {
 						} else {
 							if (requesttype !== 'autoreq') {
 								msg.channel.send({embed: { 
-									"description": "Player doesn't play on this server or doesn't exist.", 
+									"description": "Player '" + player + "' doesn't play on this server or doesn't exist.", 
 									"color": 0x0000ff,	
 									"thumbnail": { 
 										"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
@@ -796,14 +884,38 @@ bot.on("message", (msg) => {
 				});
 			});
 		} else {
-			msg.channel.send({embed: { 
-				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+			if (errorcheck2 === false) {
+				switch (server) {
+					case undefined:
+					case "":
+					case " ":
+						msg.channel.send({embed: { 
+							"description": "You have to select a server! Type ``!!help playerhours`` for more information.", 
+							"color": 0x0000ff,	
+							"thumbnail": { 
+								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+							}
+						}});
+						break;
+					default:
+						msg.channel.send({embed: { 
+							"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
+							"color": 0x0000ff,	
+							"thumbnail": { 
+								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+							}
+						}});
 				}
-			}});
-			console.log('!! Info not sent because of wrong server name !!');
+				console.log('!! Info not sent because of wrong/missing server name !!');
+			} else {
+				msg.channel.send({embed: { 
+					"description": "You have to type a player name! Type ``!!help playerhours`` for more information.", 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
+					}
+				}});
+			}
 			console.log('----------\n');
 		}
 	}
@@ -901,7 +1013,7 @@ bot.on("message", (msg) => {
 						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#0666"
 					},
 					"thumbnail": {
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk5.png?1518561202766"
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk11.png?1521343591170"
 					}
 				}});
 				break;
@@ -1203,9 +1315,9 @@ bot.on("message", (msg) => {
 								poststeamid = 'STEAM_' + $('.post_body').first().text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
 								if (poststeamid === undefined || poststeamid === 'STEAM_') { 
 									//Tries to get SteamID64 from post text
-                  poststeamid = $('.post_body').first().text().trim().split('765611').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('');
+									poststeamid = $('.post_body').first().text().trim().split('765611').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('');
 									poststeamid = '765611' + poststeamid.split('').slice(0,11).join('').trim();
-                }
+								}
 								console.log('SteamID written in post: STEAM_' + poststeamid);
 								//Checks if the author wrote a SteamID or not (even if it's broken)
 								if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
@@ -1308,8 +1420,8 @@ bot.on("message", (msg) => {
 		//announcements public -> "348548140087115776"
 		//test -> "403969093595693066"
 		//test private -> "413088508819800064"
-		const target = "409458470610403338";
-		const target2 = ["409456414654726156","348548140087115776"];
+		const target = "403969093595693066";
+		const target2 = ["413088508819800064","413088508819800064"];
 		
 		switch (checkdata[0]) {
 			case "notfound": //ANY TYPE
@@ -1474,26 +1586,32 @@ bot.on("message", (msg) => {
 
 	//Commands
 	switch (cmd) {
+		case 'serverh':
+			msg.channel.send({embed: { 
+				"description": "You have to select a server! Use ``" + config.prefix + "help serverh`` for more information.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk9.png?1518563848991"
+				}
+			}});
+			break;
 		case 'anh':
 		case 'animeh':
 			hourscmd_argsorganize(anime, args);
 			graphtypeselector();
-			if (errorcheck !== true) { scrapGT(anime);} 
-			else { wronggraphtype();}
+			if (errorcheck !== true) { scrapGT(anime);}
 			break;
 		case 'mch':
 		case 'moddedh':
 			hourscmd_argsorganize(modded, args);
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(modded);} 
-			else { wronggraphtype();}
 			break;
 		case 'proph':
 		case 'prophunth':
 			hourscmd_argsorganize(prophunt, args);
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(prophunt);} 
-			else { wronggraphtype();}
 			break;
 		case 'rph':
 		case 'darkrph':
@@ -1501,14 +1619,12 @@ bot.on("message", (msg) => {
 			hourscmd_argsorganize(roleplay, args);
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(roleplay);}
-			else { wronggraphtype();}
 			break;
 		case 'vah':
 		case 'vanillah':
 			hourscmd_argsorganize(vanilla, args);
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(vanilla);} 
-			else { wronggraphtype();}
 			break;
 		case 'steaminfo':
 			args = args.join(' ');
@@ -1524,19 +1640,14 @@ bot.on("message", (msg) => {
 		case 'playerhours':
 			playerhours(args);
 			break;
-		case 'help':
-			args = args.join(' ').trim();
-			help(args);
-			break;
-		case 'serverh':
+		case 'server':
 			msg.channel.send({embed: { 
-				"description": "Please select a server. Use ``" + config.prefix + "help serverh`` for more information.", 
+				"description": "You have to select a server! Use ``" + config.prefix + "help server`` for more information.", 
 				"color": 0x0000ff,	
 				"thumbnail": { 
 					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk9.png?1518563848991"
 				}
-			}});	
-			msg.channel.send();
+			}});
 			break;
 		case 'an':
 		case 'anime':
@@ -1559,6 +1670,10 @@ bot.on("message", (msg) => {
 		case 'vanilla':
 			server(vanilla, 'Vanilla TTT');
 	    	break;
+		case 'help':
+			args = args.join(' ').trim();
+			help(args);
+			break;
 		case 'hue':
 			msg.channel.send('br');
 			console.log('----------\n');
@@ -1631,5 +1746,5 @@ var breaker = false; //Prevents autocheck to run twice at the same time
 
 
 //Makes the bot go online I guess
-bot.login(process.env.TOKEN);
-//bot.login(config.token);
+//bot.login(process.env.TOKEN);
+bot.login(config.token);
