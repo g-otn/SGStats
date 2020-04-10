@@ -15,6 +15,7 @@ bot.on("ready", () => {
 	console.clear();
 	bot.channels.get("413088508819800064").send('SmithtainmentStats has started.');
 	bot.user.setUsername("SmithtainmentStats");
+	bot.user.setPresence({ status: 'online', game: { name: config.prefix + 'help' } });
 	console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + botinfo.author);
 	console.log('Prefix: ' + config.prefix);
 	console.log('============================\n');
@@ -30,7 +31,7 @@ bot.on("message", (msg) => {
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
 		msg.content = '!!check start';
-		//msg.content = '!!check portal';
+		//msg.content = '!!check 130';
 	}
 
     if (msg.content)
@@ -42,13 +43,13 @@ bot.on("message", (msg) => {
     //Separate the prefix from the rest ('!hue br 123' -> 'hue br 123')
     var p_cmd_arg = msg + ''; //Transforms the command into a string
     var cmd_arg = p_cmd_arg.replace(config.prefix, ''); //Replaces the prefix for nothing ('');
-    var cmd_arg = cmd_arg.toString();
+    cmd_arg = cmd_arg.toString();
     //Separation between command (w/o prefix) and arguments  
     //Separate arguments (['hue', 'br', '123'] -> ['br', '123'])
     var args = cmd_arg.trim().split(' ').slice(1);
     //Separate command (['hue', 'br', '123'] -> ['hue'])
     var cmd = cmd_arg.trim().split(' ').slice(0,1);
-    var cmd = cmd.toString();
+    cmd = cmd.toString();
     console.log('=> Command: ' + cmd);
     console.log('=> Arguments: ' + args);
     //Output of the operations above:
@@ -60,13 +61,15 @@ bot.on("message", (msg) => {
 
     //Server Addresses
     const anime = "70.42.74.129:27015";
-    const modded = "192.223.31.40:27015";    
+    const modded = "192.223.31.40:27015";
+    const prophunt = "192.99.239.40:27015";   
     const roleplay = "70.42.74.160:27015";
     const vanilla = "192.223.24.186:27015";
 
     //A ID gamertracker generates and uses
     const animeid = "5704089";
     const moddedid = "5086005";
+    const prophuntid = "5709398";
     const roleplayid = "5493690";
     const vanillaid = "5052174";
     
@@ -74,7 +77,8 @@ bot.on("message", (msg) => {
 	const M_gl = '<@&387409444109025280>';
 	const M_an = '<@&387409402250002434>';
 	const M_mc = '<@&387409235249594368>';
-	const M_rp = '<@&417461132748652544>';
+	const M_ph = '<@&421155441519755284>';
+	const M_rp = '<@&417461132748652544> <@153550726793003008>';
 	const M_va = '<@&387409354204250122>';
 
 
@@ -91,7 +95,7 @@ bot.on("message", (msg) => {
     me connect to the website (HTTP code 403 (forbidden))*/
     var options = { 
     	headers: {'user-agent': 'node.js'}
-    }
+    };
 
 
 
@@ -101,7 +105,7 @@ bot.on("message", (msg) => {
     //Variables and functions to scrap Gamertracker base64 username
     //variables
     var errorcheck;
-    var rawlink, b64user, GTid, graphtype;
+    var rawlink, b64user, graphtype;
     var scrapertarget, url, serverinfo, scanned;
     //function to separate the graphtype and the player name
     function hourscmd_argsorganize(server, command_args, requesttype) { 
@@ -256,7 +260,7 @@ bot.on("message", (msg) => {
                 //gathers the steamid (if it's found)
                 steamid = $('title').text();
                 steamid = steamid.split(' ').slice(0,1).join();
-                console.log('Steam ID: ' + steamid)
+                console.log('Steam ID: ' + steamid);
                 if (steamid !== 'Steam') {
                     //gathers the name
                     name = $('title').text();
@@ -273,7 +277,7 @@ bot.on("message", (msg) => {
                     console.log('Profile state: ' + profilestate);
                     //Gathers the steamid64 (who knows if you might need it)
                     steamid64 = $('code').children('a').first().parent().prev().prev().text();
-                    console.log('SteamID64: ' + steamid64)
+                    console.log('SteamID64: ' + steamid64);
                     gameslist = "https://steamcommunity.com/profiles/" + steamid64 + "/games/?tab=all";
                     //Gathers customURL (for gmod hours which uses custom URL)
                     customURL = $('code').children('a').first().attr('href');
@@ -290,7 +294,7 @@ bot.on("message", (msg) => {
                         privatecheck = $('body').hasClass('private_profile');
                         console.log('privatecheck: ' + privatecheck);
                         if (profilestate !== 'not set') {
-                        	if (privatecheck == true) { profilestate = 'private';}
+                        	if (privatecheck === true) { profilestate = 'private';}
                         }
                         //Gathers Garry's Mod hours
                         if (profilestate == 'public' && profilestate !== 'private' && profilestate !== 'not set') { //This doesn't work if the profile is private nor if Garry's mod isn't in the profile main page
@@ -382,22 +386,32 @@ bot.on("message", (msg) => {
 		var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, /*finaltable,*/serverid, servername;
 		errorcheck2 = false;
 		switch (server) {
+			case 'an':
 			case 'anime':
 				server = anime;
 				serverid = animeid;
 				servername = 'Anime TTT';
 				break;
+			case 'mc':
 			case 'modded':
 				server = modded;
 				serverid = moddedid;
 				servername = 'MC TTT';
 				break;
+			case 'ph':
+			case 'prophunt':
+				server = prophunt;
+				serverid = prophuntid;
+				servername = 'PropHunt';
+				break;
+			case 'rp':
 			case 'darkrp':
 			case 'roleplay':
 				server = roleplay;
 				serverid = roleplayid;
 				servername = 'DarkRP';    
 				break;
+			case 'va':
 			case 'vanilla':
 				server = vanilla;
 				serverid = vanillaid;
@@ -461,7 +475,7 @@ bot.on("message", (msg) => {
 							if (scrapedplayer !== '') { 
 								playerlist[finder3] = scrapedplayer;
 								timelist[finder3] = scrapedtime;
-								timelist[finder3] = timelist[finder3].split(':')
+								timelist[finder3] = timelist[finder3].split(':');
 								console.log('timelist[finder3] length:' + timelist[finder3].length);
 								if (timelist[finder3].length == 3) { timelist[finder3] = timelist[finder3].slice(0,2).join('h') + 'min';}
 								else { timelist[finder3] = timelist[finder3].slice(0,1).join() + 'min';}
@@ -525,7 +539,7 @@ bot.on("message", (msg) => {
 	        });
 		} else {
 			msg.channel.send({embed: { 
-				"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'roleplay' or 'vanilla'.", 
+				"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
 				"color": 0x0000ff,	
 				"thumbnail": { 
 					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
@@ -547,22 +561,32 @@ bot.on("message", (msg) => {
 		var errorcheck = false;
 		console.log('Server: ' + server);
 		switch (server) {
+			case 'an':
 			case 'anime':
 				server = anime;
 				serverid = animeid;
 				servername = "Anime TTT";
 				break;
+			case 'mc':
 			case 'modded':
 				server = modded;
 				serverid = moddedid;
 				servername = "MC TTT";
 				break;
+			case 'ph':
+			case 'prophunt':
+				server = prophunt;
+				serverid = prophuntid;
+				servername = 'PropHunt';
+				break;
+			case 'rp':
 			case 'darkrp':
 			case 'roleplay':
 				server = roleplay;
 				serverid = roleplayid;
 				servername = "DarkRP";
 				break;
+			case 'va':
 			case 'vanilla':
 				server = vanilla;
 				serverid = vanillaid;
@@ -589,7 +613,7 @@ bot.on("message", (msg) => {
 				default:
 					errorcheck = true;
 			}
-			console.log('Graphtype: ' + graphtype)
+			console.log('Graphtype: ' + graphtype);
 			console.log('errorcheck #2: ' + errorcheck);
 			if (errorcheck !== true) {
 				var serverlink = "https://www.gametracker.com/server_info/" + server;
@@ -631,7 +655,7 @@ bot.on("message", (msg) => {
 			}
 		} else {
 			msg.channel.send({embed: { 
-				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.", 
+				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
 				"color": 0x0000ff,	
 				"thumbnail": { 
 					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
@@ -660,13 +684,20 @@ bot.on("message", (msg) => {
 			console.log('Server: ' + server);
 			console.log('Player: ' + player);
 			switch (server) {
+				case 'an':
 				case 'anime':
 					server = anime;
 					servername = 'Anime TTT';
 					break;
+				case 'mc':
 				case 'modded':
 					server = modded;
 					servername = 'MC TTT';
+					break;
+				case 'ph':
+				case 'prophunt':
+					server = prophunt;
+					servername = 'PropHunt';
 					break;
 				case 'darkrp':
 				case 'roleplay':
@@ -757,7 +788,7 @@ bot.on("message", (msg) => {
 			});
 		} else {
 			msg.channel.send({embed: { 
-				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.", 
+				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'roleplay' or 'vanilla'.", 
 				"color": 0x0000ff,	
 				"thumbnail": { 
 					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
@@ -789,9 +820,9 @@ bot.on("message", (msg) => {
 			"population",
 			"playerhours",
 			"hue"
-			]
+			];
 		commandlist = commandlist.join('\n');
-		notes_srv = "Servers: 'anime', 'modded', 'roleplay' or 'vanilla'";
+		notes_srv = "Servers: 'anime', 'prophunt', 'modded', 'roleplay' or 'vanilla'";
 		notes_per = "Period: 'day', 'week' or 'month'";
 		notes = " ";
 		switch (command) {
@@ -812,7 +843,7 @@ bot.on("message", (msg) => {
 			case 'steaminfo':
 				desc = "Shows info from steam of a player";
 				syntax = "steaminfo <input>";
-				notes = "Input: SteamID, SteamID64, SteamID3 or customURL"
+				notes = "Input: SteamID, SteamID64, SteamID3 or customURL";
 				ex = "steaminfo STEAM_1:0:70936906";
 				thumb = thumbSt;
 				break;
@@ -924,7 +955,7 @@ bot.on("message", (msg) => {
 					"url": serverlink,
 					"color": 0xFFBF52,
 					"footer": {
-					  "text": scanned + "via GT"
+					  "text": scanned + " via GT"
 					},
 					"thumbnail": {
 					  "url": mapimg
@@ -949,7 +980,6 @@ bot.on("message", (msg) => {
 
 
 
-	//To test check change line ~: 1069, 1118, 1145, 1182, 1193
 	var interval;
 	function autocheckstop() { //Stop checker
 		clearInterval(interval);
@@ -965,6 +995,9 @@ bot.on("message", (msg) => {
 	function sleep(ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
+	function sleep2(ms) {
+		return new Promise(resolve2 => setTimeout(resolve2, ms));
+	}
 	//Auto check for new applications and appeals
 	//Variables and functions that scrap and send thread info
 	var postname, postauthor, postlink, postdate, seclink;
@@ -973,37 +1006,41 @@ bot.on("message", (msg) => {
 	var checkdata = [1];
 	const sectionlist = [
 		241,213, //Global
-		257,258,259,260,261, //Suggestions
-		262,263,264,265,266, //Bug Reports
+		257,258,259,260,261,281, //Suggestions
+		262,263,264,265,266,282, //Bug Reports
 		130,132,133,134, //Anime
 		51,53,48,59,66, //Modded
+		270,271,272,283, //PropHunt
 		87,93, //Vanilla
 		34,36,40,41 //DarkRP
 	];
 	const sectiontype = [
 		'Appeal','Application', //Global
-		'Suggestion','Suggestion','Suggestion','Suggestion','Suggestion', //Suggestions
-		'Bug Report','Bug Report','Bug Report','Bug Report','Bug Report', //Bug Reports
+		'Suggestion','Suggestion','Suggestion','Suggestion','Suggestion','Suggestion', //Suggestions
+		'Bug Report','Bug Report','Bug Report','Bug Report','Bug Report','Bug Report', //Bug Reports
 		'Application','Report','Ban Appeal','Warn Appeal', //Anime
 		'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
+		'Application','Ban Appeal','Warn Appeal','Report', //PropHunt
 		'Application','Ban Appeal', //Vanilla
 		'Report','Application','Ban Appeal','Warn Appeal' //DarkRP
 	];
 	const sectionfrom = [
 		'Forums/Network Appeals','Forum Moderator Applications',
-		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums',
-		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums',
+		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums','PropHunt',
+		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums','PropHunt',
 		'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
 		'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
+		'PropHunt','PropHunt','PropHunt','PropHunt',
 		'Vanila TTT','Vanila TTT',
 		'DarkRP','DarkRP','DarkRP','DarkRP'
 	];
 	const sectionmention = [
 		M_gl,M_gl,
-		M_mc,M_va,M_an,M_rp,M_gl,
-		M_mc,M_va,M_an,M_rp,M_gl,
+		M_mc,M_va,M_an,M_rp,M_gl,M_ph,
+		M_mc,M_va,M_an,M_rp,M_gl,M_ph,
 		M_an,M_an,M_an,M_an,
 		M_mc,M_mc,M_mc,M_mc,M_mc,
+		M_ph,M_ph,M_ph,M_ph,
 		M_va,M_va,
 		M_rp,M_rp,M_rp,M_rp
 	];
@@ -1030,7 +1067,7 @@ bot.on("message", (msg) => {
 			if (fid == 'portal') { break;}
 			console.log("--Starting forums search #" + selector);
 			//condition below is function to select a specific section and set vars for testing
-			if (fidcheck == true) { //Checks if fid is a number
+			if (fidcheck === true) { //Checks if fid is a number
 				forbreaker = true;
 				console.log('forbreaker: ' + forbreaker);
 				seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + fid;
@@ -1070,11 +1107,10 @@ bot.on("message", (msg) => {
 				}
 			});
 			//Waits the scraper and function to end to start again to prevent rewrite of variables in the wrong time
-			await sleep(3000); //Waits for the first scrap to search for post
-
+			await sleep(3500); //Waits for the first scrap to search for post
 			if (postname !==  undefined && postlink !== undefined && postauthor !== undefined) {
 				//Checks if thread has already been seen or if there is a thread
-				if (repeatedthreads.join(' ').includes(postlink) == false) { //".indexOf(postlink) == -1" instead of ".includes(postlink) == false" also works
+				if (repeatedthreads.join(' ').includes(postlink) === false) { //".indexOf(postlink) == -1" instead of ".includes(postlink) == false" also works
 					console.log('New thread, adding to repeatedthreads');
 					repeatedthreads.push(postlink); //Marks thread as already seen
 					console.log('Repeated threads from now: ' + repeatedthreads);
@@ -1092,12 +1128,19 @@ bot.on("message", (msg) => {
 						//Modded
 						case 48: 
 							checkdata[0] = 'appl';
-							
 						case 51:
 						case 53:
 						case 59:
 						case 66:
 							servertype = [modded,'MC TTT'];
+							break;
+						//PropHunt
+						case 270:
+							checkdata[0] = 'appl';
+						case 271:
+						case 272:
+						case 283:
+							servertype = [prophunt,'PropHunt'];
 							break;
 						//Vanilla
 						case 87: 
@@ -1117,11 +1160,13 @@ bot.on("message", (msg) => {
 						case 259:
 						case 260:
 						case 261:
+						case 281:
 						case 262: //Bug Reports
 						case 263:
 						case 264:
 						case 265:
 						case 266:
+						case 282:
 							checkdata[0] = 'notneeded';
 					}
 					console.log('servertype: '+servertype);
@@ -1135,30 +1180,34 @@ bot.on("message", (msg) => {
 						//Scraps date and SteamID if the author wrote it
 						postdate = $('.post_date').first().text().trim();
 						console.log('Post date: ' + postdate);
-						//Checks if thread is recent (<1h) to avoid spamming when bot starts
-						if (postdate.includes('minute') == true) { //Change condition to "... == true" to work proprely
-							if (checkdata[0] == 'notneeded') { 
-								checksender();
-								return;
-							}
-							console.log('New recent thread found.');
-							poststeamid = $('.post_body').text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
-							console.log('SteamID written in post: STEAM_' + poststeamid);
-							//Checks if the author wrote a SteamID or not (even if it's broken)
-							if (poststeamid !== undefined && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
-								console.log('SteamID written in post found');
-								poststeamid = 'STEAM_' + poststeamid;
-								console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
-								steaminfo(poststeamid, 'autoreq', postlink);
+						async function reqwait() {
+							console.log('waiting for scrap of post date...');
+							await sleep2(1500); //Waits for the request to finish
+							//Checks if thread is recent (<1h) to avoid spamming when bot starts
+							if (postdate.includes('minute') === true) { //Change condition to "... == true" to work proprely
+								if (checkdata[0] == 'notneeded') { 
+									checksender();
+									return;
+								}
+								console.log('New recent thread found.');
+								poststeamid = $('.post_body').first().text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
+								console.log('SteamID written in post: STEAM_' + poststeamid);
+								//Checks if the author wrote a SteamID or not (even if it's broken)
+								if (poststeamid !== undefined && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
+									console.log('SteamID written in post found');
+									poststeamid = 'STEAM_' + poststeamid;
+									console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
+									steaminfo(poststeamid, 'autoreq', postlink);
+								} else {
+									console.log('SteamID in thread not found, skipping steaminfo function');
+									checkdata[0] = 'notfound';
+								}
 							} else {
-								console.log('SteamID in thread not found, skipping steaminfo function');
-								checkdata[0] = 'notfound';
+								console.log('New thread found, but not recent.');
+								console.log('End of loop #' + selector + '\n');
 							}
-						} else {
-							console.log('New thread found, but not recent.');
-							console.log('End of loop #' + selector + '\n');
 						}
-						
+						reqwait(); //Calls next function (that continues)
 					});
 				} else {
 					console.log('Thread found, but not new.');
@@ -1168,29 +1217,29 @@ bot.on("message", (msg) => {
 				await sleep(3000);
 
 				//If a new post is found
-				if (postlink !== undefined && postdate.includes('minute') == true) { //change second condition to '... == true'
+				if (postlink !== undefined && postdate.includes('minute') === true) { //change second condition to '... == true'
 					await sleep(8000);
 					if (checkdata[0] == 'appl') {
 						console.log('---Starting serverh function');
 						scrapGT(null,'autoreq');
-						await sleep(5000);
+						await sleep(5500);
 						console.log('---Starting playerhours function');
 						playerhours(null, 'autoreq', servertype[0], checkdata[1]);
-						await sleep(5000);
+						await sleep(5500);
 						checksender();
 					} else {
 						console.log('---Starting playerhours function');
 						playerhours(null, 'autoreq', servertype[0], checkdata[1]);
-						await sleep(5000);
+						await sleep(6000);
 						checksender();
 					}
 				} else { await sleep(500);}
 			}
-			if (forbreaker == true) { break;}
+			if (forbreaker === true) { break;}
 		}
 		await sleep(500);
 		checkdata = [];
-		if (forbreaker == false || fid == undefined) {
+		if (forbreaker === false || fid === undefined) {
 			console.log('End of automatic forums checking');
 			console.log('----------\n');	
 		}
@@ -1205,9 +1254,9 @@ bot.on("message", (msg) => {
 				checkdata[1] = $('.portaldate').first().text().trim(); //Post date
 				checkdata[2] = $('.portalhead').first().text().trim(); //Title
 				console.log('Post date: ' + checkdata[1] + '\nTitle: ' + checkdata[2]);
-				if (checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) {
+				if (checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) === false) {
 					checkdata[3] = $('.mycode_img').attr('src'); //Image
-					console.log('Checkdata:\n' + checkdata.join('\n'));		
+					console.log('Checkdata:\n' + checkdata.join('\n '));		
 				} else {
 					console.log('No news found.');
 				}
@@ -1221,10 +1270,9 @@ bot.on("message", (msg) => {
 			await sleep(500);
 		}
 
-
 		if (fid == 'start') {
 			console.log('----------');
-			console.log('First automatic bot command, starting autocheck')
+			console.log('First automatic bot command, starting autocheck');
 			autocheckstart();
 			console.log('----------\n');
 		}
@@ -1234,7 +1282,7 @@ bot.on("message", (msg) => {
 		console.log('checkdata[0]: ' + checkdata[0]);
 		var i;
 		for (i=1;i<10;i++) { //Transforms undefined into 'not found' to stop some erros
-			if (checkdata[i] == undefined) { checkdata[i] = 'not found';}
+			if (checkdata[i] === undefined) { checkdata[i] = 'not found';}
 		}
 		//if (isNaN(checkdata[]) == false) { checkdata[]].split(" ").join("%20");}
 		if (checkdata[0] !== 'portal') {
@@ -1247,7 +1295,7 @@ bot.on("message", (msg) => {
 		//announcements staff -> "409456414654726156"
 		//announcements public -> "348548140087115776"
 		const target = "403969093595693066";
-		const target2 = ["403969093595693066","413088508819800064"];
+		const target2 = ["413088508819800064","413088508819800064"];
 		
 		switch (checkdata[0]) {
 			case "notfound": //ANY TYPE
@@ -1265,7 +1313,7 @@ bot.on("message", (msg) => {
 				break;
 			case "notappl": //NOT APPLICATION
 				console.log('Steam info recieved (' + checkdata[0] + '). Sending message...\n');
-				if (checkdata[4] == undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
+				if (checkdata[4] === undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
 				if (checkdata[6] == 'notfound' || checkdata[6] == 'not found') {
 					//STEAM INFO / GT INFO / NO GT GRAPH
 					bot.channels.get(target).send({embed: {
@@ -1295,7 +1343,7 @@ bot.on("message", (msg) => {
 				break;
 			case "appl": //APPLICATION
 				console.log('Steam info recieved (' + checkdata[0] + '). Sending message...\n');
-				if (checkdata[4] == undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
+				if (checkdata[4] === undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
 				if (checkdata[6] !== undefined && checkdata[6] !== "notfound" && checkdata[6] !== "not found") {
 					//STEAM INFO / GT INFO / GT GRAPH
 					bot.channels.get(target).send({embed: {
@@ -1395,7 +1443,7 @@ bot.on("message", (msg) => {
 				break;
 		}
 		checkdata = [];
-		if (forbreaker == true) { console.log('----------\n');}
+		if (forbreaker === true) { console.log('----------\n');}
 	}
 
 
@@ -1412,18 +1460,28 @@ bot.on("message", (msg) => {
 
 	//Commands
 	switch (cmd) {
+		case 'anh':
 		case 'animeh':
 			hourscmd_argsorganize(anime, args);
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(anime);} 
 			else { wronggraphtype();}
 			break;
+		case 'mch':
 		case 'moddedh':
 			hourscmd_argsorganize(modded, args);
 			graphtypeselector();
 			if (errorcheck !== true) { scrapGT(modded);} 
 			else { wronggraphtype();}
 			break;
+		case 'proph':
+		case 'prophunth':
+			hourscmd_argsorganize(prophunt, args);
+			graphtypeselector();
+			if (errorcheck !== true) { scrapGT(prophunt);} 
+			else { wronggraphtype();}
+			break;
+		case 'rph':
 		case 'darkrph':
 		case 'roleplayh':
 			hourscmd_argsorganize(roleplay, args);
@@ -1431,6 +1489,7 @@ bot.on("message", (msg) => {
 			if (errorcheck !== true) { scrapGT(roleplay);}
 			else { wronggraphtype();}
 			break;
+		case 'vah':
 		case 'vanillah':
 			hourscmd_argsorganize(vanilla, args);
 			graphtypeselector();
@@ -1465,16 +1524,24 @@ bot.on("message", (msg) => {
 			}});	
 			msg.channel.send();
 			break;
+		case 'an':
 		case 'anime':
 			server(anime, 'Anime TTT');
-	    	break;
+			break;
+		case 'mc':
 		case 'modded':
 			server(modded, 'MC TTT');
 			break;
+		case 'ph':
+		case 'prophunt':
+			server(prophunt, 'PropHunt');
+			break;
+		case 'rp':
 		case 'darkrp':
 		case 'roleplay':
 			server(roleplay, 'DarkRP');
-	    	break;
+			break;
+		case 'va':
 		case 'vanilla':
 			server(vanilla, 'Vanilla TTT');
 	    	break;
@@ -1487,7 +1554,7 @@ bot.on("message", (msg) => {
 			break;
 		case 'startauto':
 			console.log('breaker: ' + breaker);
-			if (breaker == false) {	
+			if (breaker === false) {	
 				autocheckstart();
 				msg.channel.send({embed: { 
 					"description": "Forums auto checker is now running.", 
@@ -1508,7 +1575,7 @@ bot.on("message", (msg) => {
 			break;
 		case 'stopauto':
 			console.log('breaker: ' + breaker);
-			if (breaker == true) {
+			if (breaker === true) {
 				autocheckstop();
 				msg.channel.send({embed: { 
 					"description": "Forums auto checker is now disabled.", 
