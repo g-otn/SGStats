@@ -30,8 +30,8 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
-		msg.content = '!!check start';
-		//msg.content = '!!check 270';
+		//msg.content = '!!check start';
+		msg.content = '!!checkbypass start';
 	}
 
     if (msg.content)
@@ -1100,7 +1100,12 @@ bot.on("message", (msg) => {
 
 
 
-
+	var checkbypass = false;
+	function bypasscheck(fid) {
+		console.log('Starting check command with time bypass...\n')
+		checkbypass = true;
+		check(fid);
+	}
 	var interval;
 	function autocheckstop() { //Stop checker
 		clearInterval(interval);
@@ -1224,7 +1229,7 @@ bot.on("message", (msg) => {
 					console.log('Repeated Threads: ' + repeatedthreads.join(', '));
 				} else {
 					console.log('No thread found.');
-					console.log('End of loop #' + selector + '\n');
+					console.log('--End of loop #' + selector + '\n');
 				}
 			});
 			//Waits the scraper and function to end to start again to prevent rewrite of variables in the wrong time
@@ -1303,61 +1308,80 @@ bot.on("message", (msg) => {
 						console.log('Post date: ' + postdate);
 						async function reqwait() {
 							console.log('waiting for scrap of post date...');
-							await sleep2(1500); //Waits for the request to finish
+							await sleep2(2250); //Waits for the request to finish
 							//Checks if thread is recent (<1h) to avoid spamming when bot starts
-							if (postdate.includes('minute') === true) { //Change condition to "... == true" to work proprely
+							if (postdate.includes('minute') === true || checkbypass == true) { //Change condition to "... == true" to work proprely
 								if (checkdata[0] == 'notneeded') { 
 									checksender();
 									return;
 								}
 								console.log('New recent thread found.');
 								//Tries to get SteamID from post text
-								poststeamid = 'STEAM_' + $('.post_body').first().text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
-								if (poststeamid === undefined || poststeamid === 'STEAM_') { 
+								console.log('Trying to scrap SteamID...');
+								poststeamid = $('.post_body').first().text().trim(); //Gets the all the text from the thread
+								poststeamid = poststeamid.split('STEAM_').slice(1,2).join(''); //Gets the SteamID and everything after
+								poststeamid = poststeamid.split('').slice(0,14).join('').trim(); //Removes everything after the first 14 characters (because SteamIDs without the starting 'STEAM_' are(?) 13 characters long)
+								poststeamid = poststeamid.split(' ').slice(0,1).join(''); //Removes anything after the space after the SteamID
+								poststeamid = poststeamid.split('\n').slice(0,1).join(''); //Removes anything after a line break after the SteamID
+								poststeamid = poststeamid.split('.').slice(0,1).join('').trim(); //Removes anything after a dot after the SteamID
+								poststeamid = 'STEAM_' + poststeamid; //Adds the removed 'STEAM_'
+								//If SteamID is not found
+								if (poststeamid === undefined || poststeamid === 'STEAM_') {
 									//Tries to get SteamID64 from post text
-									poststeamid = $('.post_body').first().text().trim().split('765611').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('');
-									poststeamid = '765611' + poststeamid.split('').slice(0,11).join('').trim();
+									console.log('Failed to scrap SteamID, trying SteamID64...');
+									poststeamid = $('.post_body').first().text().trim();
+									poststeamid = poststeamid.split('765611').slice(1,2).join(''); //Gets the SteamID64 and everything after
+									poststeamid = poststeamid.split('').slice(0,12).join('').trim(); //Removes everything after the first 12 characters (because SteamID64s without the starting '765611' are(?) 11 characters long)
+									poststeamid = poststeamid.split(' ').slice(0,1).join(''); //Removes anything after the space after the SteamID64
+									poststeamid = poststeamid.split('\n').slice(0,1).join(''); //Removes anything after a line break after the SteamID64
+									poststeamid = poststeamid.split('.').slice(0,1).join('').trim(); //Removes anything after a dot after the SteamID
+									poststeamid = '765611' + poststeamid;
 								}
-								console.log('SteamID written in post: STEAM_' + poststeamid);
+								console.log('SteamID/64 written in post: ' + poststeamid);
 								//Checks if the author wrote a SteamID or not (even if it's broken)
 								if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
-									console.log('SteamID written in post found');
+									console.log('SteamID/64 written in post found');
 									console.log('final input to send to the function: ' + poststeamid + '\n---Starting steaminfo function...');
 									steaminfo(poststeamid, 'autoreq', postlink);
 								} else {
-									console.log('SteamID in thread not found, skipping steaminfo function');
+									console.log('SteamID/64 in thread not found, skipping steaminfo function');
 									checkdata[0] = 'notfound';
+									checksender();
 								}
 							} else {
 								console.log('New thread found, but not recent.');
-								console.log('End of loop #' + selector + '\n');
+								console.log('--End of loop #' + selector + '\n');
 							}
 						}
 						reqwait(); //Calls next function (that continues)
 					});
 				} else {
 					console.log('Thread found, but not new.');
-					console.log('End of loop #' + selector + '\n');
+					console.log('--End of loop #' + selector + '\n');
 				}
 
 				await sleep(3000);
 
 				//If a new post is found
-				if (postlink !== undefined && postdate.includes('minute') === true) { //change second condition to '... == true'
-					await sleep(8000);
-					if (checkdata[0] == 'appl') {
-						console.log('---Starting serverh function');
-						scrapGT(null,'autoreq');
-						await sleep(5500);
-						console.log('---Starting playerhours function');
-						playerhours(null, 'autoreq', servertype[0], checkdata[1]);
-						await sleep(5500);
-						checksender();
-					} else {
-						console.log('---Starting playerhours function');
-						playerhours(null, 'autoreq', servertype[0], checkdata[1]);
-						await sleep(6000);
-						checksender();
+				if (postlink !== undefined && (postdate.includes('minute') === true || checkbypass == true)) { //change second condition to '... == true'
+					await sleep(3250);
+					if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
+						await sleep(5250);
+						if (checkdata[0] == 'appl') {
+							console.log('---Starting serverh function');
+							scrapGT(null,'autoreq');
+							await sleep(5500);
+							console.log('---Starting playerhours function');
+							playerhours(null, 'autoreq', servertype[0], checkdata[1]);
+							await sleep(5500);
+							checksender();
+						} else {
+							console.log('---Starting playerhours function');
+							playerhours(null, 'autoreq', servertype[0], checkdata[1]);
+							await sleep(5750);
+							checksender();
+							await sleep(500);
+						}
 					}
 				} else { await sleep(500);}
 			}
@@ -1380,7 +1404,7 @@ bot.on("message", (msg) => {
 				checkdata[1] = $('.portaldate').first().text().trim(); //Post date
 				checkdata[2] = $('.portalhead').first().text().trim(); //Title
 				console.log('Post date: ' + checkdata[1] + '\nTitle: ' + checkdata[2]);
-				if (checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) === false) {
+				if ((checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) === false) || checkbypass == true) {
 					checkdata[3] = $('.mycode_img').attr('src'); //Image
 					console.log('Checkdata:\n' + checkdata.join('\n '));		
 				} else {
@@ -1388,7 +1412,7 @@ bot.on("message", (msg) => {
 				}
 			});
 			await sleep(3500);
-			if (checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) { 
+			if ((checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) || checkbypass == true) { 
 				repeatedtitles.push(checkdata[2]);
 				console.log('Repeated titles: ' + repeatedtitles);
 				checksender();
@@ -1402,6 +1426,7 @@ bot.on("message", (msg) => {
 			autocheckstart();
 			console.log('----------\n');
 		}
+		checkbypass = false;
 	}
 	//Collects the data from the checking and steaminfo function and send it
 	function checksender() {
@@ -1430,7 +1455,7 @@ bot.on("message", (msg) => {
 				//NO STEAM INFO / NO GT INFO / NO GT GRAPH
 				bot.channels.get(target).send({embed: {
 					"title": "New " + sectiontype[selector] + "!",
-					"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+					"description": "__" + postauthor + "__ posted " + postdate + " a(n) [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
 					"color": 0x0000ff,
 					"footer": {
 						"text": "Info from player not found or not needed."
@@ -1444,7 +1469,7 @@ bot.on("message", (msg) => {
 					//STEAM INFO / GT INFO / NO GT GRAPH
 					bot.channels.get(target).send({embed: {
 						"title": "New " + sectiontype[selector] + "!",
-						"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+						"description": "__" + postauthor + "__ posted *" + postdate + "* a [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
 						"color": 0x0000ff,
 						"footer": {
 							"text": "Info may be wrong depending of SteamID written and multiple/similar names." 
@@ -1569,7 +1594,10 @@ bot.on("message", (msg) => {
 				break;
 		}
 		checkdata = [];
-		if (forbreaker === true) { console.log('----------\n');}
+		if (forbreaker === true) {
+			checkbypass = false;
+			console.log('----------\n');
+		}
 	}
 
 
@@ -1680,6 +1708,9 @@ bot.on("message", (msg) => {
 			break;
 		case 'check':
 			check(args);
+			break;
+		case 'checkbypass':
+			bypasscheck(args);
 			break;
 		case 'startauto':
 			console.log('breaker: ' + breaker);
