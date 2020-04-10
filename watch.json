@@ -10,5 +10,5 @@
       "^.trigger-rebuild$"
     ]
   },
-  "throttle": 36000000
+  "throttle": 7200000
 }

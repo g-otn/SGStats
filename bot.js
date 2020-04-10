@@ -1,5 +1,5 @@
-/*const autoping = require('./autoping.js');
-autoping.autopingfunction();*/
+const autoping = require('./autoping.js');
+autoping.autopingfunction();
 //===========================================================================
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -8,7 +8,7 @@ const botinfo = require('./package.json');
 const request = require('request');
 const cheerio = require('cheerio');
 
-/* Bot made by Skeke#2155 in Jan 2018 | Special thanks: Hades#6871 */
+/* Bot made by Skeke#2155 in Jan 2018 | Special thanks: Hades#0666 */
 
 //Console bot iniciation confirmation
 bot.on("ready", () => {
@@ -30,8 +30,8 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
-		//msg.content = '!!check start';
-		msg.content = '!!hue';
+		msg.content = '!!check start';
+		//msg.content = '!!check 270';
 	}
 
     if (msg.content)
@@ -724,7 +724,6 @@ bot.on("message", (msg) => {
 			server = checkserver;
 			player = checkplayer;
 		}
-		player = player.split(' ').join('+');
 		console.log('errorcheck: ' + errorcheck);
 		if (errorcheck !== true) {
 			serverlink = "https://www.gametracker.com/server_info/" + server;
@@ -899,7 +898,7 @@ bot.on("message", (msg) => {
 					"description": '**Showing SmitainmentStats commands** \nType ``' + config.prefix + 'help <command>`` for specific info.\n```' + commandlist + "```\n[Changelog](https://discordbot-smithtainmentstats-changelog.glitch.me/)",
 					"color": 0x0000ff,
 					"footer": {
-						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
+						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#0666"
 					},
 					"thumbnail": {
 						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk5.png?1518561202766"
@@ -914,7 +913,7 @@ bot.on("message", (msg) => {
 				"description": desc,
 				"color": 0x0000ff,
 				"footer": {
-					"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
+					"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#0666"
 				},
 				"thumbnail": {
 					"url": thumb
@@ -1194,7 +1193,7 @@ bot.on("message", (msg) => {
 							console.log('waiting for scrap of post date...');
 							await sleep2(1500); //Waits for the request to finish
 							//Checks if thread is recent (<1h) to avoid spamming when bot starts
-							if (/*postdate.includes('minute') === */true) { //Change condition to "... == true" to work proprely
+							if (postdate.includes('minute') === true) { //Change condition to "... == true" to work proprely
 								if (checkdata[0] == 'notneeded') { 
 									checksender();
 									return;
@@ -1204,8 +1203,9 @@ bot.on("message", (msg) => {
 								poststeamid = 'STEAM_' + $('.post_body').first().text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
 								if (poststeamid === undefined || poststeamid === 'STEAM_') { 
 									//Tries to get SteamID64 from post text
-									poststeamid = '765611' + $('.post_body').first().text().trim().split('765611').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
-								}
+                  poststeamid = $('.post_body').first().text().trim().split('765611').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('');
+									poststeamid = '765611' + poststeamid.split('').slice(0,11).join('').trim();
+                }
 								console.log('SteamID written in post: STEAM_' + poststeamid);
 								//Checks if the author wrote a SteamID or not (even if it's broken)
 								if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
@@ -1231,7 +1231,7 @@ bot.on("message", (msg) => {
 				await sleep(3000);
 
 				//If a new post is found
-				if (postlink !== undefined/* && postdate.includes('minute') === true*/) { //change second condition to '... == true'
+				if (postlink !== undefined && postdate.includes('minute') === true) { //change second condition to '... == true'
 					await sleep(8000);
 					if (checkdata[0] == 'appl') {
 						console.log('---Starting serverh function');
@@ -1308,8 +1308,8 @@ bot.on("message", (msg) => {
 		//announcements public -> "348548140087115776"
 		//test -> "403969093595693066"
 		//test private -> "413088508819800064"
-		const target = "403969093595693066";
-		const target2 = ["413088508819800064","413088508819800064"];
+		const target = "409458470610403338";
+		const target2 = ["409456414654726156","348548140087115776"];
 		
 		switch (checkdata[0]) {
 			case "notfound": //ANY TYPE
@@ -1631,5 +1631,5 @@ var breaker = false; //Prevents autocheck to run twice at the same time
 
 
 //Makes the bot go online I guess
-//bot.login(process.env.TOKEN);
-bot.login(config.token);
+bot.login(process.env.TOKEN);
+//bot.login(config.token);
