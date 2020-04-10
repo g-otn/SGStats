@@ -128,7 +128,7 @@ bot.on("message", (msg) => {
         	sendimage(server_address, rawlink);
 
     	} else {
-    		msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP code " + response.statusCode);
+    		msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.");
     		console.log('!! Image not sent because of player name !!');
     		console.log('----------\n');
     	}

@@ -2,6 +2,10 @@ SmithtainmentStats bot made by Skeke#2155
 =========================================================
 Changelog
 =========================================================
+v1.2.1 - 2018Jan27
+ * Fixed a crash after asking for hours graph
+
+----------------------------------------------------------
 v1.2.0 - 2018Jan18
  + Added a command that show a player's playtime for a
 server.
