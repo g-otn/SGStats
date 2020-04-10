@@ -973,6 +973,8 @@ bot.on("message", (msg) => {
 	var checkdata = [1];
 	const sectionlist = [
 		241,213, //Global
+		257,258,259,260,261, //Suggestions
+		262,263,264,265,266, //Bug Reports
 		130,132,133,134, //Anime
 		51,53,48,59,66, //Modded
 		87,93, //Vanilla
@@ -980,6 +982,8 @@ bot.on("message", (msg) => {
 	];
 	const sectiontype = [
 		'Appeal','Application', //Global
+		'Suggestion','Suggestion','Suggestion','Suggestion','Suggestion', //Suggestions
+		'Bug Report','Bug Report','Bug Report','Bug Report','Bug Report', //Bug Reports
 		'Application','Report','Ban Appeal','Warn Appeal', //Anime
 		'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
 		'Application','Ban Appeal', //Vanilla
@@ -987,6 +991,8 @@ bot.on("message", (msg) => {
 	];
 	const sectionfrom = [
 		'Forums/Network Appeals','Forum Moderator Applications',
+		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums',
+		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'DarkRP', 'Forums',
 		'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
 		'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
 		'Vanila TTT','Vanila TTT',
@@ -994,6 +1000,8 @@ bot.on("message", (msg) => {
 	];
 	const sectionmention = [
 		M_gl,M_gl,
+		M_mc,M_va,M_an,M_rp,M_gl,
+		M_mc,M_va,M_an,M_rp,M_gl,
 		M_an,M_an,M_an,M_an,
 		M_mc,M_mc,M_mc,M_mc,M_mc,
 		M_va,M_va,
@@ -1102,6 +1110,19 @@ bot.on("message", (msg) => {
 							servertype = [roleplay,'DarkRP'];
 							checkdata[0] = 'appl';
 							break;
+						//Threads that don't need Steam/GT info
+						case 213: //Forums Moderator Applications
+						case 257: //Suggestions
+						case 258:
+						case 259:
+						case 260:
+						case 261:
+						case 262: //Bug Reports
+						case 263:
+						case 264:
+						case 265:
+						case 266:
+							checkdata[0] = 'notneeded';
 					}
 					console.log('servertype: '+servertype);
 					//checkdata[0] tells if it's an application or if info is found to send
@@ -1116,6 +1137,10 @@ bot.on("message", (msg) => {
 						console.log('Post date: ' + postdate);
 						//Checks if thread is recent (<1h) to avoid spamming when bot starts
 						if (postdate.includes('minute') == true) { //Change condition to "... == true" to work proprely
+							if (checkdata[0] == 'notneeded') { 
+								checksender();
+								return;
+							}
 							console.log('New recent thread found.');
 							poststeamid = $('.post_body').text().trim().split('STEAM_').slice(1,2).join('').split(' ', 1).join('').split('\n').slice(0,1).join('').trim();
 							console.log('SteamID written in post: STEAM_' + poststeamid);
@@ -1133,6 +1158,7 @@ bot.on("message", (msg) => {
 							console.log('New thread found, but not recent.');
 							console.log('End of loop #' + selector + '\n');
 						}
+						
 					});
 				} else {
 					console.log('Thread found, but not new.');
@@ -1180,8 +1206,7 @@ bot.on("message", (msg) => {
 				checkdata[2] = $('.portalhead').first().text().trim(); //Title
 				console.log('Post date: ' + checkdata[1] + '\nTitle: ' + checkdata[2]);
 				if (checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) {
-					var topicfather = $('td.scaleimages');
-					checkdata[3] = topicfather.children('p').first().children('img').attr('src'); //Image
+					checkdata[3] = $('.mycode_img').attr('src'); //Image
 					console.log('Checkdata:\n' + checkdata.join('\n'));		
 				} else {
 					console.log('No news found.');
@@ -1221,11 +1246,12 @@ bot.on("message", (msg) => {
 		//test private -> "413088508819800064"
 		//announcements staff -> "409456414654726156"
 		//announcements public -> "348548140087115776"
-		const target = "409458470610403338";
+		const target = "403969093595693066";
 		const target2 = ["403969093595693066","413088508819800064"];
 		
 		switch (checkdata[0]) {
 			case "notfound": //ANY TYPE
+			case "notneeded": //FORUMS APP, SUGGESTIONS AND BUG REPORTS
 				console.log('Steam info failed (' + checkdata[0] + '). Sending without...\n');
 				//NO STEAM INFO / NO GT INFO / NO GT GRAPH
 				bot.channels.get(target).send({embed: {
@@ -1233,7 +1259,7 @@ bot.on("message", (msg) => {
 					"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
 					"color": 0x0000ff,
 					"footer": {
-						"text": "Info from player not found because of missing SteamID in thread."
+						"text": "Info from player not found or not needed."
 					}
 				}});
 				break;
