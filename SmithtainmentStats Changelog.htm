@@ -1,0 +1,144 @@
+<!-- HTML Codes by Quackit.com -->
+<!DOCTYPE html>
+<title>SmithtainmentStats Changelog</title>
+<style>
+  body {
+    background-color: #000000;
+    padding-left: 150px;
+    padding-right: 100px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+  div.container {
+    line-height: 0.1;
+    background-size: 300px 300px;
+    background-attachment: fixed;
+    background-position: right;
+    background-repeat: no-repeat;
+  }
+  div.container p {
+    line-height: 1;
+    font-family: Arial;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: none;
+    text-transform: bold;
+    color: #9999ff;
+  }
+  img {
+    border-radius: 50%;
+    width: 150px;
+  }
+  img:hover {
+    -webkit-animation:spin 1s linear infinite;
+    -moz-animation:spin 1s linear infinite;
+    animation:spin 1s linear infinite;
+  }
+  @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg);} }
+  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+  @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+</style>
+<body>
+<div class="container">
+<img src="https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FImagem2.png?1518292755160">
+<p>SmithtainmentStats Discord bot made by Skeke#2155, special thanks Hades#6871</p>
+<a href="https://discordbot-smithtainments.glitch.me/">Click here to make the bot go online!</a>
+<p>=========================================================</p>
+<p>Changelog</p>
+<p>=========================================================</p>
+<p>v2.4.1 - 2018Feb28</p>
+<p> * Portal news are now sent in the public discord too.</p>
+<p> * New DarkRP Threads pings now the entire DarkRP staff.</p>
+<br>
+
+<p>v2.4.0 - 2018Feb28</p>
+<p> + Bot now searches for news in the forums portal.</p>
+<br>
+  
+<p>v2.3.2 - 2018Feb27</p>
+<p> * Fixed a crash with bad timing function calling. (this problem was crashing my bot since version 2.0 xD)</p>
+<br>
+  
+<p>v2.3.1 - 2018Feb25</p>
+<p> + Added changelog link in the help command</p>
+<p> * Fixed a crash with the automatic checker where it would crash with new threads that were not applications.</p>
+<p> * Fixed a bug where info from new threads were sent in different/wrong/multiple messages. (I hope so lol)</p>
+<br>
+  
+<p>v2.3.0 - 2018Feb11</p>
+<p> + Bot shows GamerTracker info for new threads and server activity for new applicants. <b>(unstable)</b> </p>
+<br>
+
+<p>v2.2.0 - 2018Feb11</p>
+<p> + Bot now checks for forum moderator applications, reports and donor support threads.</p>
+<br>
+
+<p>v2.1.0 - 2018Feb11</p>
+<p> + Bot error messages and some others now have thumbnails, style change only.</p>
+<p> * 'darkrp' is now valid and considered as 'roleplay' for all commands.</p>
+<p> * Optimized code.</p>
+<br>
+  
+<p>v2.0.1 - 2018Feb11</p>
+<p> * Fixed bug where the bot would warn about the same new thread. (I HOPE IT'S FIXED)</p>
+<p> * Fixed a bug in the playerhours command where player names with spaces would break commands.</p>
+<br>
+
+<p>v2.0.0 - 2018Feb09</p>
+<p> + Bot now automatically checks for new applications and ban/warn appeals, sending them in the staff server in spam_spam_spam. This is still not 100% working so you can disable it with the !!stopauto command.</p>
+<p> * playerhours command now has a link to similar names.</p>
+<br>
+  
+<p>v1.4.0 - 2018Feb07</p>
+<p> + Added old bot server info command.</p>
+<p>Syntax: &lt;server&gt;</p>
+<p>Example: !!modded</p>
+<p> * Optimized all commands.</p>
+<br>
+
+<p>v1.3.1 - 2018Feb05</p>
+<p> + Added more helpful syntax error responses.</p>
+<p> * Temporary help command is now permanent.</p>
+<p> * Minor changes to commands text.</p>
+<br>
+  
+<p>v1.3.0 - 2018Jan31</p>
+<p> + Added a temporary help command (for Pluto discord), disabled by default.</p>
+<p> * Fixed blank line in embed message when GT sends it in blank, in the online command.</p>
+<p> * Optimized code and changed output layout of the online command.</p>
+<br>
+  
+<p>v1.2.1 - 2018Jan27</p>
+<p> * Fixed a crash after asking for hours graph</p>
+<br>
+
+<p>v1.2.0 - 2018Jan18</p>
+<p> + Added a command that show a player's playtime for a server.</p>
+<p>Syntax: playerhours &lt;server&gt; &lt;player name&gt;</p>
+<p>Example: playerhours modded Skeke</p>
+<br>
+
+<p>v1.1.1 - 2018Jan17</p>
+<p> * Fixed a error in which names with spaces in the hours graph command would break links when sent to discord.</p>
+<p> * Fixed a error in which the graphs sent in commands were 1 or 2 days off, because of a URL php input. </p>
+<br>
+
+<p>v1.1.0 - 2018Jan16</p>
+<p> + Added command that shows which players are online in a server and the server population for the last 24h.</p>
+<p>Syntax: online &lt;server&gt;</p>
+<p>Example: online anime</p>
+<p> + Added command 'population' that shows graphs for the day, week or month of a server. Default is day.</p>
+<p>Syntax: population &lt;server&gt; &lt;graphtype (optional)&gt;</p>
+<p>Example: population modded, population vanilla month</p>
+<br>
+
+<p>v1.0.0 - 2018Jan11</p>
+<p> + Added command that shows playtime graphs of players during the day, week or month of a server.</p>
+<p>Syntax: &lt;server&gt;h &lt;typeofgraph&gt; &lt;playername&gt;</p>
+<p>Example: moddedh week Skeke</p>
+<p> + Added command 'steaminfo', that shows SteamIDs, names, gmod hours and others informations about the player.</p>
+<p>Syntax: steaminfo &lt;playerinput&gt;</p>
+<p>Example: steaminfo Skeke, steaminfo STEAM:0:1:12345</p>
+</div>
+</body>

@@ -29,8 +29,8 @@ bot.on("message", (msg) => {
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
-		//msg.content = '!!check start';
 		msg.content = '!!check start';
+		//msg.content = '!!check portal';
 	}
 
     if (msg.content)
@@ -55,6 +55,8 @@ bot.on("message", (msg) => {
     //cmd = ['hue'];
     //args = ['br, '123']
 
+	//Forums Portal
+	const portallink = "http://forums.smithtainment.com/portal.php";
 
     //Server Addresses
     const anime = "70.42.74.129:27015";
@@ -72,7 +74,7 @@ bot.on("message", (msg) => {
 	const M_gl = '<@&387409444109025280>';
 	const M_an = '<@&387409402250002434>';
 	const M_mc = '<@&387409235249594368>';
-	const M_rp = '<@153550726793003008>';
+	const M_rp = '<@&417461132748652544>';
 	const M_va = '<@&387409354204250122>';
 
 
@@ -947,7 +949,7 @@ bot.on("message", (msg) => {
 
 
 
-
+	//To test check change line ~: 1069, 1118, 1145, 1182, 1193
 	var interval;
 	function autocheckstop() { //Stop checker
 		clearInterval(interval);
@@ -1017,6 +1019,7 @@ bot.on("message", (msg) => {
 		}
 		//loop for each forums section
 		for (selector = 0; selector < sectionlist.length; selector++) {
+			if (fid == 'portal') { break;}
 			console.log("--Starting forums search #" + selector);
 			//condition below is function to select a specific section and set vars for testing
 			if (fidcheck == true) { //Checks if fid is a number
@@ -1159,10 +1162,41 @@ bot.on("message", (msg) => {
 			}
 			if (forbreaker == true) { break;}
 		}
+		await sleep(500);
+		checkdata = [];
 		if (forbreaker == false || fid == undefined) {
 			console.log('End of automatic forums checking');
 			console.log('----------\n');	
 		}
+
+		//Forums Portal Check
+		if (fid == 'auto' || fid == 'start' || fid == 'portal') {
+			console.log('Starting forums portal check...');
+			checkdata[0] = 'portal';
+			//Checkdata: [0type, 1date, 2title, 3image, 4text, 5tables (html <ul>)]
+			request(portallink, options, function(error, response, html) {
+				var $ = cheerio.load(html);
+				checkdata[1] = $('.portaldate').first().text().trim(); //Post date
+				checkdata[2] = $('.portalhead').first().text().trim(); //Title
+				console.log('Post date: ' + checkdata[1] + '\nTitle: ' + checkdata[2]);
+				if (checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) {
+					var topicfather = $('td.scaleimages');
+					checkdata[3] = topicfather.children('p').first().children('img').attr('src'); //Image
+					console.log('Checkdata:\n' + checkdata.join('\n'));		
+				} else {
+					console.log('No news found.');
+				}
+			});
+			await sleep(3500);
+			if (checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) { 
+				repeatedtitles.push(checkdata[2]);
+				console.log('Repeated titles: ' + repeatedtitles);
+				checksender();
+			}
+			await sleep(500);
+		}
+
+
 		if (fid == 'start') {
 			console.log('----------');
 			console.log('First automatic bot command, starting autocheck')
@@ -1174,56 +1208,70 @@ bot.on("message", (msg) => {
 	function checksender() {
 		console.log('checkdata[0]: ' + checkdata[0]);
 		var i;
-		for (i=1;i<9;i++) { //Transforms undefined into 'not found' to stop some erros
+		for (i=1;i<10;i++) { //Transforms undefined into 'not found' to stop some erros
 			if (checkdata[i] == undefined) { checkdata[i] = 'not found';}
 		}
 		//if (isNaN(checkdata[]) == false) { checkdata[]].split(" ").join("%20");}
-		
-		console.log("Data recevied: \n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n servertype: ' + servertype);
+		if (checkdata[0] !== 'portal') {
+			console.log("Data recevied: \n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n9 gt link: ' + checkdata[9] + '\n servertype: ' + servertype);
+		}
 		//Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
-		//spam_channel -> "409458470610403338"
-		//test_channel -> "403969093595693066"
-		var target = "409458470610403338";
+		//spam_spam_spam -> "409458470610403338"
+		//test -> "403969093595693066"
+		//test private -> "413088508819800064"
+		//announcements staff -> "409456414654726156"
+		//announcements public -> "348548140087115776"
+		const target = "409458470610403338";
+		const target2 = ["403969093595693066","413088508819800064"];
 		
-		if (checkdata[0] == "notfound") {
-		console.log('Steam info failed (' + checkdata[0] + '). Sending without...\n');
-			bot.channels.get(target).send({embed: {
-				"title": "New " + sectiontype[selector] + "!",
-				"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
-				"color": 0x0000ff,
-				"footer": {
-					"text": "Info from player not found because of missing SteamID in thread."
-				}
-			}});	
-		} else {
-			console.log('Steam info recieved (' + checkdata[0] + '). Sending message...\n');
-			if (checkdata[4] == undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
-			if (checkdata[0] == 'notappl' || checkdata[6] == 'notfound') {
+		switch (checkdata[0]) {
+			case "notfound": //ANY TYPE
+				console.log('Steam info failed (' + checkdata[0] + '). Sending without...\n');
+				//NO STEAM INFO / NO GT INFO / NO GT GRAPH
 				bot.channels.get(target).send({embed: {
 					"title": "New " + sectiontype[selector] + "!",
-					"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+					"description": "__" + postauthor + "__ posted " + postdate + " an [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
 					"color": 0x0000ff,
 					"footer": {
-						"text": "Info may be wrong depending of SteamID written and multiple/similar names." 
-					},
-					"thumbnail": {
-						"url": checkdata[3]
-					},
-					"fields": [
-						{
-							"name": "Steam info",
-							"value": "Steam name: " + checkdata[1] + "\nProfile state: [" + checkdata[5] + "](" + checkdata[2] + ") \nGarry's Mod hours: " + checkdata[4],
-							"inline": true
-						},
-						{
-							"name": "Gamertracker info",
-							"value": 'Name: [' + checkdata[8] + '](https://www.gametracker.com/player/' + checkdata[1].split(" ").join("%20") + '/' + servertype[0] + '/)\n' + servertype[1] + " hours: " + checkdata[7],
-							"inline": true
-						}
-					]
+						"text": "Info from player not found because of missing SteamID in thread."
+					}
 				}});
-			} else {
-				if (checkdata[0] == 'appl' || checkdata[6] !== undefined) {
+				break;
+			case "notappl": //NOT APPLICATION
+				console.log('Steam info recieved (' + checkdata[0] + '). Sending message...\n');
+				if (checkdata[4] == undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
+				if (checkdata[6] == 'notfound' || checkdata[6] == 'not found') {
+					//STEAM INFO / GT INFO / NO GT GRAPH
+					bot.channels.get(target).send({embed: {
+						"title": "New " + sectiontype[selector] + "!",
+						"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+						"color": 0x0000ff,
+						"footer": {
+							"text": "Info may be wrong depending of SteamID written and multiple/similar names." 
+						},
+						"thumbnail": {
+							"url": checkdata[3]
+						},
+						"fields": [
+							{
+								"name": "Steam info",
+								"value": "Steam name: " + checkdata[1] + "\nProfile state: [" + checkdata[5] + "](" + checkdata[2] + ") \nGarry's Mod hours: " + checkdata[4],
+								"inline": true
+							},
+							{
+								"name": "Gamertracker info",
+								"value": 'Name: [' + checkdata[8] + '](https://www.gametracker.com/player/' + checkdata[1].split(" ").join("%20") + '/' + servertype[0] + '/)\n' + servertype[1] + " hours: " + checkdata[7],
+								"inline": true
+							}
+						]
+					}});
+				}
+				break;
+			case "appl": //APPLICATION
+				console.log('Steam info recieved (' + checkdata[0] + '). Sending message...\n');
+				if (checkdata[4] == undefined || checkdata[4] == "" || checkdata[4] == 'notfound') { checkdata[4] == 'unknown';}
+				if (checkdata[6] !== undefined && checkdata[6] !== "notfound" && checkdata[6] !== "not found") {
+					//STEAM INFO / GT INFO / GT GRAPH
 					bot.channels.get(target).send({embed: {
 						"title": "New " + sectiontype[selector] + "!",
 						"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
@@ -1256,6 +1304,7 @@ bot.on("message", (msg) => {
 					}});
 				} else {
 					bot.channels.get(target).send({embed: {
+						//STEAM INFO / GT INFO / NO GT GRAPH
 						"title": "New " + sectiontype[selector] + "!",
 						"description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
 						"color": 0x0000ff,
@@ -1264,9 +1313,6 @@ bot.on("message", (msg) => {
 						},
 						"thumbnail": {
 							"url": checkdata[3]
-						},
-						"image": {
-							"url": checkdata[6]
 						},
 						"fields": [
 							{
@@ -1281,12 +1327,46 @@ bot.on("message", (msg) => {
 							},
 							{
 								"name": servertype[1] + " Activity",
-								"value": 'Activity not found because either the player do not play on the server or it has special characters in its name.',
+								"value": 'Activity not found because either the player does not play on the server or it has special characters in its name.',
 							}
 						]
 					}});
 				}
-			}
+				break;
+			case "portal": //PORTAL NEWS
+				console.log('Data recieved:\n1 postdate: ' + checkdata[1] + '\n2 title: ' + checkdata[2] + '\n3 image: ' + checkdata[3]);
+				console.log('Sending news...');
+				if (checkdata[3] !== undefined && checkdata[3] !== "not found") {
+					//THUMBNAIL
+					for (var i = 0; i < 2; i++) {
+						bot.channels.get(target2[i]).send("@everyone");
+						bot.channels.get(target2[i]).send({embed: {
+							"title": checkdata[2],
+							"url": portallink,
+							"color": 0x0000ff,
+							"footer": {
+								"text": checkdata[1].split(':').join(' ')
+							},
+							"thumbnail": {
+								"url": checkdata[3]
+							}
+						}});
+					}
+				} else {
+					//NO THUMBNAIL
+					for (var i = 0; i < 2; i++) {
+						bot.channels.get(target2[i]).send("@everyone");
+						bot.channels.get(target2[i]).send({embed: {
+							"title": checkdata[2],
+							"url": portallink,
+							"color": 0x0000ff,
+							"footer": {
+								"text": checkdata[1].split(':').join(' ')
+							}
+						}});
+					}
+				}
+				break;
 		}
 		checkdata = [];
 		if (forbreaker == true) { console.log('----------\n');}
@@ -1297,19 +1377,7 @@ bot.on("message", (msg) => {
 
 
 
-	function test() {
-		/*bot.channels.get("409456414654726156").send({embed: { 
-			"description": "@everyone, Reeb enslaved me and I couldn't be happier! This is a test message!", 
-			"color": 0xff0000,
-			"footer": {
-				"text": "THIS IS NOT A TEST HELP ME" 
-			},
-			"image": { 
-				"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2F%C3%ADndice.jpg?1519610355021"
-			}
-		}});*/
-		bot.channels.get("409456414654726156").send("@everyone, sorry for the ping, this is a test. -Reeb (?)");
-	}
+
 
 
 
@@ -1388,9 +1456,6 @@ bot.on("message", (msg) => {
 			msg.channel.send('br');
 			console.log('----------\n');
 			break;
-		case 'test':
-			test();
-			break;
 		case 'check':
 			check(args);
 			break;
@@ -1450,6 +1515,7 @@ bot.on("message", (msg) => {
 });
 //Variables that can't be changed in every message
 var repeatedthreads = ["hi"];
+var repeatedtitles = [];
 var breaker = false; //Prevents autocheck to run twice at the same time
 
 
@@ -1458,4 +1524,5 @@ var breaker = false; //Prevents autocheck to run twice at the same time
 
 
 //Makes the bot go online I guess
+//bot.login(process.env.TOKEN);
 bot.login(config.token);
