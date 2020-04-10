@@ -622,7 +622,7 @@ bot.on("message", (msg) => {
 							playername = player;
 							player = player.split(" ").join("%20");
 							playerlink = "https://www.gametracker.com/player/" + player + "/" + server + "/";
-							
+							searchlink = searchlink.split(" ").join("%20");
 							//Sends the message
 							msg.channel.send({embed: {
 								"description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**\nFor players with similar names, click [here](" + searchlink + ").",
