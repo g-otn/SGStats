@@ -46,8 +46,17 @@ bot.on("message", (msg) => {
     const modded = "192.223.31.40:27015";    
     const roleplay = "70.42.74.160:27015";
     const vanilla = "192.223.24.186:27015";
+
+    //A ID gamertracker generates and uses
+    const animeid = "5704089";
+    const moddedid = "5086005";
+    const roleplayid = "5493690";
+    const vanillaid = "5052174";
     //cmd = ['hue'];
     //args = ['br, '123']
+
+
+
 
 
 
@@ -132,7 +141,7 @@ bot.on("message", (msg) => {
 		    case 'month':
 		        graphtype = '1m';
 		        errorcheck = false; 
-		        break;
+                break;
 		    default: //If does not match with one of those 3 above
 		    	errorcheck = true; //Blocks the function to send the image since with the typing error a broken link/image will be generated   
 		        break;
@@ -157,6 +166,8 @@ bot.on("message", (msg) => {
     	console.log('----------\n');
     }
 
+
+
     function steaminfo(input)  {
         var steamid, name, profilelink, profilestate, steamid64, customURL; //scraped in steamidfinder
         var profileicon, gmodh, privatecheck; //scraped from steam
@@ -177,13 +188,14 @@ bot.on("message", (msg) => {
                     name = $('title').text();
                     name = name.split('(').slice(1,2).join();
                     name = name.split(')').slice(0,1).join();
+                    //if (name.indexOf(' ') > -1) { name = name.split(' ').join('%20');}
                     console.log('Name: ' + name);
                     //Gathers the steam profile link
                     profilelink = $('code').children('a').text();
                     profilelink = profilelink.trim().split('http://steamcommunity.com/profiles/').slice(1,2).join();
                     profilelink = 'http://steamcommunity.com/profiles/' + profilelink;
                     console.log('Profile link: ' + profilelink);
-                    //Gathers the steam profile state (public or private)
+                    //Gathers the steam profile state (public or private) //%20
                     profilestate = $('code').children('a').last().parent().next().next().text();
                     console.log('Profile state: ' + profilestate);
                     //Gathers the steamid64 (who knows if you might need it)
@@ -253,6 +265,212 @@ bot.on("message", (msg) => {
 
 
 
+    function onlineplayers(server) {
+        var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, finaltable, serverid;
+        errorcheck2 = false;
+        switch (server) {
+            case 'anime':
+                server = anime;
+                serverid = animeid;
+                break;
+            case 'modded':
+                server = modded;
+                serverid = moddedid;
+                break;
+            case 'roleplay':
+                server = roleplay;
+                serverid = roleplayid;
+                break;
+            case 'vanilla':
+                server = vanilla;
+                serverid = vanillaid;
+                break;
+            default:
+                errorcheck2 = true;
+        }        
+        console.log('errorcheck2: ' + errorcheck2);
+        if (errorcheck2 !== true) {
+            console.log('Selected server:' + server);
+            gtserverlink = 'https://www.gametracker.com/server_info/' + server;
+            console.log('URL to scrap: ' + gtserverlink);
+            request(gtserverlink, options, function(error, response, html) {
+                if (!error && response.statusCode == 200) {
+                    console.log('Website access successful. HTTP Code: ' + response.statusCode);
+                    var $ = cheerio.load(html);
+                    var scanned = $('#last_scanned').text();
+                    scanned = scanned.trim();
+                    var finder1 = $('div.blocknewhdr').length;
+                    console.log('finder1 length: ' + finder1);
+                    var i;
+                    for (i = 0; i <= finder1; i++) {
+                        tablecount = $('div.blocknewhdr').eq(i).text();
+                        tablecount = tablecount.trim();
+                        if (tablecount == "ONLINE PLAYERS") { break;}
+                    }
+                    console.log("Found 'ONLINE PLAYERS' text at: " + i);
+                    tablecount = $('div.blocknewhdr').eq(i).next().next().children().children().length;
+                    console.log('number of <tr> found: ' + tablecount);
+                    noplayercheck = $('div.blocknewhdr').eq(i).next().next().children().children().first().text();
+                    noplayercheck = noplayercheck.trim();
+                    if (noplayercheck == 'No players Online') {
+                        noplayercheck = true;
+                        console.log('noplayercheck: ' + noplayercheck);
+                        msg.channel.send('There are no players online.');
+                        console.log('----------\n');
+                    } else {
+                        noplayercheck = false;
+                        console.log('noplayercheck: ' + noplayercheck);
+                        tablecount = tablecount - 1;
+                        console.log('Total online players: ' + tablecount);
+                        //Next two lines transform the variables into arrays so they can store the incoming data
+                        playerlist = [];
+                        timelist = [];
+                        var i2;
+                        for (i2 = 0; i2 <= tablecount; i2++) {
+                            var finder2 = i2 + 1;
+                            var finder3 = i2; //This
+                            if (finder2 == tablecount + 1) { break;}
+                            scrapedplayer = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().children('a').text();
+                            scrapedplayer = scrapedplayer.trim() + '';
+                            console.log(scrapedplayer);
+                            scrapedtime = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().eq(3).text();
+                            scrapedtime = scrapedtime.trim();
+                            if (scrapedplayer !== '') { 
+                                playerlist[finder3] = scrapedplayer;
+                                timelist[finder3] = scrapedtime;
+                                timelist[finder3] = timelist[finder3].split(':')
+                                console.log('timelist[finder3] length:' + timelist[finder3].length);
+                                if (timelist[finder3].length == 3) { timelist[finder3] = timelist[finder3].slice(0,2).join('h') + 'min';}
+                                else { timelist[finder3] = timelist[finder3].slice(0,1).join() + 'min';}
+                                console.log('Player #' + finder2 + ': ' + scrapedplayer + '\nPlaytime: ' + scrapedtime);
+                            } else { 
+                                finder3--;
+                                console.log('Player #' + finder2 + ' in blank, ignored.');
+                            }
+                        }
+                        console.log('Playerlist: ' + playerlist);
+                        console.log('Timelist:' + timelist);
+                        var i3;
+                        finaltable = '';
+                        for (i3 = 0; i3 <= playerlist.length - 1; i3++) {
+                            if (timelist[i3] && playerlist[i3] !== undefined) { //This removes those ghost players that gametracker creates for some reason
+                                finaltable = finaltable + timelist[i3] + ' - **' + playerlist[i3] + '**\n';
+                            }
+                        }
+                        console.log(finaltable);
+                        var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + 'start=-1d';
+                        msg.channel.send({embed: {
+                            "description": '__*Time played - Name*__ \n' + finaltable + '\nServer population throughout the day:',
+                            "color": 0xFFBF52,
+                            "footer": {
+                                "text": scanned + " via GT"
+                            },
+                            "image": {
+                                "url": populationgraph
+                            }
+                        }});
+                        console.log('----------\n');
+                    }
+                }
+            });
+        } else {
+            msg.channel.send("'" + server + "' is not a known server. please use anime, modded, roleplay or vanilla.");
+            console.log('!! Info not sent because of wrong server name !!');
+            console.log('----------\n');
+        }
+    }
+
+
+
+function populationgraph(server, graphtype) {
+    var serverid;
+    var errorcheck = false;
+    console.log('Server: ' + server);
+    switch (server) {
+        case 'anime':
+            server = anime;
+            serverid = animeid;
+            break;
+        case 'modded':
+            server = modded;
+            serverid = moddedid;
+            break;
+        case 'roleplay':
+            server = roleplay;
+            serverid = roleplayid;
+            break;
+        case 'vanilla':
+            server = vanilla;
+            serverid = vanillaid;
+            break;
+        default:
+            errorcheck = true;
+    }
+    console.log('errorcheck #1: ' + errorcheck);
+    if (errorcheck !== true) {
+        switch (graphtype) {
+            case 'day':
+                graphtype = '1d';
+                break;
+            case 'week':
+                graphtype = '1w';
+                break;
+            case 'month':
+                graphtype = '1m';
+                break;
+            case undefined:
+                graphtype = '1d';
+                break;
+            default:
+                errorcheck = true;
+        }
+        console.log('Graphtype: ' + graphtype)
+        console.log('errorcheck #2: ' + errorcheck);
+        if (errorcheck !== true) {
+            var serverlink = "https://www.gametracker.com/server_info/" + server;
+            console.log('URL to scrap: ' + serverlink);
+            request(serverlink, options, function(error, response, html) {
+                if (!error && response.statusCode == 200) {
+                    console.log('Website access successful. HTTP Code: ' + response.statusCode);
+                    var $ = cheerio.load(html);
+                    var scanned = $('#last_scanned').text();
+                    scanned = scanned.trim();
+                } else {
+                    console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
+                    console.log('!! Graph not sent because of website error !!');
+                    console.log('----------\n');
+                }
+                var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + '&start=-' + graphtype + '&request=0';
+                console.log('graph link: ' + populationgraph);
+                msg.channel.send({embed: {
+                    "description": 'Showing [server](' + serverlink + ') population:',
+                    "color": 0xFFBF52,
+                    "footer": {
+                        "text": scanned + " via GT"
+                    },
+                    "image": {
+                        "url": populationgraph
+                    }
+                }});
+                console.log('----------\n');
+            });
+        } else {
+            msg.channel.send("'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.");
+            console.log('!! Info not sent because of wrong server name !!');
+            console.log('----------\n');
+        }
+    } else {
+        msg.channel.send("'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
+        console.log('!! Info not sent because of wrong server name !!');
+        console.log('----------\n');
+    }
+}
+
+
+
+
+
+
     //Commands
     switch (cmd) {
         case 'animeh':
@@ -262,7 +480,7 @@ bot.on("message", (msg) => {
     			scrapGT(anime);
       		} else {
     			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!');
+            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
     		}
         	break;
         case 'moddedh':
@@ -272,7 +490,7 @@ bot.on("message", (msg) => {
     			scrapGT(modded);
       		} else {
     			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!');
+            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
     		}
         	break;
         case 'roleplayh':
@@ -282,7 +500,7 @@ bot.on("message", (msg) => {
     			scrapGT(roleplay);
       		} else {
     			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!');
+            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
     		}
         	break;
         case 'vanillah':
@@ -292,12 +510,19 @@ bot.on("message", (msg) => {
     			scrapGT(vanilla);
       		} else {
     			msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-            	console.log('!! Image not sent because of wrong graph type !!');
+            	console.log('!! Image not sent because of wrong graph type !!\n----------\n');
     		}
         	break;
         case 'steaminfo':
             args = args.join(' ');
             steaminfo(args);
+            break;
+        case 'online':
+            args = args.join('').trim();
+            onlineplayers(args);
+            break;
+        case 'population':
+            populationgraph(args[0], args[1]);
             break;
     	case 'hue':
             msg.channel.send('br');
@@ -311,7 +536,8 @@ bot.on("message", (msg) => {
             break;
         default:
             msg.channel.send("'" + cmd + "' is not a known command.")
-            console.log('!! Invalid command !!\n');
+            console.log('!! Invalid command !!');
+            console.log('----------\n');
     }
 });
 

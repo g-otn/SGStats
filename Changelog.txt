@@ -1,0 +1,23 @@
+SmithtainmentStats bot made by Skeke#2155
+=========================================================
+Changelog
+=========================================================
+v1.1.0 - 2018Jan16
+ + Added command that shows which players are online in
+a server and the server population for the last 24h.
+Syntax: online <server>
+Example: online anime
+ + Added command 'population' that shows graphs for the 
+day, week or month of a server. Default is day.
+Syntax: population <server> <graphtype (optional)>
+Example: population modded, population vanilla month
+----------------------------------------------------------
+v1.0.0 - 2018Jan11
+ + Added command that shows playtime graphs of players 
+during the day, week or month of a server. 
+Syntax: <server>h <typeofgraph> <playername>
+Example: moddedh week Skeke
+ + Added command 'steaminfo', that shows SteamIDs, names, 
+gmod hours and others informations about the player.
+Syntax: steaminfo <playerinput>
+Example: steaminfo Skeke, steaminfo STEAM:0:1:12345
