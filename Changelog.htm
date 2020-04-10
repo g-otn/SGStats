@@ -1,0 +1,94 @@
+<!-- HTML Codes by Quackit.com -->
+<!DOCTYPE html>
+<title>Text Example</title>
+<style>
+  div.container {
+      background-color: #000000;
+      background-size: 300px 300px;
+      background-attachment: fixed;
+      background-position: right;
+      background-repeat: no-repeat;
+      padding-top: 20px;
+      padding-left: 50px;
+      padding-bottom: 20px;
+  }
+  div.container p {
+    line-height: 0.1;
+    font-family: Arial;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: none;
+    text-transform: bold;
+    color: #9999ff;
+  }
+  img {
+    border-radius: 50%;
+    width: 150px;
+  }
+  img:hover {
+    -webkit-animation:spin 1s linear;
+    -moz-animation:spin 1s linear ;
+    animation:spin 1s linear;
+  }
+  @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+  @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+</style>
+<body>
+<div class="container">
+<img src="https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FImagem1.png?1518027435617">
+<p>SmithtainmentStats Discord bot made by Skeke#2155, special thanks Hades#6871</p>
+<p>=========================================================</p>
+<p>Changelog</p>
+<p>=========================================================</p>
+<p>v1.4.0 - 2018Feb07</p>
+<p> + Added old bot server info command</p>
+<p>Syntax: &lt;server&gt;</p>
+<p>Example: !!modded</p>
+<p> * Optimized all commands</p>
+<br>
+
+<p>v1.3.1 - 2018Feb05</p>
+<p> + Added more helpful syntax error responses</p>
+<p> * Temporary help command is now permanent</p>
+<p> * Minor changes to commands text</p><br>
+<p>v1.3.0 - 2018Jan31</p>
+<p> + Added a temporary help command (for Pluto discord), disabled by default.</p>
+<p> * Fixed blank line in embed message when GT sends it in blank, in the online command.</p>
+<p> * Optimized code and changed output layout of the online command.</p>
+<br>
+  
+<p>v1.2.1 - 2018Jan27</p>
+<p> * Fixed a crash after asking for hours graph</p>
+<br>
+
+<p>v1.2.0 - 2018Jan18</p>
+<p> + Added a command that show a player's playtime for a server.</p>
+<p>Syntax: playerhours &lt;server&gt; &lt;player name&gt;</p>
+<p>Example: playerhours modded Skeke</p>
+<br>
+
+<p>v1.1.1 - 2018Jan17</p>
+<p> * Fixed a error in which names with spaces in the hours graph command would break links when sent to discord.</p>
+<p> * Fixed a error in which the graphs sent in commands were 1 or 2 days off, because of a URL php input. </p>
+<br>
+
+<p>v1.1.0 - 2018Jan16</p>
+<p> + Added command that shows which players are online in a server and the server population for the last 24h.</p>
+<p>Syntax: online &lt;server&gt;</p>
+<p>Example: online anime</p>
+<p> + Added command 'population' that shows graphs for the day, week or month of a server. Default is day.</p>
+<p>Syntax: population &lt;server&gt; &lt;graphtype (optional)&gt;</p>
+<p>Example: population modded, population vanilla month</p>
+<br>
+
+<p>v1.0.0 - 2018Jan11</p>
+<p> + Added command that shows playtime graphs of players during the day, week or month of a server.</p>
+<p>Syntax: &lt;server&gt;h &lt;typeofgraph&gt; &lt;playername&gt;</p>
+<p>Example: moddedh week Skeke</p>
+<p> + Added command 'steaminfo', that shows SteamIDs, names, gmod hours and others informations about the player.</p>
+<p>Syntax: steaminfo &lt;playerinput&gt;</p>
+<p>Example: steaminfo Skeke, steaminfo STEAM:0:1:12345</p>
+</div>
+</body>
