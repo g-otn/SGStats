@@ -13,7 +13,7 @@ const cheerio = require('cheerio');
 //Console bot iniciation confirmation
 bot.on("ready", () => {
 	console.clear();
-	bot.channels.get("403969093595693066").send('SmithtainmentStats has started.');
+	bot.channels.get("413088508819800064").send('SmithtainmentStats has started.');
 	bot.user.setUsername("SmithtainmentStats");
 	console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + botinfo.author);
 	console.log('Prefix: ' + config.prefix);
@@ -124,7 +124,13 @@ bot.on("message", (msg) => {
                 	extract_nameb64(server_address);
 
             	} else { //If it can't access
-            	msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode);
+				msg.channel.send({embed: { 
+					"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+					}
+				}});
             	console.log('Website access error. HTTP Code ' + response.statusCode);
             	console.log('!! Image not sent because of website error !!');
             	console.log('----------\n');
@@ -145,7 +151,13 @@ bot.on("message", (msg) => {
         	sendimage(server_address, rawlink);
 
         } else {
-        	msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.");
+			msg.channel.send({embed: { 
+				"description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+				}
+			}});
         	console.log('!! Image not sent because of player name !!');
         	console.log('----------\n');
         }
@@ -193,6 +205,16 @@ bot.on("message", (msg) => {
 			}
 		}});
 		console.log('----------\n');
+	}
+	function wronggraphtype() {
+		msg.channel.send({embed: {
+			"description": "'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.",
+			"color": 0x0000ff,
+			"thumbnail": {
+			  "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+			}
+		}});
+		console.log('!! Image not sent because of wrong graph type !!\n----------\n');
 	}
 
 
@@ -295,7 +317,13 @@ bot.on("message", (msg) => {
                     });
                 } else {
 					if (requesttype == "main") {
-						msg.channel.send('The website could not find the user.');
+						msg.channel.send({embed: { 
+							"description": "The website could not find the user.", 
+							"color": 0x0000ff,	
+							"thumbnail": { 
+								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+							}
+						}});
 						console.log('!! User not found !!');
 						console.log('----------\n');
 					} else { 
@@ -306,6 +334,13 @@ bot.on("message", (msg) => {
                 }
             } else {
 				if (requesttype == "main") {
+					msg.channel.send({embed: { 
+						"description": "Could not access the website. HTTP Code: " + response.statusCode, 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+						}
+					}});
 					console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
 					console.log('!! Steam info not sent because of website error !!');
 					console.log('----------\n');
@@ -337,6 +372,7 @@ bot.on("message", (msg) => {
 				serverid = moddedid;
 				servername = 'MC TTT';
 				break;
+			case 'darkrp':
 			case 'roleplay':
 				server = roleplay;
 				serverid = roleplayid;
@@ -455,14 +491,26 @@ bot.on("message", (msg) => {
 						console.log('----------\n');
 	                }
 				} else {
-					msg.channel.send("Couldn't access the website. HTTP code " + response.statusCode);
+					msg.channel.send({embed: { 
+						"description": "Couldn't access the website. HTTP code " + response.statusCode, 
+						"color": 0x0000ff,	
+						"thumbnail": { 
+							"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+						}
+					}});
 					console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
 					console.log('!! Info not sent because of website error !!');
 					console.log('----------\n');
 				}
 	        });
 		} else {
-			msg.channel.send("'" + server + "' is not a known server. please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
+			msg.channel.send({embed: { 
+				"description": "'" + server + "' is not a known server. please use 'anime', 'modded', 'roleplay' or 'vanilla'.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+				}
+			}});
 			console.log('!! Info not sent because of wrong server name !!');
 			console.log('----------\n');
 		}
@@ -489,6 +537,7 @@ bot.on("message", (msg) => {
 				serverid = moddedid;
 				servername = "MC TTT";
 				break;
+			case 'darkrp':
 			case 'roleplay':
 				server = roleplay;
 				serverid = roleplayid;
@@ -550,12 +599,24 @@ bot.on("message", (msg) => {
 					console.log('----------\n');
 				});
 			} else {
-				msg.channel.send("'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.");
+				msg.channel.send({embed: { 
+					"description": "'" + graphtype + "' is not a known type of graph. Please use 'day', 'week' or 'month'.", 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+					}
+				}});
 				console.log('!! Info not sent because of wrong server name !!');
 				console.log('----------\n');
 			}
 		} else {
-			msg.channel.send("'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
+			msg.channel.send({embed: { 
+				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+				}
+			}});
 			console.log('!! Info not sent because of wrong server name !!');
 			console.log('----------\n');
 		}
@@ -586,6 +647,7 @@ bot.on("message", (msg) => {
 				server = modded;
 				servername = 'MC TTT';
 				break;
+			case 'darkrp':
 			case 'roleplay':
 				server = roleplay;
 				servername = 'DarkRP';
@@ -633,12 +695,24 @@ bot.on("message", (msg) => {
 							}});
 							console.log('----------\n');
 						} else {
-							msg.channel.send("Player doesn't play on this server or doesn't exist.");
+							msg.channel.send({embed: { 
+								"description": "Player doesn't play on this server or doesn't exist.", 
+								"color": 0x0000ff,	
+								"thumbnail": { 
+									"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+								}
+							}});
 							console.log('Player not found!');
 							console.log('----------\n');
 						}
 					} else {
-						msg.channel.send("Couldn't access the website. HTTP code " + response.statusCode);
+						msg.channel.send({embed: { 
+							"description": "Couldn't access the website. HTTP code " + response.statusCode, 
+							"color": 0x0000ff,	
+							"thumbnail": { 
+								"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+							}
+						}});
 						console.log('Website access error. HTTP Code ' + response.statusCode);
 						console.log('!! Info not sent because of website error !!');
 						console.log('----------\n');
@@ -646,7 +720,13 @@ bot.on("message", (msg) => {
 				});
 			});
 		} else {
-			msg.channel.send("'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
+			msg.channel.send({embed: { 
+				"description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'roleplay' or 'vanilla'.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+				}
+			}});
 			console.log('!! Info not sent because of wrong server name !!');
 			console.log('----------\n');
 		}
@@ -660,7 +740,9 @@ bot.on("message", (msg) => {
 	//help command
 	function help(command) {
 		console.log('Command to help: ' + command);
-		var desc, syntax, ex, notes, notes_srv, notes_per;
+		var desc, syntax, ex, notes, notes_srv, notes_per, thumb;
+		var thumbSt = "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FkSt.png?1518565783409";
+		var thumbGT = "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FkGT.png?1518565784303";
 		var defaultcheck = false;
 		var commandlist = [
 			, //idk why but without this it sends without the first value
@@ -682,36 +764,42 @@ bot.on("message", (msg) => {
 				syntax = "<server>";
 				notes = notes_srv;
 				ex = config.prefix + "modded; " + config.prefix + "vanilla";
+				thumb = thumbGT;
 				break;
 			case 'serverh':
 				desc = "Shows a graph of a player playtime of a Smithtainment server in a specific period of time.";
 				syntax = "<server>h <period> <playername>";
 				notes = notes_srv;
 				ex = "moddedh week Skeke";
+				thumb = thumbGT;
 				break;
 			case 'steaminfo':
 				desc = "Shows info from steam of a player";
 				syntax = "steaminfo <input>";
 				notes = "Input: SteamID, SteamID64, SteamID3 or customURL"
 				ex = "steaminfo STEAM_1:0:70936906";
+				thumb = thumbSt;
 				break;
 			case 'online':
 				desc = "Shows online players from a Smithtainment server along with a population graph of that server in the last 24h.";
 				syntax = "online <server>";
 				notes = notes_srv;
 				ex = "online modded";
+				thumb = thumbGT;
 				break;
 			case 'population':
 				desc = "Shows a graph of population of a Smithtainment server during a specific time period.";
 				syntax = "population <server> <period>";
 				notes = notes_srv + '\n' + notes_per;
 				ex = "population vanilla month";
+				thumb = thumbGT;
 				break;
 			case 'playerhours':
 				desc = "Shows a player total hours in a specific Smithtainment server.";
 				syntax = "playerhours <server> <player>";
 				notes = notes_srv;
 				ex = "playerhours Skeke";
+				thumb = thumbGT;
 				break;
 			case 'hue':
 				defaultcheck = true;
@@ -735,6 +823,9 @@ bot.on("message", (msg) => {
 					"color": 0x0000ff,
 					"footer": {
 						"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
+					},
+					"thumbnail": {
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk5.png?1518561202766"
 					}
 				}});
 				break;
@@ -747,6 +838,9 @@ bot.on("message", (msg) => {
 				"color": 0x0000ff,
 				"footer": {
 					"text": "SmithtainmentStats v" + botinfo.version + " by Skeke#2155, special thanks Hades#6871"
+				},
+				"thumbnail": {
+					"url": thumb
 				},
 				"fields": [
 					{
@@ -801,7 +895,13 @@ bot.on("message", (msg) => {
 					}
 				}});
 			} else { //If it can't access
-			msg.channel.send("Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode);
+			msg.channel.send({embed: {
+				"description": "Couldn't access website. HTTP Code "  + response.statusCode,
+				"color": 0x0000ff,
+				"thumbnail": {
+				  "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+				}
+			}});
 			console.log('Website access error. HTTP Code ' + response.statusCode);
 			console.log('!! Image not sent because of website error !!');
 			console.log('----------\n');
@@ -833,9 +933,27 @@ bot.on("message", (msg) => {
 	//Variables and functions that scrap and send thread info
 	var postname, postauthor, postlink, postdate, seclink;
 	var selector, forbreaker;
-	const sectionlist = [241,130,133,134,48,59,66,87,93,36,40,41];
-	const sectiontype = ['Network Appeal','Application','Ban Appeal','Warn Appeal','Application','Ban Appeal','Warn Appeal','Application','Ban Appeal','Application','Ban Appeal','Warn Appeal'];
-	const sectionfrom = ['Global Section','Anime TTT','Anime TTT','Anime TTT','MC TTT','MC TTT','MC TTT','Vanila TTT','Vanila TTT','DarkRP','DarkRP','DarkRP'];
+	const sectionlist = [
+							241,213, //Global
+							130,132,133,134, //Anime
+							51,53,48,59,66, //Modded
+							87,93, //Vanilla
+							34,36,40,41 //DarkRP
+						];
+	const sectiontype = [
+							'Appeal','Application', //Global
+							'Application','Report','Ban Appeal','Warn Appeal', //Anime
+							'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
+							'Application','Ban Appeal', //Vanilla
+							'Report','Application','Ban Appeal','Warn Appeal' //DarkRP
+						];
+	const sectionfrom = [
+							'Forums/Network Appeals','Forum Moderator Applications',
+							'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
+							'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
+							'Vanila TTT','Vanila TTT',
+							'DarkRP','DarkRP','DarkRP','DarkRP'
+						];
 	async function check(fid) {
 		//Checks for manual test (with fid)
 		var i;
@@ -988,42 +1106,27 @@ bot.on("message", (msg) => {
 		case 'animeh':
 			hourscmd_argsorganize(anime, args);
 			graphtypeselector();
-			if (errorcheck !== true) {
-				scrapGT(anime);
-			} else {
-				msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-				console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-			}
+			if (errorcheck !== true) { scrapGT(anime);} 
+			else { wronggraphtype();}
 			break;
 		case 'moddedh':
 			hourscmd_argsorganize(modded, args);
 			graphtypeselector();
-			if (errorcheck !== true) {
-				scrapGT(modded);
-			} else {
-				msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-				console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-			}
+			if (errorcheck !== true) { scrapGT(modded);} 
+			else { wronggraphtype();}
 			break;
+		case 'darkrph':
 		case 'roleplayh':
 			hourscmd_argsorganize(roleplay, args);
 			graphtypeselector();
-			if (errorcheck !== true) {
-				scrapGT(roleplay);
-			} else {
-				msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-				console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-			}
+			if (errorcheck !== true) { scrapGT(roleplay);}
+			else { wronggraphtype();}
 			break;
 		case 'vanillah':
 			hourscmd_argsorganize(vanilla, args);
 			graphtypeselector();
-			if (errorcheck !== true) {
-				scrapGT(vanilla);
-			} else {
-				msg.channel.send("'" + graphtype + "' is not a valid graphtype. Please use 'day', 'week' or 'month'.");
-				console.log('!! Image not sent because of wrong graph type !!\n----------\n');
-			}
+			if (errorcheck !== true) { scrapGT(vanilla);} 
+			else { wronggraphtype();}
 			break;
 		case 'steaminfo':
 			args = args.join(' ');
@@ -1044,14 +1147,22 @@ bot.on("message", (msg) => {
 			help(args);
 			break;
 		case 'serverh':
-			msg.channel.send('Please select a server. Use ``' + config.prefix + 'help serverh`` for more information.');
+			msg.channel.send({embed: { 
+				"description": "Please select a server. Use ``" + config.prefix + "help serverh`` for more information.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk9.png?1518563848991"
+				}
+			}});	
+			msg.channel.send();
 			break;
 		case 'anime':
 			server(anime, 'Anime TTT');
 	    	break;
 		case 'modded':
 			server(modded, 'MC TTT');
-	    	break;
+			break;
+		case 'darkrp':
 		case 'roleplay':
 			server(roleplay, 'DarkRP');
 	    	break;
@@ -1069,22 +1180,52 @@ bot.on("message", (msg) => {
 			console.log('breaker: ' + breaker);
 			if (breaker == false) {	
 				autocheckstart();
-				msg.channel.send('Forums auto checker is now running.');
+				msg.channel.send({embed: { 
+					"description": "Forums auto checker is now running.", 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk8.png?1518561204876"
+					}
+				}});
 			} else {
-				msg.channel.send('Forums auto checker is already running!');
+				msg.channel.send({embed: { 
+					"description": "Forums auto checker is already running!", 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"
+					}
+				}});
 			}
 			break;
 		case 'stopauto':
 			console.log('breaker: ' + breaker);
 			if (breaker == true) {
 				autocheckstop();
-				msg.channel.send('Forums auto checker is now disabled.');
+				msg.channel.send({embed: { 
+					"description": "Forums auto checker is now disabled.", 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk7.png?1518561202966"
+					}
+				}});
 			} else {
-				msg.channel.send('Forums auto checker is already disabled.');
+				msg.channel.send({embed: { 
+					"description": "Forums auto checker is already disabled!", 
+					"color": 0x0000ff,	
+					"thumbnail": { 
+						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"
+					}
+				}});
 			}			
 			break;
-	    default:
-	    	msg.channel.send("'" + cmd + "' is not a known command. Type ``" + config.prefix + "help`` for a list of commands.");
+		default:
+			msg.channel.send({embed: { 
+				"description": "'" + cmd + "' is not a known command.\nType ``" + config.prefix + "help`` for a list of commands.", 
+				"color": 0x0000ff,	
+				"thumbnail": { 
+					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
+				}
+			}});
 	    	console.log('!! Invalid command !!');
 	    	console.log('----------\n');
 	}
