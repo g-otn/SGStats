@@ -1,67 +1,9 @@
 <!-- HTML Codes by Quackit.com -->
 <!DOCTYPE html>
-<title>SmithtainmentStats Changelog</title>
-<style>
-  body {
-    font-family: Arial;
-    background-color: #000000;
-    padding-left: 150px;
-    padding-right: 100px;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    color: grey;
-  }
-  div.log {
-    border: 1px solid green;
-    border-radius: 15px;
-    padding: 5px;
-    margin-top: 10px;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-  }
-  p {
-    line-height: 1.2;
-    font-family: Arial;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: none;
-    color: #9999ff;
-  }
-  h1 {
-    font-weight: bold;
-    text-align: center;
-    font-size: 30pt;
-    padding: 20px;
-  }
-  h2 {
-    text-align: center;
-  }
-  .important {
-    color: #D358F7;
-    font-weight: bold;  
-  }
-  p.title {
-    color: #CEECF5;
-    font-weight: bold;
-  }
-  img {
-    position: absolute;
-    border-radius: 50%;
-    width: 150px;
-    left: 0;
-    top: 0;
-    padding: 10px;
-  }
-  img:hover {
-    -webkit-animation:spin 1s linear infinite;
-    -moz-animation:spin 1s linear infinite;
-    animation:spin 1s linear infinite;
-  }
-  @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg);} }
-  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-  @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-</style>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>SmithtainmentStats Changelog</title>
+</head>
 <body>
 <div class="container">
 <h1 class="important">SmithtainmentStats Discord bot Changelog</h1>
@@ -69,14 +11,26 @@
 <a href="https://discordbot-smithtainments.glitch.me/">Click here to make the bot go online!</a>
 <img src="https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FImagem2.png?1518292755160">
 
-  <p><b>Plans for the bot:</b></p>
+<p><b>Plans for the bot:</b></p>
 <ul>
   <li>none, you can suggest however.</li>
-</ul>
+</ul><br><br>
+  
+<div class="log last">
+<p class="title">v2.8.4 - 2018Apr01</p>
+<p> * Updated channel IDs</p>
+<p> * Bug fixes</p>
+<br></div>
+
+<div class="log">
+<p class="title">v2.8.3 - 2018Mar27</p>
+<p> * Removed unused forums sections in forums checking.</p>
+<p> * Optimized code</p>
+<br></div>
 
 <div class="log">
 <p class="title">v2.8.2 - 2018Mar25</p>
-<p> * Changed darkrp commands to match the in-development server Star Wars TTT.</p>
+<p> * Changed DarkRP commands to match the in-development server Star Wars TTT.</p>
 <p> * Minor bug fix</p>
 <br></div>
   
@@ -86,7 +40,7 @@
 <p> * Fixed minor grammar error.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.8.0 - 2018Mar18</p>
 <p> + Added helpful messages for wrong commands/syntaxes.</p>
 <p> - Removed 'day' graph type as the default for the population command. Now it doesn't have default and the user should specify the graph type.</p>
@@ -99,17 +53,17 @@
 <p> * Updated Hades user descriptor in special thanks</p>
 <br></div>
  
-<div class="log">
+<div class="log minor">
 <p class="title">v2.7.0 - 2018Mar15</p>
 <p> + Bot now tries to find the player with a similar name instead of needing to type the exact name for the serverh command, like the playehours command. <a href="https://image.prntscr.com/image/bkChQ4RSQQu-jbl2jwvugg.png">example</a>.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.6.0 - 2018Mar10</p>
 <p> + Bot now uses SteamID64 if SteamID is not found in the new threads.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.5.0 - 2018Mar8</p>
 <p> + Added the new PropHunt server to all commands (server, serverh, online, population and playerhours).</p>
 <p> + Servers now can be referenced abbreviation.</p>
@@ -131,14 +85,14 @@
 <p> * New DarkRP Threads pings now the entire DarkRP staff + Reeb.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.4.0 - 2018Feb28</p>
 <p> + Bot now searches for news in the forums portal.</p>
 <br></div>
 
 <div class="log">
 <p class="title">v2.3.2 - 2018Feb27</p>
-<p> * Fixed a crash with bad timing function calling. (this problem was crashing my bot since version 2.0 xD)</p>
+<p> * Fixed a crash. (this problem was crashing my bot since version 2.0 xD)</p>
 <br></div>
 
 <div class="log">
@@ -148,17 +102,17 @@
 <p> * Fixed a bug where info from new threads were sent in different/wrong/multiple messages. (I hope so lol)</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.3.0 - 2018Feb11</p>
 <p> + Bot shows GamerTracker info for new threads and server activity for new applicants. <b>(unstable)</b> </p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.2.0 - 2018Feb11</p>
 <p> + Bot now checks for forum moderator applications, reports and donor support threads.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v2.1.0 - 2018Feb11</p>
 <p> + Bot error messages and some others now have thumbnails, style change only.</p>
 <p> * 'darkrp' is now valid and considered as 'roleplay' for all commands.</p>
@@ -171,13 +125,13 @@
 <p> * Fixed a bug in the playerhours command where player names with spaces would break commands.</p>
 <br></div>
 
-<div class="log">
+<div class="log major">
 <p class="title">v2.0.0 - 2018Feb09</p>
 <p> + Bot now automatically checks for new applications and ban/warn appeals, sending them in the staff server in spam_spam_spam. This is still not 100% working so you can disable it with the !!stopauto command.</p>
 <p> * playerhours command now has a link to similar names.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v1.4.0 - 2018Feb07</p>
 <p> + Added old bot server info command.</p>
 <p>Syntax: &lt;server&gt;</p>
@@ -192,7 +146,7 @@
 <p> * Minor changes to commands text.</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v1.3.0 - 2018Jan31</p>
 <p> + Added a temporary help command (for Pluto discord), disabled by default.</p>
 <p> * Fixed blank line in embed message when GT sends it in blank, in the online command.</p>
@@ -204,7 +158,7 @@
 <p> * Fixed a crash after asking for hours graph</p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v1.2.0 - 2018Jan18</p>
 <p> + Added a command that show a player's playtime for a server.</p>
 <p>Syntax: playerhours &lt;server&gt; &lt;player name&gt;</p>
@@ -217,7 +171,7 @@
 <p> * Fixed a error in which the graphs sent in commands were 1 or 2 days off, because of a URL php input. </p>
 <br></div>
 
-<div class="log">
+<div class="log minor">
 <p class="title">v1.1.0 - 2018Jan16</p>
 <p> + Added command that shows which players are online in a server and the server population for the last 24h.</p>
 <p>Syntax: online &lt;server&gt;</p>
@@ -227,7 +181,7 @@
 <p>Example: population modded, population vanilla month</p>
 <br></div>
 
-<div class="log">
+<div class="log major">
 <p class="title">v1.0.0 - 2018Jan11</p>
 <p> + Added command that shows playtime graphs of players during the day, week or month of a server.</p>
 <p>Syntax: &lt;server&gt;h &lt;typeofgraph&gt; &lt;playername&gt;</p>

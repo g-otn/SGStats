@@ -31,7 +31,7 @@ bot.on("message", (msg) => {
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
 		msg.content = '!!check start';
-		//msg.content = '!!checkbypass 48';
+		msg.content = '!!checkbypass 48';
 	}
 
     if (msg.content)
@@ -106,7 +106,7 @@ bot.on("message", (msg) => {
     //variables
     var errorcheck;
     var rawlink, b64user, graphtype;
-    var scrapertarget, url, serverinfo, scanned, playersearch;
+    var scrapertarget,serverinfo, scanned, playersearch;
     //function to separate the graphtype and the player name
     function hourscmd_argsorganize(server, command_args, requesttype) { 
         //Example: !!moddedh week Skeke
@@ -121,7 +121,7 @@ bot.on("message", (msg) => {
     function scrapGT(server_address, requesttype) {
 		if (requesttype == 'autoreq') {
 			server_address = servertype[0];
-			playersearch = 'https://www.gametracker.com/server_info/' + servertype[0] + '/top_players/?query=' + args;
+			playersearch = 'https://www.gametracker.com/server_info/' + servertype[0] + '/top_players/?query=' + checkdata[1];
 			scrapertarget = "https://www.gametracker.com/player/" + checkdata[1] + "/" + servertype[0] + "/";
 			serverinfo = "https://www.gametracker.com/server_info/" + servertype[0];
 			graphtype = '1w';
@@ -138,7 +138,6 @@ bot.on("message", (msg) => {
 					noplayercheck = false;
 					console.log('noplayercheck: ' + noplayercheck);
 					var player = $('.table_lst').children().children().eq(1).children().children('a').text().trim();
-					var hours = $('.table_lst').children().children().eq(1).children().eq(4).text().split('.').slice(0,1).join().trim();
 					scrapertarget = "https://www.gametracker.com/player/" + player + "/" + server_address + "/";
 				} else { //If it can't access
 					msg.channel.send({embed: { 
@@ -168,36 +167,42 @@ bot.on("message", (msg) => {
 	                	var $ = cheerio.load(html);
 	                	rawlink = $('img#graph_player_time').attr('src'); //What we want (the link to the graph)
 						console.log('Raw scraped link: ' + rawlink);
-						//separate the scraped raw link and get the base64 username
-						rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
-						b64user = rawlink.trim().split('&host=').slice(0,1);
-						console.log('Base64 Username: ' + b64user);
-						var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + server_address + '&start=-' + graphtype + "&request=0" + requestnumber;
-						if (requesttype == 'autoreq') {
-							checkdata[6] = finalimage;
-							console.log('---End of serverh function');
-						} else {
-							//(finnally) send the image
-							console.log('errorcheck: ' + errorcheck);
-							console.log('Graph type: ' + graphtype);
-							console.log('Image to send: ' + finalimage);
-							//Fix to links that are broken when sent to discord if the player has space in its name
-							scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
-							scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
-							scrapertarget = scrapertarget.split(" ").join("%20");
-							scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
-							//Sends the message
-							msg.channel.send({embed: {
-								"description": "Showing [" + player + "](" + scrapertarget + ")'s playtime:",
-								"color": 0xFFBF52,
-								"footer": {
-									"text": scanned + " via GT"
-								},
-								"image": {
-									"url": finalimage
-								}
-							}});
-							console.log('----------\n');
+						function sleep3(ms) {
+							return new Promise(resolve2 => setTimeout(resolve2, ms));
+						}
+						async function waitscrap() {
+							await sleep3(1500); //waits for scrap of raw link
+							//separate the scraped raw link and get the base64 username
+							rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
+							b64user = rawlink.trim().split('&host=').slice(0,1);
+							console.log('Base64 Username: ' + b64user);
+							var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + server_address + '&start=-' + graphtype + "&request=0" + requestnumber;
+							if (requesttype == 'autoreq') {
+								checkdata[6] = finalimage;
+								console.log('---End of serverh function');
+							} else {
+								//(finnally) send the image
+								console.log('errorcheck: ' + errorcheck);
+								console.log('Graph type: ' + graphtype);
+								console.log('Image to send: ' + finalimage);
+								//Fix to links that are broken when sent to discord if the player has space in its name
+								scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
+								scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
+								scrapertarget = scrapertarget.split(" ").join("%20");
+								scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
+								//Sends the message
+								msg.channel.send({embed: {
+									"description": "Showing [" + player + "](" + scrapertarget + ")'s playtime:",
+									"color": 0xFFBF52,
+									"footer": {
+										"text": scanned + " via GT"
+									},
+									"image": {
+										"url": finalimage
+									}
+								}});
+								console.log('----------\n');
+							}
 						}
 					} else {
 						if (requesttype !== 'autoreq') {
@@ -807,7 +812,7 @@ bot.on("message", (msg) => {
 				default:
 					errorcheck = true;
 			}
-			if ((player == undefined || player == "" || player == " ") && errorcheck !== true) { errorcheck2 = true;}
+			if ((player === undefined || player == "" || player == " ") && errorcheck !== true) { errorcheck2 = true;}
 		} else { //Check function
 			server = checkserver;
 			player = checkplayer;
@@ -952,7 +957,7 @@ bot.on("message", (msg) => {
 				desc = "Shows info about a specific server";
 				syntax = "<server>";
 				notes = notes_srv;
-				ex = config.prefix + "modded; " + config.prefix + "vanilla";
+				ex = "modded; " + config.prefix + "vanilla";
 				thumb = thumbGT;
 				break;
 			case 'serverh':
@@ -1103,7 +1108,7 @@ bot.on("message", (msg) => {
 
 	var checkbypass = false;
 	function bypasscheck(fid) {
-		console.log('Starting check command with time bypass...\n')
+		console.log('Starting check command with time bypass...\n');
 		checkbypass = true;
 		check(fid);
 	}
@@ -1133,8 +1138,8 @@ bot.on("message", (msg) => {
 	var checkdata = [1];
 	const sectionlist = [
 		241,213, //Global
-		257,258,259,260,261,281, //Suggestions
-		262,263,264,265,266,282, //Bug Reports
+		257,258,259,/*260,*/261,281, //Suggestions
+		262,263,264,/*265,*/266,282, //Bug Reports
 		130,132,133,134, //Anime
 		51,53,48,59,66, //Modded
 		270,271,272,283, //PropHunt
@@ -1143,8 +1148,8 @@ bot.on("message", (msg) => {
 	];
 	const sectiontype = [
 		'Appeal','Application', //Global
-		'Suggestion','Suggestion','Suggestion','Suggestion','Suggestion','Suggestion', //Suggestions
-		'Bug Report','Bug Report','Bug Report','Bug Report','Bug Report','Bug Report', //Bug Reports
+		'Suggestion','Suggestion','Suggestion',/*'Suggestion',*/'Suggestion','Suggestion', //Suggestions
+		'Bug Report','Bug Report','Bug Report',/*'Bug Report',*/'Bug Report','Bug Report', //Bug Reports
 		'Application','Report','Ban Appeal','Warn Appeal', //Anime
 		'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
 		'Application','Ban Appeal','Warn Appeal','Report', //PropHunt
@@ -1153,8 +1158,8 @@ bot.on("message", (msg) => {
 	];
 	const sectionfrom = [
 		'Forums/Network Appeals','Forum Moderator Applications',
-		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'Star Wars TTT', 'Forums','PropHunt',
-		'MC TTT', 'Vanilla TTT', 'Anime TTT', 'Star Wars TTT', 'Forums','PropHunt',
+		'MC TTT','Vanilla TTT','Anime TTT',/*'Star Wars TTT',*/'Forums','PropHunt',
+		'MC TTT','Vanilla TTT','Anime TTT',/*'Star Wars TTT',*/'Forums','PropHunt',
 		'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
 		'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
 		'PropHunt','PropHunt','PropHunt','PropHunt',
@@ -1163,8 +1168,8 @@ bot.on("message", (msg) => {
 	];
 	const sectionmention = [
 		M_gl,M_gl,
-		M_mc,M_va,M_an,M_sw,M_gl,M_ph,
-		M_mc,M_va,M_an,M_sw,M_gl,M_ph,
+		M_mc,M_va,M_an,/*M_sw,*/M_gl,M_ph,
+		M_mc,M_va,M_an,/*M_sw,*/M_gl,M_ph,
 		M_an,M_an,M_an,M_an,
 		M_mc,M_mc,M_mc,M_mc,M_mc,
 		M_ph,M_ph,M_ph,M_ph,
@@ -1311,7 +1316,7 @@ bot.on("message", (msg) => {
 							console.log('waiting for scrap of post date...');
 							await sleep2(3000); //Waits for the request to finish
 							//Checks if thread is recent (<1h) to avoid spamming when bot starts
-							if (postdate.includes('minute') === true || checkbypass == true) { //Change condition to "... == true" to work proprely
+							if (postdate.includes('minute') === true || checkbypass === true) { //Change condition to "... == true" to work proprely
 								if (checkdata[0] == 'notneeded') { 
 									checksender();
 									return;
@@ -1332,7 +1337,7 @@ bot.on("message", (msg) => {
 									console.log('Failed to scrap SteamID, trying SteamID64...');
 									poststeamid = $('.post_body').first().text().trim();
 									poststeamid = poststeamid.split('765611').slice(1,2).join(''); //Gets the SteamID64 and everything after
-									poststeamid = poststeamid.split('').slice(0,12).join('').trim(); //Removes everything after the first 12 characters (because SteamID64s without the starting '765611' are(?) 11 characters long)
+									poststeamid = poststeamid.split('').slice(0,11).join('').trim(); //Removes everything after the first 11 characters (because SteamID64s without the starting '765611' are(?) 11 characters long)
 									poststeamid = poststeamid.split(' ').slice(0,1).join(''); //Removes anything after the space after the SteamID64
 									poststeamid = poststeamid.split('\n').slice(0,1).join(''); //Removes anything after a line break after the SteamID64
 									poststeamid = poststeamid.split('.').slice(0,1).join('').trim(); //Removes anything after a dot after the SteamID
@@ -1371,7 +1376,7 @@ bot.on("message", (msg) => {
 						if (checkdata[0] == 'appl') {
 							console.log('---Starting serverh function');
 							scrapGT(null,'autoreq');
-							await sleep(5500);
+							await sleep(6500);
 							console.log('---Starting playerhours function');
 							playerhours(null, 'autoreq', servertype[0], checkdata[1]);
 							await sleep(5500);
@@ -1405,7 +1410,7 @@ bot.on("message", (msg) => {
 				checkdata[1] = $('.portaldate').first().text().trim(); //Post date
 				checkdata[2] = $('.portalhead').first().text().trim(); //Title
 				console.log('Post date: ' + checkdata[1] + '\nTitle: ' + checkdata[2]);
-				if ((checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) === false) || checkbypass == true) {
+				if ((checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) === false) || checkbypass === true) {
 					checkdata[3] = $('.mycode_img').attr('src'); //Image
 					console.log('Checkdata:\n' + checkdata.join('\n '));		
 				} else {
@@ -1413,7 +1418,7 @@ bot.on("message", (msg) => {
 				}
 			});
 			await sleep(3500);
-			if ((checkdata[1].includes('minute') == true && repeatedtitles.join(' ').includes(checkdata[2]) == false) || checkbypass == true) { 
+			if ((checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) == false) || checkbypass === true) { 
 				repeatedtitles.push(checkdata[2]);
 				console.log('Repeated titles: ' + repeatedtitles);
 				checksender();
@@ -1441,9 +1446,8 @@ bot.on("message", (msg) => {
 			console.log("Data recevied: \n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n9 gt link: ' + checkdata[9] + '\n servertype: ' + servertype);
 		}
 		//Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
-		//spam_spam_spam -> "409458470610403338"
-		//announcements staff -> "409456414654726156"
-		//announcements public -> "348548140087115776"
+		//spam_spam_spam -> "429815221041758210"
+		//announcements staff,public -> ["409456414654726156","348548140087115776"];
 		//test -> "403969093595693066"
 		//test private -> "413088508819800064"
 		const target = "403969093595693066";
@@ -1564,9 +1568,9 @@ bot.on("message", (msg) => {
 				console.log('Sending news...');
 				if (checkdata[3] !== undefined && checkdata[3] !== "not found") {
 					//THUMBNAIL
-					for (var i = 0; i < 2; i++) {
-						bot.channels.get(target2[i]).send("@everyone");
-						bot.channels.get(target2[i]).send({embed: {
+					for (var j = 0; j < 2; j++) {
+						bot.channels.get(target2[j]).send("@everyone");
+						bot.channels.get(target2[j]).send({embed: {
 							"title": checkdata[2],
 							"url": portallink,
 							"color": 0x0000ff,
@@ -1580,7 +1584,7 @@ bot.on("message", (msg) => {
 					}
 				} else {
 					//NO THUMBNAIL
-					for (var i = 0; i < 2; i++) {
+					for (var k = 0; k < 2; k++) {
 						bot.channels.get(target2[i]).send("@everyone");
 						bot.channels.get(target2[i]).send({embed: {
 							"title": checkdata[2],
@@ -1698,7 +1702,8 @@ bot.on("message", (msg) => {
 		case 'va':
 		case 'vanilla':
 			server_fun(vanilla, 'Vanilla TTT');
-	    	break;
+			break;
+		case '':
 		case 'help':
 			args = args.join(' ').trim();
 			help(args);
@@ -1768,7 +1773,7 @@ bot.on("message", (msg) => {
 	}
 });
 //Variables that can't be changed in every message
-var repeatedthreads = ["hi"];
+var repeatedthreads = [];
 var repeatedtitles = [];
 var breaker = false; //Prevents autocheck to run twice at the same time
 
