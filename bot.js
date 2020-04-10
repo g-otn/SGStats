@@ -1,8 +1,20 @@
+//Auto ping so Glitch doesn't sleep
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+//===========================================================================
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const config = require('./config.json');
 const botinfo = require('./package.json');
-
 const request = require('request');
 const cheerio = require('cheerio');
 
@@ -11,7 +23,7 @@ const cheerio = require('cheerio');
 //Console bot iniciation confirmation
 bot.on("ready", () => {
     console.clear();
-    console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + config.author);
+    console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + botinfo.author);
     console.log('Prefix: ' + config.prefix);
     console.log('============================\n');
 });
@@ -277,10 +289,11 @@ bot.on("message", (msg) => {
     }
 
 
+
 	//Function to check online players and population troughtout the day
 	    function onlineplayers(server) {
-	        var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, finaltable, serverid;
-	        errorcheck2 = false;
+	        var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, /*finaltable,*/serverid;
+			errorcheck2 = false;
 	        switch (server) {
 	            case 'anime':
 	                server = anime;
@@ -300,8 +313,9 @@ bot.on("message", (msg) => {
 					break;
 	            default:
 	                errorcheck2 = true;
-	        }        
-	        console.log('errorcheck2: ' + errorcheck2);
+			}        
+			var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + '&start=-1d&request=0' + requestnumber;
+			console.log('errorcheck2: ' + errorcheck2);
 	        if (errorcheck2 !== true) {
 	            console.log('Selected server:' + server);
 	            gtserverlink = 'https://www.gametracker.com/server_info/' + server;
@@ -327,8 +341,17 @@ bot.on("message", (msg) => {
 	                    noplayercheck = noplayercheck.trim();
 	                    if (noplayercheck == 'No players Online') {
 	                        noplayercheck = true;
-	                        console.log('noplayercheck: ' + noplayercheck);
-	                        msg.channel.send('There are no players online.');
+							console.log('noplayercheck: ' + noplayercheck);
+							msg.channel.send({embed: {
+	                            "description": 'There are no players online.\n\n Server population throughout the day:',
+	                            "color": 0xFFBF52,
+	                            "footer": {
+	                                "text": scanned + " via GT"
+	                            },
+	                            "image": {
+	                                "url": populationgraph
+	                            }
+	                        }});
 	                        console.log('----------\n');
 	                    } else {
 	                        noplayercheck = false;
@@ -356,29 +379,44 @@ bot.on("message", (msg) => {
 	                                if (timelist[finder3].length == 3) { timelist[finder3] = timelist[finder3].slice(0,2).join('h') + 'min';}
 	                                else { timelist[finder3] = timelist[finder3].slice(0,1).join() + 'min';}
 	                                console.log('Player #' + finder2 + ': ' + scrapedplayer + '\nPlaytime: ' + scrapedtime);
-	                            } else { 
-	                                finder3--;
+	                            } else {
+									playerlist.slice(finder3-1, finder3+1);
+									finder3--;
 	                                console.log('Player #' + finder2 + ' in blank, ignored.');
 	                            }
 	                        }
 	                        console.log('Playerlist: ' + playerlist);
-	                        console.log('Timelist:' + timelist);
-	                        var i3;
+							console.log('Timelist:' + timelist);
+							playerlist = playerlist.join('\n');
+							timelist = timelist.join("\n");
+	                        /*var i3;
 	                        finaltable = '';
 	                        for (i3 = 0; i3 <= playerlist.length - 1; i3++) {
 	                            if (timelist[i3] && playerlist[i3] !== undefined) { //This removes those ghost players that gametracker creates for some reason
-	                                finaltable = finaltable + timelist[i3] + ' - **' + playerlist[i3] + '**\n';
+									finaltable = finaltable + timelist[i3] + ' - **' + playerlist[i3] + '**\n';
+									
 	                            }
 	                        }
-	                        console.log(finaltable);
-							var populationgraph = 'https://cache.gametracker.com/images/graphs/server_players.php?GSID=' + serverid + '&start=-1d&request=0' + requestnumber;
+	                        console.log(finaltable);*/
 							console.log('Graph link: ' + populationgraph + '\nlink not stable because of request parameter. Graph may be send 12h delayed.');
 	                        msg.channel.send({embed: {
-	                            "description": '__*Time played - Name*__ \n' + finaltable + '\nServer population throughout the day:',
+	                            "description": 'Showing [server](' + gtserverlink + ') online players and population throughout the day:',
 	                            "color": 0xFFBF52,
 	                            "footer": {
 	                                "text": scanned + " via GT"
-	                            },
+								},
+								"fields": [
+									{
+										"name": "Player Name",
+										"value": playerlist,
+										"inline": true
+									},
+									{
+										"name": "Time Played",
+										"value": timelist,
+										"inline": true
+									}
+								  ],
 	                            "image": {
 	                                "url": populationgraph
 	                            }
@@ -393,11 +431,12 @@ bot.on("message", (msg) => {
 					}
 	            });
 	        } else {
-	            msg.channel.send("'" + server + "' is not a known server. please use anime, modded, roleplay or vanilla.");
+	            msg.channel.send("'" + server + "' is not a known server. please use 'anime', 'modded', 'roleplay' or 'vanilla'.");
 	            console.log('!! Info not sent because of wrong server name !!');
 	            console.log('----------\n');
 	        }
 	    }
+
 
 
 	//Function to send population graph
@@ -547,12 +586,12 @@ bot.on("message", (msg) => {
 							//Sends the message
 							msg.channel.send({embed: {
 								"description": "[" + playername + "](" + playerlink + ")'s hours: **" + hours + "**",
-							  "color": 0xFFBF52,
-							  "footer": {
-								  "text": scanned + " via GT"
-							  },
-						  }});
-						  console.log('----------\n');
+							  	"color": 0xFFBF52,
+							  	"footer": {
+								  	"text": scanned + " via GT"
+							  	},
+						  	}});
+						  	console.log('----------\n');
 						} else {
 							msg.channel.send("Player doesn't play on this server or doesn't exist.");
 							console.log('Player not found!');
@@ -613,6 +652,104 @@ bot.on("message", (msg) => {
 			}
 		});
 	}*/
+
+
+
+	//Temporary help command for Pluto discord server
+	function help(command) {
+		var desc, syntax, ex, notes;
+		var defaultcheck = false;
+		var commandlist = [
+			, //idk why but without this it sends without the first value "serverh"
+			"serverh",
+			"steaminfo",
+			"online",
+			"population",
+			"playerhours",
+			"hue"
+		]
+		commandlist = commandlist.join('\n');
+		console.log('Command to help: ' + command);
+		notes = " ";
+		switch (command) {
+			case 'serverh':
+				desc = "Shows a graph of a player playtime of a Smithtainment server in a specific period of time.";
+				syntax = "<server>h <period> <playername>";
+				notes = "Servers: 'anime', 'modded', 'roleplay' or 'vanilla'\nPeriod: 'day', 'week' or 'month'"
+				ex = "moddedh week Skeke";
+				break;
+			case 'steaminfo':
+				desc = "Shows info from steam of a player";
+				syntax = "steaminfo <input>";
+				notes = "Input: SteamID, SteamID64, SteamID3 or customURL"
+				ex = "steaminfo STEAM_1:0:70936906";
+				break;
+			case 'online':
+				desc = "Shows online players from a Smithtainment server along with a population graph of that server in the last 24h.";
+				syntax = "online <server>";
+				notes = "Servers: 'anime', 'modded', 'roleplay' or 'vanilla'"
+				ex = "online modded";
+				break;
+			case 'population':
+				desc = "Shows a graph of population of a Smithtainment server during a specific time period.";
+				syntax = "population <server> <period>";
+				notes = "Servers: 'anime', 'modded', 'roleplay' or 'vanilla'\nPeriod: 'day', 'week' or 'month'"
+				ex = "population vanilla month";
+				break;
+			case 'playerhours':
+				desc = "Shows a player total hours in a specific Smithtainment server.";
+				syntax = "playerhours <server> <player>";
+				notes = "Servers: 'anime', 'modded', 'roleplay' or 'vanilla'"
+				ex = "playerhours Skeke";
+				break;
+			case 'hue':
+				defaultcheck = true;
+				msg.channel.send({embed: {
+					"description": "huehuehuehueeuhehuehehu",
+					"color": 0x0000ff,
+					"footer": {
+						"text": "This is a hue command"
+					},
+					"image": {
+						"url": "https://img.ibxk.com.br/2013/8/materias/1649968641515049.jpg"
+					}
+				}});
+				break;
+			case '':
+			case ' ':
+			default:
+				defaultcheck = true;
+				msg.channel.send({embed: {
+					"description": 'Showing SmitainmentGTStats commands, type ' + config.prefix + 'help "command" for specific info.\n```' + commandlist + "```",
+					"color": 0x0000ff,
+					"footer": {
+						"text": "This is a temporary help command"
+					}
+				}});
+				break;
+		}
+		notes = "\n" + notes;
+		if (defaultcheck !== true) {
+			msg.channel.send({embed: {
+				"title": 'The ' + command + ' command',
+				"description": desc,
+				"color": 0x0000ff,
+				"footer": {
+					"text": "This is a temporary help command"
+				},
+				"fields": [
+					{
+						"name": "Syntax",
+						"value": "``" + config.prefix + syntax + "``" + notes,
+					},
+					{
+						"name": "Example",
+						"value": "``" + config.prefix + ex + "``",
+					}
+				  ]
+			}});
+		}
+	}
 
 
 
@@ -678,6 +815,13 @@ bot.on("message", (msg) => {
     	case 'hue':
             msg.channel.send('br');
             break;
+        //Temporary help command for Pluto discord
+        
+        case 'help':
+			args = args.join(' ').trim();
+			help(args);
+        	break;
+        
         //Commands of the python bot that this bot will ignore
         case 'anime':
             break;
@@ -693,4 +837,4 @@ bot.on("message", (msg) => {
 });
 
 //Makes the bot go online I guess
-bot.login(config.token);
+bot.login(process.env.TOKEN);
