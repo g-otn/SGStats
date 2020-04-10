@@ -3,9 +3,6 @@
     Function: Shows a graph of a player playtime of a SG server in a specific period of time
     Author: Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
-var args = require('../bot.js').args;
 //Generated number for URL
 const requestnumber = require('../bot.js').req_num;
 //Scrap modules
@@ -24,7 +21,9 @@ var scrapertarget,serverinfo, scanned, playersearch;
 
 //function to separate the graphtype and the player name
 exports.hourscmd_argsorganize = function(server, command_args, requesttype) {
-    args = require('../bot.js').args;
+
+    var args = require('../bot.js').args;
+
     //Example: !!moddedh week Skeke
     //server = ad_modded; args = ['week', 'Skeke'];
     console.log('args recieved: ' + args);
@@ -35,10 +34,11 @@ exports.hourscmd_argsorganize = function(server, command_args, requesttype) {
     serverinfo = "https://www.gametracker.com/server_info/" + server;
     console.log('args (name): ' + args);
     console.log('graphtype: ' + graphtype);
+    exports.args = args;
 }
 
 //function that selects the type of graph
-exports.graphtypeselector = function() {
+exports.graphtypeselector = function(msg, args) {
     switch (graphtype) {
         case 'day':
             graphtype = '1d';
@@ -98,10 +98,10 @@ exports.graphtypeselector = function() {
 }
 
 //function to scrap the gamertracker base64 username'
-exports.scrapGT = function(server_address, requesttype) {
+exports.scrapGT = function(server_address, requesttype, args) {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
     if (requesttype == 'autoreq') {
         const checkdata = require('./check.js').checkdata;

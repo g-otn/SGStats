@@ -3,8 +3,6 @@
     Function: Shows info about a specific SG server
     Author: original by Hades#0666, recreated by Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
 //Scrap modules
 const request = require('request');
 const cheerio = require('cheerio');
@@ -18,7 +16,7 @@ const options = {
 exports.server_stats = function(server, name2) {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
     var serverlink = "https://www.gametracker.com/server_info/" + server;
     var name, status, players, map, mapimg, scanned;

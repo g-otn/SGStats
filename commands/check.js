@@ -4,7 +4,7 @@
     Author: Skeke#2155
 */
 //Discord module
-const bot = require('../bot.js').bot; //sends message
+var bot = require('../bot.js').bot; //sends message
 //Scrap modules
 const request = require('request');
 const cheerio = require('cheerio');
@@ -253,11 +253,11 @@ exports.check = async function(fid, checkbypass) {
                             var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join('') + "\"\n}"
                             //File writer module
                             var fs = require('fs');
-                            fs.writeFile(rep_path, rep_th_file, function (err) {
+                            fs.writeFile(rep_path2, rep_th_file, function (err) {
                                 if (err) throw err;
                                 delete require.cache[require.resolve(rep_path)];
                                 rep_th = require(rep_path).repeated_th;
-                                console.log('Repeated threads list updated with: ' + postlink);
+                                console.log('Repeated threads list updated with: ' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join(''));
                             });
                             await sleep(500);
                             console.log('Repeated threads from now: ' + rep_th);
@@ -300,7 +300,7 @@ exports.check = async function(fid, checkbypass) {
                                 console.log('---Starting steaminfo function...');
                                 ext_steaminfo.steaminfo(poststeamid, 'autoreq', postlink);
                             } else {
-                                console.log('SteamID/64 in thread not found, skipping steaminfo function');
+                                console.log('SteamID/64 in thread not found, skipping steaminfo function. Section: ' + sectionfrom[selector]);
                                 checkdata[0] = 'notfound';
                                 checksender();
                             }
@@ -384,9 +384,9 @@ function checksender(thread_title, text_preview) {
         console.log('Thread Title: ' + thread_title + '\nText preview : ' + text_preview.split(' ').slice(0,20).join(' ') + '...')
     }
     //Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
-    //spam_spam_spam -> "429815221041758210"
+    //spam_spam_spam -> "429815221041758210" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
     //test -> "403969093595693066"
-    var target = "403969093595693066";
+    const target = "429815221041758210";
     //If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')');

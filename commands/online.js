@@ -3,8 +3,6 @@
     Function: Shows online players from a SG server along with a population graph of that server in the last 24h
     Author: Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
 //Generated number for URL
 const requestnumber = require('../bot.js').req_num;
 //Scrap modules
@@ -34,7 +32,7 @@ const vanillaid = "5052174";
 exports.onlineplayers = function(server) {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
     var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, /*finaltable,*/serverid, servername;
     errorcheck2 = false;

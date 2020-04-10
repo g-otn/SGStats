@@ -6,7 +6,7 @@ const app = express();
 
 exports.autopingfunction = function(){
     app.get("/", (request, response) => {
-      console.log(Date.now() + " Ping Received");
+      console.log(Date(Date.now()) + " Ping Received");
       response.sendStatus(200);
     });
     app.listen(process.env.PORT);

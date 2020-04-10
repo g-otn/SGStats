@@ -2,6 +2,7 @@
   "name": "SGStats-test",
   "version": "3.0.0",
   "description": "Test version of the Bot made for the Smithtainment Discord server.",
+  "bot_id": "<@439196372152090625>",
   "main": "bot.js",
   "engines": {
     "node": "8.9.3"

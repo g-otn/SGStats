@@ -14,7 +14,6 @@
 //Discord Modules
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-exports.bot = bot;
 //Settings and info
 const botinfo = require('./package.json');
 var prefix = require('./config/prefix.json');
@@ -46,9 +45,10 @@ const vanillaid = "5052174";
 	Bot initiation
 */
 bot.on("ready", () => {
+	exports.bot = bot;
 	console.clear();
 	bot.user.setUsername(botinfo.name);
-	bot.user.setPresence({ status: 'away', game: { name: prefix.prefix + 'help' } });
+	bot.user.setPresence({ status: 'away', game: { name: prefix.prefix + 'help | @' + botinfo.name } });
 	console.log(botinfo.name + ' v' + botinfo.version + ' started. \nAuthor: ' + botinfo.author);
 	console.log('Prefix: ' + prefix.prefix);
 	console.log('============================\n');
@@ -66,6 +66,8 @@ bot.on("message", (msg) => {
 	*/
 	//Ignore the message if it doesn't start with the prefix or it's from a bot
 	if (msg.content.includes(botinfo.name + ' has started.') === false) {
+		//Main bot: <@394544294490275847>
+		//Test bot: <@439196372152090625>
 		if (msg.content.startsWith('<@394544294490275847>')) {
 			msg.content = msg.content.split('<@394544294490275847>').join('!!');
 		} else if (msg.content.startsWith('<@394544294490275847> ')) {
@@ -79,9 +81,9 @@ bot.on("message", (msg) => {
 	if (msg.content.includes(botinfo.name + ' has started.') === true && msg.author.bot) {
 		console.log('Bot startup message found.\n');
 		//commands executed on start
-		bot.channels.get("413088508819800064").send(prefix.prefix + 'startauto');
-		msg.content = prefix.prefix + 'check start';
-		//msg.content = prefix.prefix + 'checkbypass start';
+		//bot.channels.get("413088508819800064").send(prefix.prefix + 'startauto');
+		//msg.content = prefix.prefix + 'check start';
+		msg.content = prefix.prefix + 'checkbypass 59';
 		//return;
 	}
 
@@ -224,9 +226,9 @@ bot.on("message", (msg) => {
 			exports.args = args;
 			var ext_serverh = require('./commands/serverh.js');
 			ext_serverh.hourscmd_argsorganize(anime, args);
-			ext_serverh.graphtypeselector();
+			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
 			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(anime);
+			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(anime, 'main', ext_serverh.args);
 			break;
 		case 'mdh':
 		case 'moddedh':
@@ -236,9 +238,9 @@ bot.on("message", (msg) => {
 			exports.args = args;
 			var ext_serverh = require('./commands/serverh.js');
 			ext_serverh.hourscmd_argsorganize(modded, args);
-			ext_serverh.graphtypeselector();
+			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
 			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(modded); 
+			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(modded, 'main', ext_serverh.args); 
 			break;
 		case 'phh':
 		case 'prophunth':
@@ -248,9 +250,9 @@ bot.on("message", (msg) => {
 			exports.args = args;
 			var ext_serverh = require('./commands/serverh.js');
 			ext_serverh.hourscmd_argsorganize(prophunt, args);
-			ext_serverh.graphtypeselector();
+			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
 			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(prophunt);
+			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(prophunt, 'main', ext_serverh.args);
 			break;
 		case 'mch':
 		case 'pmch':
@@ -273,9 +275,9 @@ bot.on("message", (msg) => {
 			exports.args = args;
 			var ext_serverh = require('./commands/serverh.js');
 			ext_serverh.hourscmd_argsorganize(starwars, args);
-			ext_serverh.graphtypeselector();
+			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
 			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(starwars);
+			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(starwars, 'main', ext_serverh.args);
 			break;
 		case 'vah':
 		case 'vanillah':
@@ -285,8 +287,9 @@ bot.on("message", (msg) => {
 			exports.args = args;
 			var ext_serverh = require('./commands/serverh.js');
 			ext_serverh.hourscmd_argsorganize(vanilla, args);
-			ext_serverh.graphtypeselector();
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(vanilla);
+			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
+			ext_serverh = require('./commands/serverh.js'); //reload
+			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(vanilla, 'main', ext_serverh.args);
 			break;
 		//Steaminfo command
 		case 'steaminfo':

@@ -3,8 +3,6 @@
     Function: Shows info from steam of a player
     Author: Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
 //Scrap modules
 const request = require('request');
 const cheerio = require('cheerio');
@@ -16,7 +14,7 @@ const options = {
 exports.steaminfo = function(input, requesttype)  {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
     console.log('Request type: ' + requesttype);
     input = input + "";

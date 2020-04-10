@@ -3,8 +3,6 @@
     Function: Shows a player total hours in a specific SG server.
     Author: Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
 //Scrap modules
 const request = require('request');
 const cheerio = require('cheerio');
@@ -32,7 +30,7 @@ const vanillaid = "5052174";
 exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
     var server, player, playername, searchlink, serverlink, noplayercheck, playerlink, servername;
     var scanned, hours;
@@ -144,9 +142,14 @@ exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
                                     "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
                                 }
                             }});
-                        } else { exports.output.d1 = 'not found\nPlayer not found in GT!';}
-                        console.log('Player not found!');
-                        console.log('----------\n');
+                            console.log('Player not found!');
+                            console.log('----------\n');
+                        } else { 
+                            exports.output = {
+                                'd1': 'not found\nPlayer not found in GT!'
+                            }
+                            console.log('---End of playerhours function');
+                        }
                     }
                 } else {
                     if (requesttype !== 'autoreq') {

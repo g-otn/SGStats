@@ -3,8 +3,6 @@
     Function: Shows a graph of population of a SG server during a specific time period
     Author: Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
 //Generated number for URL
 const requestnumber = require('../bot.js').req_num;
 //Scrap modules
@@ -35,7 +33,7 @@ const vanillaid = "5052174";
 exports.populationgraph = function(server, graphtype) {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
     var serverid, servername;
     var errorcheck = false;

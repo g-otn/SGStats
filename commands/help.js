@@ -3,8 +3,6 @@
     Function: Sends instructions about other commands
     Author: Skeke#2155
 */
-//Command info
-var msg = require('../bot.js').msg;
 //Bot info
 const prefix = require('../config/prefix.json');
 const botinfo = require('../package.json');
@@ -12,7 +10,7 @@ const botinfo = require('../package.json');
 exports.help = function(command) {
 
     //Update message parameters for this execution
-    msg = require('../bot.js').msg;
+    const msg = require('../bot.js').msg;
 
  
     console.log('Command to help: ' + command);

@@ -6,3 +6,8 @@ node_modules/
 
 # Forums repeated threads list
 bot/data/repeatedThreads.json
+
+
+# Legacy Branch
+*/.vscode/*
+config/token.json
