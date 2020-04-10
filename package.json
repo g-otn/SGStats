@@ -1,13 +1,17 @@
 {
-  "name": "SmithtainmentStats",
-  "version": "2.9.0",
-  "description": "HTML Scrapper made for the Smithtainment discord.",
+  "name": "SGStats-test",
+  "version": "3.0.0",
+  "description": "Test version of the Bot made for the Smithtainment Discord server.",
   "main": "bot.js",
-  "engines": { "node": "8.9.3" },
+  "engines": {
+    "node": "8.9.3"
+  },
   "dependencies": {
-  	"discord.js": "^11.2.1",
-    "request": "^2.83.0",
-    "cheerio": "^1.0.0-rc.2"
+    "cheerio": "^1.0.0-rc.2",
+    "discord.js": "^11.2.1",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "request": "^2.83.0"
   },
   "devDependencies": {},
   "scripts": {
