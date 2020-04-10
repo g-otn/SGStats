@@ -27,11 +27,18 @@ bot.on("ready", () => {
 bot.on("message", (msg) => {
 	//Ignore the message if it doesn't start with the prefix or it's from a bot
 	if (msg.content !== 'SmithtainmentStats has started.') {
+		if (msg.content.startsWith('<@394544294490275847>')) {
+			msg.content = msg.content.split('<@394544294490275847>').join('!!');
+		} else if (msg.content.startsWith('<@394544294490275847> ')) {
+			msg.content = msg.content.split('<@394544294490275847> ').join('!!');
+		}
 		if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 	}
 	if (msg.content == 'SmithtainmentStats has started.' && msg.author.bot) {
+		console.log('Bot startup test message successful.');
+		return;
 		//msg.content = '!!check start';
-		//msg.content = '!!checkbypass 48';
+		//msg.content = '!!checkbypass 270';
 	}
 
     if (msg.content)
@@ -55,9 +62,6 @@ bot.on("message", (msg) => {
     //Output of the operations above:
     //cmd = ['hue'];
     //args = ['br, '123']
-
-	//Forums Portal
-	const portallink = "http://forums.smithtainment.com/portal.php";
 
     //Server Addresses
     const anime = "70.42.74.129:27015";
@@ -1190,7 +1194,6 @@ bot.on("message", (msg) => {
 		}
 		//loop for each forums section
 		for (selector = 0; selector < sectionlist.length; selector++) {
-			if (fid == 'portal') { break;}
 			console.log("--Starting forums search #" + selector);
 			//condition below is function to select a specific section and set vars for testing
 			if (fidcheck === true) { //Checks if fid is a number
@@ -1394,32 +1397,6 @@ bot.on("message", (msg) => {
 			console.log('----------\n');	
 		}
 
-		//Forums Portal Check
-		if (fid == 'auto' || fid == 'start' || fid == 'portal') {
-			console.log('Starting forums portal check...');
-			checkdata[0] = 'portal';
-			//Checkdata: [0type, 1date, 2title, 3image, 4text, 5tables (html <ul>)]
-			request(portallink, options, function(error, response, html) {
-				var $ = cheerio.load(html);
-				checkdata[1] = $('.portaldate').first().text().trim(); //Post date
-				checkdata[2] = $('.portalhead').first().text().trim(); //Title
-				console.log('Post date: ' + checkdata[1] + '\nTitle: ' + checkdata[2]);
-				if ((checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) === false) || checkbypass === true) {
-					checkdata[3] = $('.mycode_img').attr('src'); //Image
-					console.log('Checkdata:\n' + checkdata.join('\n '));		
-				} else {
-					console.log('No news found.');
-				}
-			});
-			await sleep(3500);
-			if ((checkdata[1].includes('minute') === true && repeatedtitles.join(' ').includes(checkdata[2]) == false) || checkbypass === true) { 
-				repeatedtitles.push(checkdata[2]);
-				console.log('Repeated titles: ' + repeatedtitles);
-				checksender();
-			}
-			await sleep(500);
-		}
-
 		if (fid == 'start') {
 			console.log('----------');
 			console.log('First automatic bot command, starting autocheck');
@@ -1436,16 +1413,11 @@ bot.on("message", (msg) => {
 			if (checkdata[i] === undefined) { checkdata[i] = 'not found';}
 		}
 		//if (isNaN(checkdata[]) == false) { checkdata[]].split(" ").join("%20");}
-		if (checkdata[0] !== 'portal') {
-			console.log("Data recevied: \n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n9 gt link: ' + checkdata[9] + '\n servertype: ' + servertype);
-		}
+		console.log("Data recevied: \n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n9 gt link: ' + checkdata[9] + '\n servertype: ' + servertype);
 		//Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
 		//spam_spam_spam -> "429815221041758210"
-		//announcements staff,public -> ["409456414654726156","348548140087115776"];
 		//test -> "403969093595693066"
-		//test private -> "413088508819800064"
 		const target = "403969093595693066";
-		const target2 = ["413088508819800064","413088508819800064"];
 		
 		switch (checkdata[0]) {
 			case "notfound": //ANY TYPE
@@ -1555,40 +1527,6 @@ bot.on("message", (msg) => {
 							}
 						]
 					}});
-				}
-				break;
-			case "portal": //PORTAL NEWS
-				console.log('Data recieved:\n1 postdate: ' + checkdata[1] + '\n2 title: ' + checkdata[2] + '\n3 image: ' + checkdata[3]);
-				console.log('Sending news...');
-				if (checkdata[3] !== undefined && checkdata[3] !== "not found") {
-					//THUMBNAIL
-					for (var j = 0; j < 2; j++) {
-						bot.channels.get(target2[j]).send("@everyone");
-						bot.channels.get(target2[j]).send({embed: {
-							"title": checkdata[2],
-							"url": portallink,
-							"color": 0x0000ff,
-							"footer": {
-								"text": checkdata[1].split(':').join(' ')
-							},
-							"thumbnail": {
-								"url": checkdata[3]
-							}
-						}});
-					}
-				} else {
-					//NO THUMBNAIL
-					for (var k = 0; k < 2; k++) {
-						bot.channels.get(target2[i]).send("@everyone");
-						bot.channels.get(target2[i]).send({embed: {
-							"title": checkdata[2],
-							"url": portallink,
-							"color": 0x0000ff,
-							"footer": {
-								"text": checkdata[1].split(':').join(' ')
-							}
-						}});
-					}
 				}
 				break;
 		}
