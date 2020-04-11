@@ -183,7 +183,7 @@ exports.scrapGT = function(server_address, requesttype, args) {
                                 scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
                                 //Sends the message
                                 msg.channel.send({embed: {
-                                    "description": "Showing [" + player + "](" + scrapertarget + ")'s playtime:",
+                                    "description": "Showing [" + player + "](" + scrapertarget + ")'s activity,\nfor players with similar names, click [here](" + playersearch + ").",
                                     "color": 0xFFBF52,
                                     "footer": {
                                         "text": scanned + " via GT"

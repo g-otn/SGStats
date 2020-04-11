@@ -71,7 +71,7 @@ const sectionlist = [
     227,231,229,//Pure Vanilla Minecraft
     34,36,40,41, //Star Wars TTT
     87,93 //Vanilla
-];
+]; 
 const sectiontype = [
     'Appeal','Application', //Global
     'Suggestion','Suggestion','Suggestion',/*'Suggestion',*/'Suggestion','Suggestion', //Suggestions
@@ -176,7 +176,6 @@ exports.check = async function(fid, checkbypass) {
                     //Anime
                     case 130:
                         checkdata[0] = 'appl';
-                    case 132:
                     case 133:
                     case 134:
                         servertype = [anime,'Anime TTT'];
@@ -184,7 +183,6 @@ exports.check = async function(fid, checkbypass) {
                     //Modded
                     case 48: 
                         checkdata[0] = 'appl';
-                    case 51:
                     case 53:
                     case 59:
                     case 66:
@@ -195,12 +193,10 @@ exports.check = async function(fid, checkbypass) {
                         checkdata[0] = 'appl';
                     case 271:
                     case 272:
-                    case 283:
                         servertype = [prophunt,'PropHunt'];
                         break;
                     //Pure Vanilla Minecraft
                     case 227:
-                    case 231:
                     case 229:
                         servertype = [pure_mc, 'Pure Vanilla Minecraft'];
                         break;
@@ -229,6 +225,11 @@ exports.check = async function(fid, checkbypass) {
                     case 265:
                     case 266:
                     case 282:
+                    case 132: //Reports
+                    case 51: 
+                    case 283:
+                    case 231:
+                    case 34:
                         checkdata[0] = 'notneeded'; //gets sent with thread preview
                 }
                 console.log('servertype: '+servertype);

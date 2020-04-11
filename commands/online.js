@@ -129,35 +129,26 @@ exports.onlineplayers = function(server) {
                         var finder3 = i2; //This
                         if (finder2 == tablecount + 1) { break;}
                         scrapedplayer = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().children('a').text().trim() + '';
-                        console.log(scrapedplayer);
+                        //console.log(scrapedplayer);
                         scrapedtime = $('div.blocknewhdr').eq(i).next().next().children().children().eq(finder2).children().eq(3).text().trim();
                         if (scrapedplayer !== '') { 
                             playerlist[finder3] = scrapedplayer;
                             timelist[finder3] = scrapedtime;
                             timelist[finder3] = timelist[finder3].split(':');
-                            console.log('timelist[finder3] length:' + timelist[finder3].length);
+                            //console.log('timelist[finder3] length:' + timelist[finder3].length);
                             if (timelist[finder3].length == 3) { timelist[finder3] = timelist[finder3].slice(0,2).join('h') + 'min';}
                             else { timelist[finder3] = timelist[finder3].slice(0,1).join() + 'min';}
-                            console.log('Player #' + finder2 + ': ' + scrapedplayer + '\nPlaytime: ' + scrapedtime);
+                            //console.log('Player #' + finder2 + ': ' + scrapedplayer + '\nPlaytime: ' + scrapedtime);
                         } else {
                             playerlist.slice(finder3-1, finder3+1);
                             finder3--;
-                            console.log('Player #' + finder2 + ' in blank, ignored.');
+                            //console.log('Player #' + finder2 + ' in blank, ignored.');
                         }
                     }
                     console.log('Playerlist: ' + playerlist);
                     console.log('Timelist:' + timelist);
                     playerlist = playerlist.join('\n');
                     timelist = timelist.join("\n");
-                    /*var i3;
-                    finaltable = '';
-                    for (i3 = 0; i3 <= playerlist.length - 1; i3++) {
-                        if (timelist[i3] && playerlist[i3] !== undefined) { //This removes those ghost players that gametracker creates for some reason
-                            finaltable = finaltable + timelist[i3] + ' - **' + playerlist[i3] + '**\n';
-                            
-                        }
-                    }
-                    console.log(finaltable);*/
                     console.log('Graph link: ' + populationgraph);
                     msg.channel.send({embed: {
                         "description": 'Showing ['+ servername +'](' + gtserverlink + ') online players and population throughout the day:',
