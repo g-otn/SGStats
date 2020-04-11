@@ -69,7 +69,7 @@ const sectionlist = [
     51,53,48,59,66, //Modded
     270,271,272,283, //PropHunt
     227,231,229,//Pure Vanilla Minecraft
-    //34,36,40,41, //Star Wars TTT
+    34,36,40,41, //Star Wars TTT
     87,93 //Vanilla
 ];
 const sectiontype = [
@@ -80,7 +80,7 @@ const sectiontype = [
     'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
     'Application','Ban Appeal','Warn Appeal','Report', //PropHunt
     'Support Thread','Report','Ban Appeal', //Pure Vanilla Minecraft
-    //'Report','Application','Ban Appeal','Warn Appeal', //Star Wars TTT
+    'Report','Application','Ban Appeal','Warn Appeal', //Star Wars TTT
     'Application','Ban Appeal' //Vanilla
 ];
 const sectionfrom = [
@@ -91,7 +91,7 @@ const sectionfrom = [
     'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
     'PropHunt','PropHunt','PropHunt','PropHunt',
     'Pure Vanilla Minecraft','Pure Vanilla Minecraft','Pure Vanilla Minecraft',
-    //'Star Wars TTT','Star Wars TTT','Star Wars TTT','Star Wars TTT'
+    'Star Wars TTT','Star Wars TTT','Star Wars TTT','Star Wars TTT',
     'Vanila TTT','Vanila TTT'
 ];
 const sectionmention = [
@@ -102,7 +102,7 @@ const sectionmention = [
     M_mc,M_mc,M_mc,M_mc,M_mc,
     M_ph,M_ph,M_ph,M_ph,
     '','','', //no staff
-    //M_sw,M_sw,M_sw,M_sw,
+    M_sw,M_sw,M_sw,M_sw,
     M_va,M_va
 ];
 exports.check = async function(fid, checkbypass) {
@@ -229,7 +229,7 @@ exports.check = async function(fid, checkbypass) {
                     case 265:
                     case 266:
                     case 282:
-                        checkdata[0] = 'notneeded';
+                        checkdata[0] = 'notneeded'; //gets sent with thread preview
                 }
                 console.log('servertype: '+servertype);
                 //checkdata[0] tells if it's an application or if info is found to send
@@ -284,7 +284,7 @@ exports.check = async function(fid, checkbypass) {
                             //If SteamID is not found
                             if (poststeamid === undefined || poststeamid === 'STEAM_') {
                                 //Tries to get SteamID64 from post text
-                                console.log('Failed to scrap SteamID, trying SteamID64...');
+                                console.log('Failed to find SteamID, trying SteamID64...');
                                 poststeamid = $('.post_body').first().text().trim();
                                 poststeamid = poststeamid.split('765611').slice(1,2).join(''); //Gets the SteamID64 and everything after
                                 poststeamid = poststeamid.split('').slice(0,11).join('').trim(); //Removes everything after the first 11 characters (because SteamID64s without the starting '765611' are(?) 11 characters long)
@@ -296,11 +296,11 @@ exports.check = async function(fid, checkbypass) {
                             console.log('SteamID/64 written in post: ' + poststeamid);
                             //Checks if the author wrote a SteamID or not (even if it's broken)
                             if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
-                                console.log('SteamID/64 written in post found');
+                                console.log('SteamID/64 found');
                                 console.log('---Starting steaminfo function...');
                                 ext_steaminfo.steaminfo(poststeamid, 'autoreq', postlink);
                             } else {
-                                console.log('SteamID/64 in thread not found, skipping steaminfo function. Section: ' + sectionfrom[selector]);
+                                console.log('SteamID/64 not found, skipping steaminfo function. Section: ' + sectionfrom[selector]);
                                 checkdata[0] = 'notfound';
                                 checksender();
                             }
@@ -325,7 +325,6 @@ exports.check = async function(fid, checkbypass) {
                     await sleep(5250); //This awaits for the steaminfo function
                     var out = require('./steaminfo.js').output;
                     checkdata.push(out.d1, out.d2, out.d3, out.d4, out.d5); //checkdata 1-5
-                    //console.log('\ncheckdata (after steaminfo):\n' + checkdata.join('\n') + '\n');
                     //Checks post type and selects what data to get for sending
                     if (checkdata[0] == 'appl') {
                         console.log('---Starting serverh function');
@@ -374,23 +373,33 @@ exports.check = async function(fid, checkbypass) {
 
 //Collects the data from the checking and steaminfo function and send it
 function checksender(thread_title, text_preview) {
+    //Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
     console.log('checkdata[0]: ' + checkdata[0]);
     for (var i=1;i<10;i++) { //Transforms undefined into 'not found' to stop some erros
         if (checkdata[i] === undefined) { checkdata[i] = 'not found';}
     }
-    if (text_preview === undefined) {
+    if (text_preview === undefined) { //If data is needed, show in console what will be sent
         console.log("Data recevied:\nservertype:" + servertype + "\n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n9 gt link: ' + checkdata[9]);       
-    } else {
+    } else { //If it's not, show the text preview, which threads that don't need data have
         console.log('Thread Title: ' + thread_title + '\nText preview : ' + text_preview.split(' ').slice(0,20).join(' ') + '...')
     }
-    //Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
-    //spam_spam_spam -> "429815221041758210" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
-    //test -> "403969093595693066"
-    const target = "429815221041758210";
+    /*
+        Channels
+        spam_spam_spam -> "429815221041758210" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
+        test -> "403969093595693066"
+    */
+    const target = "403969093595693066";
     //If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')');
     }
+    /*
+        Thread types
+        notneeded: Bug Reports and Suggestions. Steam and GT info is not needed
+        notfound: Default if no steaminfo is found, and it's a thread that uses steam info and gt info
+        notappl: Default. Sends Steam info and GT info if found
+        appl: Application. Steam, GT and GT Graph is used.
+    */
     switch (checkdata[0]) {
         case "notfound": //ANY TYPE
            //NO STEAM INFO / NO GT INFO / NO GT GRAPH
@@ -487,7 +496,7 @@ function checksender(thread_title, text_preview) {
                 }});
             } else {
                 bot.channels.get(target).send({embed: {
-                    //STEAM INFO / GT INFO / NO GT GRAPH
+                    //STEAM INFO / GT INFO / NO GT GRAPH (not found)
                     "title": "New " + sectiontype[selector] + "!",
                     "description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
                     "color": 0x0000ff,

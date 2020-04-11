@@ -31,16 +31,6 @@ const pure_mc = "206.221.183.139:25575";
 const starwars = "70.42.74.160:27015";
 const vanilla = "192.223.24.186:27015";
 
-//A ID gamertracker generates and uses
-const animeid = "5704089";
-const moddedid = "5086005";
-const prophuntid = "5709398";
-const pure_mcid = "5865486";
-const starwarsid = "5493690";
-const vanillaid = "5052174";
-
-
-
 /*
 	Bot initiation
 */
@@ -82,9 +72,9 @@ bot.on("message", (msg) => {
 		console.log('Bot startup message found.\n');
 		//commands executed on start
 		//bot.channels.get("413088508819800064").send(prefix.prefix + 'startauto');
-		//msg.content = prefix.prefix + 'check start';
-		msg.content = prefix.prefix + 'checkbypass 59';
-		//return;
+		//,msg.content = prefix.prefix + 'checkbypass start';
+		//msg.content = prefix.prefix + 'checkbypass 59';
+		return; //Comment if a command above is executed, uncomment otherwise
 	}
 
     //Log in the console about the command

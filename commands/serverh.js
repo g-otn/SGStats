@@ -40,14 +40,17 @@ exports.hourscmd_argsorganize = function(server, command_args, requesttype) {
 //function that selects the type of graph
 exports.graphtypeselector = function(msg, args) {
     switch (graphtype) {
+        case 'd':
         case 'day':
             graphtype = '1d';
             errorcheck = false; //Unlocks the function to send images in case someone blocked it in a previous command
             break;
+        case 'w':
         case 'week':
             graphtype = '1w';
             errorcheck = false;
             break;
+        case 'm':
         case 'month':
             graphtype = '1m';
             errorcheck = false; 

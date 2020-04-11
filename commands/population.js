@@ -84,12 +84,15 @@ exports.populationgraph = function(server, graphtype) {
     console.log('errorcheck #1: ' + errorcheck);
     if (errorcheck !== true) {
         switch (graphtype) {
+            case 'd':
             case 'day':
                 graphtype = '1d';
                 break;
+            case 'w':
             case 'week':
                 graphtype = '1w';
                 break;
+            case 'm':
             case 'month':
                 graphtype = '1m';
                 break;
