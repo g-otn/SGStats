@@ -13,54 +13,35 @@ const options = {
     headers: {'user-agent': 'node.js'}
 };
 
-
-//function from Hades old bot that shows server info
-exports.server_stats = function(server, name2) {
-
-    //Update message parameters for this execution
-    msg = require('../bot.js').msg;
-
-    var serverlink = "https://www.gametracker.com/server_info/" + server;
-    var name, status, players, map, mapimg, scanned;
-    request(serverlink, options, function(error, response, html) {
+exports.server_stats = async function(msg,url,apiID,name) {
+    url = 'http://status.smithtainment.com/api/'+url+'/';
+    console.log('Server name:',name,'\nServer url:',url);
+    var text = '';
+    request(url, options, function(error, response, html) {
         if (!error && response.statusCode == 200) {
-            console.log('Website access successful. HTTP Code ' + response.statusCode);
-            var $ = cheerio.load(html);
-            scanned = $('#last_scanned').text().trim();
-            console.log('Scanned: ' + scanned);
-            name = $('.item_color_title').eq(0).next().children().text().trim();
-            console.log('Name: ' + name);
-            status = $('.item_color_success').text().trim();
-            console.log('Status: ' + status);
-            players = $('#HTML_num_players').text().trim() + "/" + $('#HTML_max_players').text().trim();
-            console.log('Players: ' + players);
-            map = $('#HTML_curr_map').text().trim();
-            console.log('Map: ' + map);
-            mapimg = "https:" + $('#HTML_map_ss_img').children().attr('src').trim();
-            console.log('Map img: ' + mapimg);
+            const $ = cheerio.load(html);
+            text = $('#grohsfabian_game_server_status-'+apiID).text().trim();
+            text = text.replace('Name:','').replace('Status:','\n').replace('Server:','\n').replace('Players:','\n').split('\n');
+            console.log('Scraped text:',text);
             msg.channel.send({embed: {
-                "title": name2 + ' info',
-                "description": "Name: ``" + name + "``\nStatus: ``" + status + "``\nPlayers: ``" + players + "``\nMap: ``" + map + "``",
-                "url": serverlink,
-                "color": 0xFFBF52,
-                "footer": {
-                    "text": scanned + " via GT"
-                },
-                "thumbnail": {
-                    "url": mapimg
+                'title': name + ' info',
+                'description': '``'+text[0]+'``\n**Status:** '+text[1]+'\n**IP:** ``'+text[2]+'``\n**Players:** '+text[3]+'\n',
+                'url': url,
+                'color': 0x313131,
+                'footer': {
+                    'text': 'Last scanned 1s ago via Reeb’s API',
+                    'icon_url': 'https://cdn.discordapp.com/avatars/153550726793003008/08bb5ec777ab048d045ceca6254dac34.png?size=128'
                 }
             }});
-        } else { //If it can't access
-        msg.channel.send({embed: {
-            "description": "Couldn't access website. HTTP Code "  + response.statusCode,
-            "color": 0x0000ff,
-            "thumbnail": {
-                "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
-            }
-        }});
-        console.log('Website access error. HTTP Code ' + response.statusCode);
-        console.log('!! Image not sent because of website error !!');
-        console.log('----------\n');
+        } else {
+            console.log('Error when acessing website ('+response.statusCode+'):',error);
+            msg.channel.send({embed: { 
+                "description": "Couldn't access the website. (" + response.statusCode + ')', 
+                "color": 0x0000ff,	
+                "thumbnail": { 
+                    "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
+                }
+            }});
         }
     });
 }

@@ -11,11 +11,7 @@ const options = {
     headers: {'user-agent': 'node.js'}
 };
 
-exports.steaminfo = function(input, requesttype)  {
-
-    //Update message parameters for this execution
-    const msg = require('../bot.js').msg;
-
+exports.steaminfo = async function(msg, input, requesttype)  {
     console.log('Request type: ' + requesttype);
     input = input + "";
     console.log('input: ' + input);
@@ -25,10 +21,10 @@ exports.steaminfo = function(input, requesttype)  {
         var customID, gameslist; //made with scraped values
         var idfinderlink = 'https://steamidfinder.com/lookup/' + input;
         console.log('URL to scrap: ' + idfinderlink);
-        request(idfinderlink, options, function (error, response, html) {
+        request(idfinderlink, options, await function (error, response, html) {
             console.log('Scraper started');
             if (!error && response.statusCode == 200) {
-                console.log('Website access successful. HTTP Code: ' + response.statusCode);
+                console.log('Website access successful. (' + response.statusCode + ')');
                 var $ = cheerio.load(html);
                 //gathers the steamid (if it's found)
                 steamid = $('title').text();
@@ -97,7 +93,8 @@ exports.steaminfo = function(input, requesttype)  {
                                     "description": "'"+input+"' info: \n\nName: **"+name+"** ("+customID+")\nProfile: ["+profilestate+"]("+profilelink+")\nSteamID: `"+steamid+"`\nSteamID64: `"+steamid64+"`\nGmod hours: "+gmodh+" [(check)]("+gameslist+")",
                                     "color": 0x293956,
                                     "footer": {
-                                        "text": "Searched via steamidfinder.com | Use SteamIDs for more accurate searches!"
+                                        "text": "Searched via steamidfinder.com and steamcommunity.com",
+                                        'icon_url': 'https://i.imgur.com/WQA9KyN.png'
                                     },
                                     "thumbnail": {
                                         "url": profileicon
@@ -142,13 +139,13 @@ exports.steaminfo = function(input, requesttype)  {
             } else {
                 if (requesttype == "main") {
                     msg.channel.send({embed: { 
-                        "description": "Could not access the website. HTTP Code: " + response.statusCode, 
+                        "description": "Could not access the website. (" + response.statusCode + ')', 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
                         }
                     }});
-                    console.log('Website access error. HTTP Code: ' + response.statusCode + '\n');
+                    console.log('Website access error. (' + response.statusCode + ')');
                     console.log('!! Steam info not sent because of website error !!');
                     console.log('----------\n');
                 } else { 

@@ -15,26 +15,23 @@ const options = {
 
 //Server Addresses
 const anime = "70.42.74.129:27015";
-const modded = "192.223.31.40:27015";
+const mcttt = "192.223.31.40:27015";
+const modded = "192.223.24.186:27015";
+const murder = "70.42.74.160:27015";
 const prophunt = "192.99.239.40:27015";
 const pure_mc = "206.221.183.139:25575"; 
-const starwars = "70.42.74.160:27015";
-const vanilla = "192.223.24.186:27015";
 
 //A ID gamertracker generates and uses
 const animeid = "5704089";
-const moddedid = "5086005";
+const mctttid = "5086005";
+const moddedid = "5052174";
+const murderid = "5493690";
 const prophuntid = "5709398";
 const pure_mcid = "5865486";
-const starwarsid = "5493690";
-const vanillaid = "5052174";
 
 
-exports.populationgraph = function(server, graphtype) {
 
-    //Update message parameters for this execution
-    const msg = require('../bot.js').msg;
-
+exports.populationgraph = function(msg,server, graphtype) {
     var serverid, servername;
     var errorcheck = false;
     console.log('Server: ' + server);
@@ -45,11 +42,25 @@ exports.populationgraph = function(server, graphtype) {
             serverid = animeid;
             servername = "Anime TTT";
             break;
+        case 'mc':
+        case 'mcttt':
+        case 'mcmd':
+            server = mcttt;
+            serverid = mctttid;
+            servername = "MC TTT";
+            break;
         case 'md':
         case 'modded':
+        case 'mdttt':
             server = modded;
             serverid = moddedid;
-            servername = "MC TTT";
+            servername = "Modded TTT";
+            break;
+        case 'mu':
+        case 'murder':
+            server = murder;
+            serverid = murderid;
+            servername = "Murder TTT";
             break;
         case 'ph':
         case 'prophunt':
@@ -57,26 +68,12 @@ exports.populationgraph = function(server, graphtype) {
             serverid = prophuntid;
             servername = 'PropHunt';
             break;
-        case 'mc':
         case 'pmc':
         case 'puremc':
         case 'minecraft':
             server = pure_mc;
             serverid = pure_mcid;
             servername = 'Pure Vanilla Minecraft';
-            break;
-        case 'sw':
-        case 'starw':
-        case 'starwars':
-            server = starwars;
-            serverid = starwarsid;
-            servername = "Star Wars TTT";
-            break;
-        case 'va':
-        case 'vanilla':
-            server = vanilla;
-            serverid = vanillaid;
-            servername = "Vanilla TTT";
             break;
         default:
         errorcheck = true;
@@ -111,11 +108,11 @@ exports.populationgraph = function(server, graphtype) {
             console.log('URL to scrap: ' + serverlink);
             request(serverlink, options, function(error, response, html) {
                 if (!error && response.statusCode == 200) {
-                    console.log('Website access successful. HTTP Code ' + response.statusCode);
+                    console.log('Website access successful. (' + response.statusCode + ')');
                     var $ = cheerio.load(html);
                     var scanned = $('#last_scanned').text().trim();
                 } else {
-                    console.log('Website access error. HTTP Code ' + response.statusCode + '\n');
+                    console.log('Website access error. (' + response.statusCode + ')');
                     console.log('!! Graph not sent because of website error !!');
                     console.log('----------\n');
                 }
@@ -125,7 +122,8 @@ exports.populationgraph = function(server, graphtype) {
                     "description": 'Showing [' + servername + '](' + serverlink + ') population:',
                     "color": 0xFFBF52,
                     "footer": {
-                        "text": scanned + " via GT"
+                        "text": scanned + " via gametracker.com",
+                        'icon_url': 'https://www.gametracker.com/images/icons/icon16x16_gt.png'
                     },
                     "image": {
                         "url": populationgraph
@@ -173,7 +171,7 @@ exports.populationgraph = function(server, graphtype) {
                 break;
             default:
                 msg.channel.send({embed: { 
-                    "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'starwars' or 'vanilla'.", 
+                    "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'murder' or 'vanilla'.", 
                     "color": 0x0000ff,	
                     "thumbnail": { 
                         "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"

@@ -13,25 +13,12 @@ const options = {
 
 //Server Addresses
 const anime = "70.42.74.129:27015";
-const modded = "192.223.31.40:27015";
+const mcttt = "192.223.31.40:27015";
+const modded = "192.223.24.186:27015";
+const murder = "70.42.74.160:27015";
 const prophunt = "192.99.239.40:27015";
-const pure_mc = "206.221.183.139:25575"; 
-const starwars = "70.42.74.160:27015";
-const vanilla = "192.223.24.186:27015";
 
-//A ID gamertracker generates and uses
-const animeid = "5704089";
-const moddedid = "5086005";
-const prophuntid = "5709398";
-const pure_mcid = "5865486";
-const starwarsid = "5493690";
-const vanillaid = "5052174";
-
-exports.stats = function(args, requesttype, checkserver, checkplayer) {
-
-    //Update message parameters for this execution
-    const msg = require('../bot.js').msg;
-
+exports.stats = async function(msg, args, requesttype, checkserver, checkplayer) {
     var server, player, playername, searchlink, serverlink, noplayercheck, playerlink, servername;
     var scanned, rank, score, hours, score_min;
     var errorcheck = false;
@@ -49,31 +36,32 @@ exports.stats = function(args, requesttype, checkserver, checkplayer) {
                 server = anime;
                 servername = 'Anime TTT';
                 break;
-            case 'md':
-            case 'modded':
-                server = modded;
+            case 'mc':
+            case 'mcttt':
+            case 'mcmd':
+                server = mcttt;
                 servername = 'MC TTT';
                 break;
-            case 'ph':
-            case 'prophunt':
-                server = prophunt;
-                servername = 'PropHunt';
+            case 'md':
+            case 'modded':
+            case 'mdttt':
+                server = modded;
+                servername = 'Modded TTT';
                 break;
-            case 'mc':
             case 'pmc':
             case 'puremc':
             case 'minecraft':
                 errorcheck = true;
                 break;
-            case 'sw':
-            case 'starwars':
-                server = starwars;
-                servername = 'Star Wars TTT';
+            case 'mu':
+            case 'murder':
+                server = murder;
+                servername = 'Murder';
                 break;
-            case 'va':
-            case 'vanilla':
-                server = vanilla;
-                servername = 'Vanilla TTT';
+            case 'ph':
+            case 'prophunt':
+                server = prophunt;
+                servername = 'PropHunt';
                 break;
             default:
                 errorcheck = true;
@@ -96,7 +84,7 @@ exports.stats = function(args, requesttype, checkserver, checkplayer) {
             scanned = $('#last_scanned').text().trim();
             request(searchlink, options, function(error, response, html) {
                 if (!error && response.statusCode == 200) {
-                    console.log('Website access successful. HTTP Code ' + response.statusCode);
+                    console.log('Website access successful. (' + response.statusCode + ')');
                     var $ = cheerio.load(html);
                     noplayercheck = $('.table_lst').children().children().first().children().text().trim();
                     //console.log('noplayercheck: ' + noplayercheck);
@@ -122,7 +110,8 @@ exports.stats = function(args, requesttype, checkserver, checkplayer) {
                                 "description": "For players with similar names, click [here](" + searchlink + ").",
                                 "color": 0xFFBF52,
                                 "footer": {
-                                    "text": scanned + " via GT"
+                                    "text": scanned + " via gametracker.com",
+                                    'icon_url': 'https://www.gametracker.com/images/icons/icon16x16_gt.png'
                                 },
                                 "fields": [
                                     {
@@ -180,14 +169,14 @@ exports.stats = function(args, requesttype, checkserver, checkplayer) {
                 } else {
                     if (requesttype !== 'autoreq') {
                         msg.channel.send({embed: { 
-                            "description": "Couldn't access the website. HTTP code " + response.statusCode, 
+                            "description": "Couldn't access the website. (" + response.statusCode + ')', 
                             "color": 0x0000ff,	
                             "thumbnail": { 
                                 "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
                             }
                         }});
                     }
-                    console.log('Website access error. HTTP Code ' + response.statusCode);
+                    console.log('Website access error. (' + response.statusCode + ')');
                     console.log('!! Info not sent because of website error !!');
                     console.log('----------\n');
                 }
@@ -221,7 +210,7 @@ exports.stats = function(args, requesttype, checkserver, checkplayer) {
                     break;
                 default:
                     msg.channel.send({embed: { 
-                        "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'starwars' or 'vanilla'.", 
+                        "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'murder' or 'vanilla'.", 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"

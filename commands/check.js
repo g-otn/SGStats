@@ -18,35 +18,27 @@ const fs = require('fs');
 const ext_steaminfo = require('./steaminfo.js');
 const ext_serverh = require('./serverh.js');
 const ext_stats = require('./stats.js');
-//Variables used by the command
-var breaker = require('../bot.js').breaker;
+
 //File path for repeated threads list
 const rep_path = '../config/check_repeated_th_list.json';
 const rep_path2 = './config/check_repeated_th_list.json';
 
 //Server Addresses
 const anime = "70.42.74.129:27015";
-const modded = "192.223.31.40:27015";
+const mcttt = "192.223.31.40:27015";
+const modded = "192.223.24.186:27015";
+const murder = "70.42.74.160:27015";
 const prophunt = "192.99.239.40:27015";
 const pure_mc = "206.221.183.139:25575"; 
-const starwars = "70.42.74.160:27015";
-const vanilla = "192.223.24.186:27015";
-
-//A ID gamertracker generates and uses
-const animeid = "5704089";
-const moddedid = "5086005";
-const prophuntid = "5709398";
-const pure_mcid = "5865486";
-const starwarsid = "5493690";
-const vanillaid = "5052174";
 
 //Roles ID of each server
-const M_gl = '<@&387409444109025280>';
-const M_an = '<@&387409402250002434>';
-const M_mc = '<@&387409235249594368>';
-const M_ph = '<@&421155441519755284>';
-const M_sw = '<@&417461132748652544>';
-const M_va = '<@&387409354204250122>';
+const M_gl = '<@&387409444109025280>'; // Global
+const M_dev = '<@&385537151393202176>'; // Developers
+const M_an = '<@&387409402250002434>'; // Anime
+const M_md = '<@&387409235249594368>'; // MC TTT
+const M_mc = '<@&387409354204250122>'; // Modded
+const M_mu = '<@&468622839755571219>'; // Murder
+const M_ph = '<@&421155441519755284>'; // Prophunt
 
 //Makes possible for the automatic async function test() to wait itself to finish to loop itself
 function sleep(ms) {
@@ -63,47 +55,46 @@ var servertype = [];
 var checkdata = [1];
 const sectionlist = [
     241,213, //Global
-    257,258,259,/*260,*/261,281, //Suggestions
-    262,263,264,/*265,*/266,282, //Bug Reports
+    '256&sortby=lastpost&order=desc','255&sortby=lastpost&order=desc','300&sortby=lastpost&order=desc', //Developer
+
     130,132,133,134, //Anime
-    51,53,48,59,66, //Modded
+    51,53,48,59,66, //MC TTT
+    91,87,93,296, //Modded
+    34,36,40,41, //Murder
     270,271,272,283, //PropHunt
     227,231,229,//Pure Vanilla Minecraft
-    34,36,40,41, //Star Wars TTT
-    87,93 //Vanilla
 ]; 
 const sectiontype = [
     'Appeal','Application', //Global
-    'Suggestion','Suggestion','Suggestion',/*'Suggestion',*/'Suggestion','Suggestion', //Suggestions
-    'Bug Report','Bug Report','Bug Report',/*'Bug Report',*/'Bug Report','Bug Report', //Bug Reports
+    'Bug Report','Suggestion','Question', // Developer
+
     'Application','Report','Ban Appeal','Warn Appeal', //Anime
-    'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //Modded
+    'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //MC TTT
+    'Report','Application','Ban Appeal','Warn Appeal', //Modded
+    'Report','Application','Ban Appeal','Warn Appeal', //Murder
     'Application','Ban Appeal','Warn Appeal','Report', //PropHunt
     'Support Thread','Report','Ban Appeal', //Pure Vanilla Minecraft
-    'Report','Application','Ban Appeal','Warn Appeal', //Star Wars TTT
-    'Application','Ban Appeal' //Vanilla
 ];
 const sectionfrom = [
     'Forums/Network Appeals','Forum Moderator Applications',
-    'MC TTT','Vanilla TTT','Anime TTT',/*'Star Wars TTT',*/'Forums','PropHunt',
-    'MC TTT','Vanilla TTT','Anime TTT',/*'Star Wars TTT',*/'Forums','PropHunt',
+    'Developer Corner','Developer Corner','Developer Corner',
+
     'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
     'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
+    'Modded TTT','Modded TTT','Modded TTT','Modded TTT',
+    'Murder','Murder','Murder','Murder',
     'PropHunt','PropHunt','PropHunt','PropHunt',
     'Pure Vanilla Minecraft','Pure Vanilla Minecraft','Pure Vanilla Minecraft',
-    'Star Wars TTT','Star Wars TTT','Star Wars TTT','Star Wars TTT',
-    'Vanila TTT','Vanila TTT'
 ];
 const sectionmention = [
     M_gl,M_gl,
-    M_mc,M_va,M_an,/*M_sw,*/M_gl,M_ph,
-    M_mc,M_va,M_an,/*M_sw,*/M_gl,M_ph,
+    M_dev,M_dev,M_dev,
+
     M_an,M_an,M_an,M_an,
     M_mc,M_mc,M_mc,M_mc,M_mc,
+    M_md,M_md,M_md,M_md,
+    M_mu,M_mu,M_mu,M_mu,
     M_ph,M_ph,M_ph,M_ph,
-    '','','', //no staff
-    M_sw,M_sw,M_sw,M_sw,
-    M_va,M_va
 ];
 exports.check = async function(fid, checkbypass) {
     checkdata = [];
@@ -114,19 +105,20 @@ exports.check = async function(fid, checkbypass) {
     if (fid == 'start') {
         await sleep(2250); //Waits for the startauto command (organizes console)
     }
+    //Checks if fid is a number from the list
     for (i = 0; i < sectionlist.length; i++) { 
         if (fid == sectionlist[i]) {
             fidcheck = true;
+            forbreaker = true;
             console.log('fidcheck: ' + fidcheck);
+            console.log('forbreaker: ' + forbreaker);
         }
     }
     //loop for each forums section
     for (selector = 0; selector < sectionlist.length; selector++) {
         console.log("==Forums search #" + (selector+1) + ' | fid: ' + fid + ' | bypass: ' + checkbypass);
         //condition below is function to select a specific section and set vars for testing
-        if (fidcheck === true) { //Checks if fid is a number from the list
-            forbreaker = true;
-            console.log('forbreaker: ' + forbreaker);
+        if (fidcheck === true) { 
             seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + fid;
             for (i = 0; i < sectionlist.length; i++) { 
                 if (fid == sectionlist[i]) {
@@ -143,10 +135,19 @@ exports.check = async function(fid, checkbypass) {
         var poststeamid;
         request(seclink, options, function(error, response, html) {
             var $ = cheerio.load(html); 
-            //Selects the post from the forum. eq(2) for first thread, eq(8) for second (lines below)
-            postname = $('.forumdisplay_regular').eq(2).children().children('span').children('span').eq(0).children('a').text();
-            postlink = $('.forumdisplay_regular').eq(2).children().children('span').children('span').eq(0).attr('id');
-            postauthor = $('.forumdisplay_regular').eq(2).children().children('div').children().text();
+            //Selects the post info from the forums section. eq(2) for first thread, eq(8) for second
+            var scrapRoot = $('.forumdisplay_regular').eq(2).children();
+            if (sectiontype[selector] !== 'Bug Report') {
+                //Any thread
+                postname = scrapRoot.children('span').children('span').eq(0).children('a').text();
+                postlink = scrapRoot.children('span').children('span').eq(0).attr('id');
+                postauthor = scrapRoot.children('div').children().text();
+            } else {
+                //Bug reports
+                postname = scrapRoot.children('span').children('span').eq(1).children('a').text();
+                postlink = scrapRoot.children('span').children('span').eq(1).attr('id');
+                postauthor = scrapRoot.children('div').children('a').text();
+            }
             console.log("Thread name: " + postname);
             console.log("Thread link: " + postlink);
             console.log("Thread author: " + postauthor);
@@ -168,7 +169,7 @@ exports.check = async function(fid, checkbypass) {
         if (postname !== undefined && postlink !== undefined && postauthor !== undefined) {
             //Checks if thread has already been seen or if there is a thread
             if (rep_th.includes(postlink) === false || checkbypass === true) { 
-                console.log('New thread found.');
+                console.log('Thread found.');
                 //Sets the thread type
                 checkdata[0] = 'notappl'; //replaces undefined
                 servertype[1] = 'Server'; //replaces undefined
@@ -180,13 +181,26 @@ exports.check = async function(fid, checkbypass) {
                     case 134:
                         servertype = [anime,'Anime TTT'];
                         break;
-                    //Modded
+                    //MC TTT
                     case 48: 
                         checkdata[0] = 'appl';
                     case 53:
                     case 59:
                     case 66:
                         servertype = [modded,'MC TTT'];
+                        break;
+                    //Modded
+                    case 87: 
+                        checkdata[0] = 'appl';
+                    case 91:
+                    case 93:
+                    case 296:
+                        servertype = [modded,'Modded TTT'];
+                        break;
+                    //Murder
+                    case 36: 
+                        servertype = [murder,'Murder'];
+                        checkdata[0] = 'appl';
                         break;
                     //PropHunt
                     case 270:
@@ -200,36 +214,10 @@ exports.check = async function(fid, checkbypass) {
                     case 229:
                         servertype = [pure_mc, 'Pure Vanilla Minecraft'];
                         break;
-                    //Star Wars TTT
-                    case 36: 
-                        servertype = [starwars,'Star Wars TTT'];
-                        checkdata[0] = 'appl';
-                        break;
-                    //Vanilla
-                    case 87: 
-                        checkdata[0] = 'appl';
-                    case 93:
-                        servertype = [vanilla,'Vanilla TTT'];
-                        break;
                     //Threads that don't need Steam/GT info
-                    case 213: //Forums Moderator Applications
-                    case 257: //Suggestions
-                    case 258:
-                    case 259:
-                    case 260:
-                    case 261:
-                    case 281:
-                    case 262: //Bug Reports
-                    case 263:
-                    case 264:
-                    case 265:
-                    case 266:
-                    case 282:
-                    case 132: //Reports
-                    case 51: 
-                    case 283:
-                    case 231:
-                    case 34:
+                    case '256&sortby=lastpost&order=desc':
+                    case '255&sortby=lastpost&order=desc':
+                    case '300&sortby=lastpost&order=desc':
                         checkdata[0] = 'notneeded'; //gets sent with thread preview
                 }
                 console.log('servertype: '+servertype);
@@ -252,9 +240,7 @@ exports.check = async function(fid, checkbypass) {
                             if (checkbypass === false) {
                                 //Repeated thread file writer
                                 console.log('Old repeated threads list: ' + rep_th);
-                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join('') + "\"\n}"
-                                //File writer module
-                                var fs = require('fs');
+                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join('') + "\"\n}";
                                 fs.writeFile(rep_path2, rep_th_file, function (err) {
                                     if (err) throw err;
                                     delete require.cache[require.resolve(rep_path)];
@@ -270,9 +256,10 @@ exports.check = async function(fid, checkbypass) {
                                 var thread_title = $('title').text().trim();
                                 var text_preview = $('.post_body').first().text().trim();
                                 text_preview = text_preview + '';
-                                text_preview = text_preview.split(' ').slice(0,30);
+                                text_preview = text_preview.split(' ').slice(0,35); // Word count in preview
                                 text_preview = text_preview.join(' ') + '';
-                                text_preview = text_preview.split('\n').join(' ').trim() + '...';
+                                text_preview = text_preview.split('\n').join(' ').trim() + ' [...]';
+                                poststeamid = undefined;
                                 checksender(thread_title, text_preview);
                                 return;
                             }
@@ -302,7 +289,7 @@ exports.check = async function(fid, checkbypass) {
                             if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
                                 console.log('SteamID/64 found');
                                 console.log('---Starting steaminfo function...');
-                                ext_steaminfo.steaminfo(poststeamid, 'autoreq', postlink);
+                                ext_steaminfo.steaminfo(null,poststeamid, 'autoreq', postlink);
                             } else {
                                 console.log('SteamID/64 not found, skipping steaminfo function. Section: ' + sectionfrom[selector]);
                                 checkdata[0] = 'notfound';
@@ -334,13 +321,15 @@ exports.check = async function(fid, checkbypass) {
                         console.log('---Starting serverh function');
                         exports.checkdata = checkdata;
                         exports.servertype = servertype;
-                        ext_serverh.scrapGT(null,'autoreq');
+                        ext_serverh.scrapGT(null, null, 'autoreq', null);
+                        console.log('>>> Starting sleep for serverh (6,5s)');
                         await sleep(6500); //This awaits for the serverh function
                         out = require('./serverh.js').output;
                         checkdata.push(out); //checkdata 6
-                        
+
                         console.log('---Starting stats function');
-                        ext_stats.stats(null, 'autoreq', servertype[0], checkdata[1]);
+                        ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1]);
+                        console.log('>>> Starting sleep for serverh (5,5s)');
                         await sleep(5500); //This awaits for the stats function
                         out = require('./stats.js').output;
                         checkdata.push(out.d1, out.d2, out.d3); //checkdata 7-9
@@ -348,7 +337,8 @@ exports.check = async function(fid, checkbypass) {
                         checksender();
                     } else {
                         console.log('---Starting stats function');
-                        ext_stats.stats(null, 'autoreq', servertype[0], checkdata[1]);
+                        ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1]);
+                        console.log('>>> Starting sleep for serverh (5,75s)');
                         await sleep(5750);
                         out = require('./stats.js').output;
                         checkdata[6] = 'not found'; //checkdata 6
@@ -377,6 +367,7 @@ exports.check = async function(fid, checkbypass) {
 
 //Collects the data from the checking and steaminfo function and send it
 function checksender(thread_title, text_preview) {
+    bot = require('../bot.js').bot;
     //Checkdata -> [name, profilelink, profileicon, gmodh, profilestate, steamid, graph, gthours]
     console.log('checkdata[0]: ' + checkdata[0]);
     for (var i=1;i<10;i++) { //Transforms undefined into 'not found' to stop some erros
@@ -392,7 +383,7 @@ function checksender(thread_title, text_preview) {
         spam_spam_spam -> "448536720623796244" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
         test -> "403969093595693066"
     */
-    const target = "448536720623796244";
+    const target = "403969093595693066";
     //If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')');

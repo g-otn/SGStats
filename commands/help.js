@@ -7,14 +7,9 @@
 const prefix = require('../config/prefix.json');
 const botinfo = require('../package.json');
 
-exports.help = function(command) {
-
-    //Update message parameters for this execution
-    const msg = require('../bot.js').msg;
-
- 
+exports.help = function(msg,command) {
     console.log('Command to help: ' + command);
-    var desc, syntax, ex, notes, notes_srv, notes_per, thumb;
+    var desc, syntax, ex, notes, notes_srv, notes_per, thumb, icon, footer;
     var thumbSt = "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FkSt.png?1518565783409";
     var thumbGT = "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2FkGT.png?1518565784303";
     var defaultcheck = false;
@@ -29,7 +24,7 @@ exports.help = function(command) {
         "hue"
         ];
     commandlist = commandlist.join('\n');
-    notes_srv = "Servers: 'anime', 'modded', 'prophunt', 'puremc', 'starwars' or 'vanilla'";
+    notes_srv = "Servers: 'anime', 'mcttt', 'modded', 'murder', 'prophunt' or 'puremc'";
     notes_per = "Period: 'day', 'week' or 'month'";
     notes = " ";
     switch (command) {
@@ -37,15 +32,19 @@ exports.help = function(command) {
             desc = "Shows info about a specific server";
             syntax = "<server>";
             notes = notes_srv;
-            ex = "modded\n" + prefix.prefix + "vanilla\n" + prefix.prefix + "ph";
+            ex = "mcttt\n" + prefix.prefix + "puremc\n" + prefix.prefix + "ph";
             thumb = thumbGT;
+            footer = 'status.smithtainment.com';
+            icon = 'https://cdn.discordapp.com/avatars/153550726793003008/08bb5ec777ab048d045ceca6254dac34.png?size=128';
             break;
         case 'serverh':
             desc = "Shows a graph of a player playtime of a SG server in a specific period of time.";
             syntax = "<server>h <period> <playername>";
             notes = notes_srv;
-            ex = "moddedh week Skeke";
+            ex = "animeh week Skeke";
             thumb = thumbGT;
+            footer = 'gametracker.com';
+            icon = 'https://www.gametracker.com/images/icons/icon16x16_gt.png';
             break;
         case 'steaminfo':
             desc = "Shows info from steam of a player";
@@ -53,6 +52,8 @@ exports.help = function(command) {
             notes = "Input: SteamID, SteamID64, SteamID3 or customURL";
             ex = "steaminfo STEAM_1:0:12345678\n" + prefix.prefix + "steaminfo 7656119876543210";
             thumb = thumbSt;
+            footer = 'steamidfinder.com and steamcommunity.com';
+            icon = 'https://i.imgur.com/WQA9KyN.png';
             break;
         case 'online':
             desc = "Shows online players from a SG server along with a population graph of that server in the last 24h.";
@@ -60,20 +61,26 @@ exports.help = function(command) {
             notes = notes_srv;
             ex = "online modded\n" + prefix.prefix + "online minecraft";
             thumb = thumbGT;
+            footer = 'gametracker.com';
+            icon = 'https://www.gametracker.com/images/icons/icon16x16_gt.png';
             break;
         case 'population':
             desc = "Shows a graph of population of a SG server during a specific time period.";
             syntax = "population <server> <period>";
             notes = notes_srv + '\n' + notes_per + '. Default: day';
-            ex = "population vanilla month\n" + prefix.prefix + "population md week";
+            ex = "population anime month\n" + prefix.prefix + "population mc week";
             thumb = thumbGT;
+            footer = 'gametracker.com';
+            icon = 'https://www.gametracker.com/images/icons/icon16x16_gt.png';
             break;
         case 'stats':
             desc = "Shows a player stats in a specific SG server.";
             syntax = "stats <server> <player>";
             notes = notes_srv.split("'puremc', ").join('');
-            ex = "stats modded Skeke\n" + prefix.prefix + "stats va Skeke";
+            ex = "stats modded Skeke\n" + prefix.prefix + "stats md Skeke";
             thumb = thumbGT;
+            footer = 'gametracker.com';
+            icon = 'https://www.gametracker.com/images/icons/icon16x16_gt.png';
             break;
         case 'hue':
             defaultcheck = true;
@@ -96,7 +103,8 @@ exports.help = function(command) {
                 "description": '**Showing ' + botinfo.name + ' commands** \nType ``' + prefix.prefix + 'help <command>`` for specific info.\n```' + commandlist + "```\n[Changelog](https://sgstats-changelog.glitch.me/)",
                 "color": 0x0000ff,
                 "footer": {
-                    "text": botinfo.name + " v" + botinfo.version + " by Skeke#2155, special thanks Hades#0666"
+                    "text": botinfo.name + " v" + botinfo.version + " by Skeke#2155, special thanks Hades#0666",
+                    "icon_url": 'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=128'
                 },
                 "thumbnail": {
                     "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk11.png?1521343591170"
@@ -111,7 +119,8 @@ exports.help = function(command) {
             "description": desc,
             "color": 0x0000ff,
             "footer": {
-                "text": botinfo.name + " v" + botinfo.version + " by Skeke#2155, special thanks Hades#0666"
+                "text": 'Data is gathered through ' + footer,
+                "icon_url": icon
             },
             "thumbnail": {
                 "url": thumb

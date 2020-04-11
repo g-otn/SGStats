@@ -8,7 +8,7 @@ const requestnumber = require('../bot.js').req_num;
 //Scrap modules
 const request = require('request');
 const cheerio = require('cheerio');
-//Anti-HTTP Code 403 (Forbidden)
+//Anti-HTTP code 403 (Forbidden)
 const options = { 
     headers: {'user-agent': 'node.js'}
 };
@@ -101,11 +101,7 @@ exports.graphtypeselector = function(msg, args) {
 }
 
 //function to scrap the gamertracker base64 username'
-exports.scrapGT = function(server_address, requesttype, args) {
-
-    //Update message parameters for this execution
-    const msg = require('../bot.js').msg;
-
+exports.scrapGT = async function(msg, server_address, requesttype, args) {
     if (requesttype == 'autoreq') {
         const checkdata = require('./check.js').checkdata;
         const servertype = require('./check.js').servertype;
@@ -119,7 +115,7 @@ exports.scrapGT = function(server_address, requesttype, args) {
         console.log('graphtype: ' + graphtype);
     }
     console.log("Search URL: " + playersearch);
-    request(playersearch, options, function(error, response, html) {
+    request(playersearch, options, await function(error, response, html) {
         var noplayercheck = false;
         if (requesttype !== 'autoreq') {
             var $ = cheerio.load(html);
@@ -132,13 +128,13 @@ exports.scrapGT = function(server_address, requesttype, args) {
             } else { //If it can't access
                 playersearch = playersearch.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
                 msg.channel.send({embed: { 
-                    "description": "Player '[" + args + "]("+playersearch+")' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
+                    "description": "Player '[" + args + "]("+playersearch+")' doesn't play on this server, doesn't exist or has special characters on its name. ("  + response.statusCode + ')', 
                     "color": 0x0000ff,	
                     "thumbnail": { 
                         "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
                     }
                 }});
-                console.log('Website access error. HTTP Code ' + response.statusCode);
+                console.log('Website access error. (' + response.statusCode + ')');
                 console.log('!! Image not sent because of website error !!');
                 console.log('----------\n');
             }			
@@ -154,7 +150,7 @@ exports.scrapGT = function(server_address, requesttype, args) {
                 request(scrapertarget, options, function (error, response, html) {
                     console.log('Scraper started');
                     if (!error && response.statusCode == 200) {
-                        console.log('Website access successful. HTTP Code ' + response.statusCode);
+                        console.log('Website access successful. (' + response.statusCode + ')');
                         //console.log(html); Shows the entire page html, just to see if it's connected
                         var $ = cheerio.load(html);
                         rawlink = $('img#graph_player_time').attr('src'); //What we want (the link to the graph)
@@ -189,10 +185,11 @@ exports.scrapGT = function(server_address, requesttype, args) {
                                         "description": "Showing [" + player + "](" + scrapertarget + ")'s activity,\nfor players with similar names, click [here](" + playersearch + ").",
                                         "color": 0xFFBF52,
                                         "footer": {
-                                            "text": scanned + " via GT"
+                                            "text": scanned + " via gametracker.com"
                                         },
                                         "image": {
-                                            "url": finalimage
+                                            "url": finalimage,
+                                            'icon_url': 'https://www.gametracker.com/images/icons/icon16x16_gt.png'
                                         }
                                     }});
                                     console.log('----------\n');
