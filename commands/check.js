@@ -27,7 +27,6 @@ const rep_path2 = './config/check_repeated_th_list.json';
 const anime = "70.42.74.129:27015";
 const mcttt = "192.223.31.40:27015";
 const modded = "192.223.24.186:27015";
-const murder = "70.42.74.160:27015";
 const prophunt = "192.99.239.40:27015";
 const pure_mc = "206.221.183.139:25575"; 
 
@@ -35,9 +34,8 @@ const pure_mc = "206.221.183.139:25575";
 const M_gl = '<@&387409444109025280>'; // Global
 const M_dev = '<@&385537151393202176>'; // Developers
 const M_an = '<@&387409402250002434>'; // Anime
-const M_md = '<@&387409235249594368>'; // MC TTT
-const M_mc = '<@&387409354204250122>'; // Modded
-const M_mu = '<@&468622839755571219>'; // Murder
+const M_mc = '<@&387409235249594368>'; // MC TTT
+const M_md = '<@&387409354204250122>'; // Modded
 const M_ph = '<@&421155441519755284>'; // Prophunt
 
 //Makes possible for the automatic async function test() to wait itself to finish to loop itself
@@ -60,7 +58,6 @@ const sectionlist = [
     130,132,133,134, //Anime
     51,53,48,59,66, //MC TTT
     91,87,93,296, //Modded
-    34,36,40,41, //Murder
     270,271,272,283, //PropHunt
     227,231,229,//Pure Vanilla Minecraft
 ]; 
@@ -71,7 +68,6 @@ const sectiontype = [
     'Application','Report','Ban Appeal','Warn Appeal', //Anime
     'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', //MC TTT
     'Report','Application','Ban Appeal','Warn Appeal', //Modded
-    'Report','Application','Ban Appeal','Warn Appeal', //Murder
     'Application','Ban Appeal','Warn Appeal','Report', //PropHunt
     'Support Thread','Report','Ban Appeal', //Pure Vanilla Minecraft
 ];
@@ -82,7 +78,6 @@ const sectionfrom = [
     'Anime TTT','Anime TTT','Anime TTT','Anime TTT',
     'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
     'Modded TTT','Modded TTT','Modded TTT','Modded TTT',
-    'Murder','Murder','Murder','Murder',
     'PropHunt','PropHunt','PropHunt','PropHunt',
     'Pure Vanilla Minecraft','Pure Vanilla Minecraft','Pure Vanilla Minecraft',
 ];
@@ -93,8 +88,8 @@ const sectionmention = [
     M_an,M_an,M_an,M_an,
     M_mc,M_mc,M_mc,M_mc,M_mc,
     M_md,M_md,M_md,M_md,
-    M_mu,M_mu,M_mu,M_mu,
     M_ph,M_ph,M_ph,M_ph,
+    "","",""
 ];
 exports.check = async function(fid, checkbypass) {
     checkdata = [];
@@ -143,9 +138,11 @@ exports.check = async function(fid, checkbypass) {
                 postlink = scrapRoot.children('span').children('span').eq(0).attr('id');
                 postauthor = scrapRoot.children('div').children().text();
             } else {
-                //Bug reports
+                //Bug reports (threads with TAGS)
                 postname = scrapRoot.children('span').children('span').eq(1).children('a').text();
-                postlink = scrapRoot.children('span').children('span').eq(1).attr('id');
+                postlink = scrapRoot.children('span').children('span').length > 1 ? 
+                    scrapRoot.children('span').children('span').eq(1).attr('id')
+                    : scrapRoot.children('span').children('span').eq(0).attr('id');
                 postauthor = scrapRoot.children('div').children('a').text();
             }
             console.log("Thread name: " + postname);
@@ -165,7 +162,7 @@ exports.check = async function(fid, checkbypass) {
         delete require.cache[require.resolve(rep_path)];
         var rep_th = require(rep_path).repeated_th;
         //Waits the scraper and function to end to start again to prevent rewrite of variables in the wrong time
-        await sleep(3500); //Waits for the first scrap to search for post
+        await sleep(4500); //Waits for the first scrap to search for post
         if (postname !== undefined && postlink !== undefined && postauthor !== undefined) {
             //Checks if thread has already been seen or if there is a thread
             if (rep_th.includes(postlink) === false || checkbypass === true) { 
@@ -196,11 +193,6 @@ exports.check = async function(fid, checkbypass) {
                     case 93:
                     case 296:
                         servertype = [modded,'Modded TTT'];
-                        break;
-                    //Murder
-                    case 36: 
-                        servertype = [murder,'Murder'];
-                        checkdata[0] = 'appl';
                         break;
                     //PropHunt
                     case 270:
@@ -324,13 +316,14 @@ exports.check = async function(fid, checkbypass) {
                         ext_serverh.scrapGT(null, null, 'autoreq', null);
                         console.log('>>> Starting sleep for serverh (6,5s)');
                         await sleep(6500); //This awaits for the serverh function
+                        console.log('>>> Sleep for serverh ended');
                         out = require('./serverh.js').output;
                         checkdata.push(out); //checkdata 6
-
                         console.log('---Starting stats function');
                         ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1]);
-                        console.log('>>> Starting sleep for serverh (5,5s)');
+                        console.log('>>> Starting sleep for stats (5,5s)');
                         await sleep(5500); //This awaits for the stats function
+                        console.log('>>> Sleep for stats ended');
                         out = require('./stats.js').output;
                         checkdata.push(out.d1, out.d2, out.d3); //checkdata 7-9
 
@@ -338,8 +331,9 @@ exports.check = async function(fid, checkbypass) {
                     } else {
                         console.log('---Starting stats function');
                         ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1]);
-                        console.log('>>> Starting sleep for serverh (5,75s)');
+                        console.log('>>> Starting sleep for stats (5,75s)');
                         await sleep(5750);
+                        console.log('>>> Sleep for stats ended');
                         out = require('./stats.js').output;
                         checkdata[6] = 'not found'; //checkdata 6
                         checkdata.push(out.d1, out.d2, out.d3); //checkdata 7-9
@@ -380,13 +374,33 @@ function checksender(thread_title, text_preview) {
     }
     /*
         Channels
-        spam_spam_spam -> "448536720623796244" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
-        test -> "403969093595693066"
+        bot-chat -> "491775954864046080" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
+        test -> "496868812478742529"
     */
-    const target = "403969093595693066";
+    const target = "496868812478742529";
     //If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')');
+    }
+    if (sectiontype[selector] !== "Bug Report")
+        bot.channels.get(target).send(sectionmention[selector])
+    else {
+        var extramention = sectionmention[selector] + " "
+        console.log(thread_title.substring(1,thread_title.indexOf("]")))
+        switch (thread_title.substring(1,thread_title.indexOf("]"))) {
+            case "MCTTT":
+                extramention += M_mc
+                break
+            case "MTTT":
+                extramention += M_md
+                break
+            case "ATTT":
+                extramention += M_an
+                break
+            case "PH":
+                extramention += M_ph
+        }
+        bot.channels.get(target).send(extramention)
     }
     /*
         Thread types
@@ -400,7 +414,7 @@ function checksender(thread_title, text_preview) {
            //NO STEAM INFO / NO GT INFO / NO GT GRAPH
             bot.channels.get(target).send({embed: {
                 "title": "New " + sectiontype[selector] + "!",
-                "description": "__" + postauthor + "__ posted " + postdate + " a(n) [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+                "description": "__" + postauthor + "__ posted " + postdate + " a(n) [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! ",
                 "color": 0x0000ff,
                 "footer": {
                     "text": "Info from player not found."
@@ -411,7 +425,7 @@ function checksender(thread_title, text_preview) {
             //NO STEAM INFO / NO GT INFO / NO GT GRAPH
             bot.channels.get(target).send({embed: {
                 "title": "New " + sectiontype[selector] + "!",
-                "description": "__" + postauthor + "__ posted " + postdate + " a(n) [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+                "description": "__" + postauthor + "__ posted " + postdate + " a(n) [" + sectiontype[selector] + "](" + postlink + ") in the [" + sectionfrom[selector] + "](" + seclink + ")! ",
                 "color": 0x0000ff,
                 "footer": {
                     "text": "Info from player not needed."
@@ -431,7 +445,7 @@ function checksender(thread_title, text_preview) {
                 //STEAM INFO / GT INFO / NO GT GRAPH
                 bot.channels.get(target).send({embed: {
                     "title": "New " + sectiontype[selector] + "!",
-                    "description": "__" + postauthor + "__ posted *" + postdate + "* a [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+                    "description": "__" + postauthor + "__ posted *" + postdate + "* a [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! ",
                     "color": 0x0000ff,
                     "footer": {
                         "text": "Info may be wrong depending of SteamID written and multiple/similar names." 
@@ -461,7 +475,7 @@ function checksender(thread_title, text_preview) {
                 //STEAM INFO / GT INFO / GT GRAPH
                 bot.channels.get(target).send({embed: {
                     "title": "New " + sectiontype[selector] + "!",
-                    "description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+                    "description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! ",
                     "color": 0x0000ff,
                     "footer": {
                         "text": "Info may be wrong depending of SteamID written and multiple/similar names." 
@@ -493,7 +507,7 @@ function checksender(thread_title, text_preview) {
                 bot.channels.get(target).send({embed: {
                     //STEAM INFO / GT INFO / NO GT GRAPH (not found)
                     "title": "New " + sectiontype[selector] + "!",
-                    "description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! " + sectionmention[selector],
+                    "description": "__" + postauthor + "__ posted *" + postdate + "* an [" + sectiontype[selector] + "](" + postlink + ") for the [" + sectionfrom[selector] + "](" + seclink + ")! ",
                     "color": 0x0000ff,
                     "footer": {
                         "text": "Info may be wrong depending of SteamID written and multiple/similar names." 

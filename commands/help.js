@@ -24,7 +24,7 @@ exports.help = function(msg,command) {
         "hue"
         ];
     commandlist = commandlist.join('\n');
-    notes_srv = "Servers: 'anime', 'mcttt', 'modded', 'murder', 'prophunt' or 'puremc'";
+    notes_srv = "Servers: 'anime', 'mcttt', 'modded', 'prophunt' or 'puremc'";
     notes_per = "Period: 'day', 'week' or 'month'";
     notes = " ";
     switch (command) {

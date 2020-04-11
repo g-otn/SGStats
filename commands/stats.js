@@ -15,7 +15,6 @@ const options = {
 const anime = "70.42.74.129:27015";
 const mcttt = "192.223.31.40:27015";
 const modded = "192.223.24.186:27015";
-const murder = "70.42.74.160:27015";
 const prophunt = "192.99.239.40:27015";
 
 exports.stats = async function(msg, args, requesttype, checkserver, checkplayer) {
@@ -52,11 +51,6 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
             case 'puremc':
             case 'minecraft':
                 errorcheck = true;
-                break;
-            case 'mu':
-            case 'murder':
-                server = murder;
-                servername = 'Murder';
                 break;
             case 'ph':
             case 'prophunt':
@@ -210,7 +204,7 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
                     break;
                 default:
                     msg.channel.send({embed: { 
-                        "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt', 'murder' or 'vanilla'.", 
+                        "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt' or 'vanilla'.", 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"

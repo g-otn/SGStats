@@ -20,16 +20,14 @@
 
 
 	/*
-		Information declaration for commands
+		Server Information for commands
 	*/
 	//Server Addresses
 	const anime = "70.42.74.129:27015";
 	const mcttt = "192.223.31.40:27015";
 	const modded = "192.223.24.186:27015";
-	const murder = "70.42.74.160:27015";
 	const prophunt = "192.99.239.40:27015";
-	const pure_mc = "206.221.183.139:25575"; 
-	const vanilla = "192.223.24.186:27015";
+	const pure_mc = "206.221.183.139:25575";
 
 
 	/*
@@ -71,8 +69,8 @@
 		if (msg.content.includes(botinfo.name + ' has started.') === true && msg.author.bot) {
 			//commands executed on start
 			bot.channels.get("468491525379194880").send(prefix.prefix + 'startauto');
-			msg.content = prefix.prefix + 'checkbypass start';
 			//msg.content = prefix.prefix + 'checkbypass start';
+			msg.content = prefix.prefix + 'checkbypass start';
 			//return; //Comment if a command above is executed, uncomment otherwise
 		}
 
@@ -182,11 +180,6 @@
 				var ext_server_stats = require('./commands/server_stats.js');
 				ext_server_stats.server_stats(msg, 'mc', '21', 'Pure Vanilla Minecraft');
 				break;
-			case 'mu':
-			case 'murder':
-				var ext_server_stats = require('./commands/server_stats.js');
-				ext_server_stats.server_stats(msg, 'murder', '23', 'Murder');
-				break;
 			case 'ph':
 			case 'prophunt':
 				var ext_server_stats = require('./commands/server_stats.js');
@@ -241,18 +234,6 @@
 				ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
 				ext_serverh = require('./commands/serverh.js'); //reload
 				if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, modded, 'main', ext_serverh.args);
-				break;
-			case 'muh':
-			case 'murderh':
-				if (args[0] !== undefined) {
-					args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-				}
-				exports.args = args;
-				var ext_serverh = require('./commands/serverh.js');
-				ext_serverh.hourscmd_argsorganize(murder, args);
-				ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
-				ext_serverh = require('./commands/serverh.js'); //reload
-				if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, murder, 'main', ext_serverh.args);
 				break;
 			case 'phh':
 			case 'prophunth':
