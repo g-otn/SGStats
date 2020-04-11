@@ -12,10 +12,9 @@ const options = {
 };
 
 //Server Addresses
-const darkrp = "192.223.24.186:27015"
-const deathrun = "70.42.74.160:27015"
 const mcttt = "192.223.31.40:27015"
-const prophunt = "192.99.239.40:27015"
+const prophunt = "208.103.169.108:27024"
+const tvanilla = '173.26.48.4:27045'
 
 exports.stats = async function(msg, args, requesttype, checkserver, checkplayer) {
     var server, player, playername, searchlink, serverlink, noplayercheck, playerlink, servername;
@@ -30,24 +29,14 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
         console.log('Server: ' + server);
         console.log('Player: ' + player);
         switch (server) {
-            case 'rp':
-            case 'darkrp':
-                server = darkrp;
-                servername = 'DarkRP';
-                break;
-            case 'dr':
-            case 'deathrun':
-                server = deathrun
-                servername = 'Deathrun'
-                break
             case 'mc':
             case 'mcttt':
             case 'mcmd':
                 server = mcttt;
                 servername = 'MC TTT';
                 break;
-            case 'pmc':
-            case 'puremc':
+            case 'csgo':
+            case 'comp':
             case 'minecraft':
                 errorcheck = true;
                 break;
@@ -55,6 +44,11 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
             case 'prophunt':
                 server = prophunt;
                 servername = 'PropHunt';
+                break;
+            case 'va':
+            case 'vanilla':
+                server = tvanilla
+                sservername = 'True Vanilla TTT'
                 break;
             default:
                 errorcheck = true;
@@ -178,12 +172,10 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
     } else {
         if (errorcheck2 === false) {
             switch (server) {
-                case 'mc':
-                case 'pmc':
-                case 'puremc':
-                case 'minecraft':
+                case 'csgo':
+                case 'comp':
                     msg.channel.send({embed: { 
-                        "description": "Gamertracker does not support player hours of Minecraft servers.", 
+                        "description": "Gamertracker does not support player hours of CS:GO servers.", 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"
@@ -203,7 +195,7 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
                     break;
                 default:
                     msg.channel.send({embed: { 
-                        "description": "'" + server + "' is not a known server. Please use 'darkrp', 'deathrun', 'mcttt' or 'prophunt'.", 
+                        "description": "'" + server + "' is not a known server. Please use 'mcttt', 'prophunt' or 'vanilla'.", 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"

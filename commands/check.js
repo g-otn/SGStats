@@ -24,20 +24,16 @@ const rep_path = '../config/check_repeated_th_list.json'
 const rep_path2 = './config/check_repeated_th_list.json'
 
 // Server Addresses
-const darkrp = "192.223.24.186:27015"
-const deathrun = "70.42.74.160:27015"
 const mcttt = "192.223.31.40:27015"
-const prophunt = "192.99.239.40:27015"
-const pure_mc = "206.221.183.139:25575" 
+const prophunt = "208.103.169.108:27024"
+const tvanilla = '173.26.48.4:27045'
 
 // Roles ID of each server
 const M_gl = '<@&387409444109025280>' // Global
 const M_dev = '<@&385537151393202176>' // Developer
-const M_rp = '<@&537876007731068940>' // DarkRP
-const M_dr = '<@&387409354204250122>' // Deathrun
 const M_mc = '<@&387409235249594368>' // MC TTT
 const M_ph = '<@&421155441519755284>' // Prophunt
-const M_su = '<@&516800012366118923><@&516800697157550081><@&516800016564617236>' // Minecraft Survival
+const M_va = '<@&387409354204250122>'
 
 //Makes possible for the automatic async function test() to wait itself to finish to loop itself
 function sleep(ms) {
@@ -53,44 +49,36 @@ var selector, forbreaker
 var servertype = []
 var checkdata = [1]
 const sectionlist = [
-    241,213, // Global
+    241,302,303,213, // Global
     '256&sortby=lastpost&order=desc','255&sortby=lastpost&order=desc', //Developer
 
-    93,340,87,81,91, // DarkRP
-    327,339,311,312,313, // Deathrun
     51,53,48,59,66, // MC TTT
     283,336,270,271,272, // PropHunt
-    231,341,321,229 // Minecraft Survival
+    339,311,312,313 // True Vanilla TTT
 ] 
 const sectiontype = [
-    'Appeal','Application', // Global
+    'Ban Appeal','Ban Appeal','Ban Appeal','Application', // Global
     'Bug Report','Suggestion', // Developer
 
-    'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', // DarkRP
-    'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', // Deathrun
     'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', // MC TTT
     'Report','Donor Support Thread','Application','Ban Appeal','Warn Appeal', // PropHunt
-    'Report','Donor Support Thread','Application','Ban Appeal' // Minecraft Survival
+    'Donor Support Thread', 'Applications', 'Ban Appeal', 'Warn Appeal' // Vanilla TTT
 ]
 const sectionfrom = [
-    'Forums/Network Appeals','Forum Moderator Applications',
+    'Forums Ban Appeals','Discord Ban Appeals','Network Ban Appeals','Forum Moderator Applications',
     'Developer Corner','Developer Corner',
 
-    'DarkRP','DarkRP','DarkRP','DarkRP','DarkRP',
-    'Deathrun','Deathrun','Deathrun','Deathrun',
     'MC TTT','MC TTT','MC TTT','MC TTT','MC TTT',
     'PropHunt','PropHunt','PropHunt','PropHunt','PropHunt',
-    'Minecraft Survival','Minecraft Survival','Minecraft Survival','Minecraft Survival'
+    'True Vanilla TTT','True Vanilla TTT','True Vanilla TTT','True Vanilla TTT'
 ]
 const sectionmention = [
-    M_gl,M_gl,
+    M_gl,M_gl,M_gl,M_gl,
     M_dev,M_dev,M_dev,
 
-    M_rp,M_rp,M_rp,M_rp,M_rp,
-    M_dr,M_dr,M_dr,M_dr,M_dr,
     M_mc,M_mc,M_mc,M_mc,M_mc,
     M_ph,M_ph,M_ph,M_ph,M_ph,
-    M_su,M_su,M_su,M_su,M_su
+    M_va,M_va,M_va,M_va
 ]
 exports.check = async function(fid, checkbypass) {
     checkdata = []
@@ -131,29 +119,18 @@ exports.check = async function(fid, checkbypass) {
         var poststeamid
         request(seclink, options, function(error, response, html) {
             var $ = cheerio.load(html) 
-            // Selects the post info from the forums section. eq(2) for first thread, eq(8) for second
-            var scrapRoot = $('.forumdisplay_regular').eq(2).children()
-            //console.log(scrapRoot.eq(0))
-            if (sectiontype[selector] !== 'Bug Report') {
-                // Any thread
-                postname = scrapRoot.children('span').children('span').eq(0).children('a').text()
-                postlink = scrapRoot.children('span').children('span').eq(0).attr('id')
-                postauthor = scrapRoot.children('div').children().text()
-            } else {
-                // Bug reports (threads with TAGS)
-                postname = scrapRoot.children('span').children('span').eq(1).children('a').text()
-                postlink = scrapRoot.children('span').children('span').length > 1 ? 
-                    scrapRoot.children('span').children('span').eq(1).attr('id')
-                    : scrapRoot.children('span').children('span').eq(0).attr('id')
-                postauthor = scrapRoot.children('div').children('a').text()
-            }
+            // Selects the post info from the forums section.
+            //console.log("threads:", $('.forumdisplay_regular').length)
+            postname = $('.forumdisplay_regular').eq(0).find('span[id*="tid_"]').eq(0).text()
+            postlink = $('.forumdisplay_regular').eq(0).find('span[id*="tid_"]').eq(0).children().eq(0).attr('href')
+            postauthor = $('.forumdisplay_regular').eq(0).find('a[href*="member"]').eq(0).text()
             console.log("Thread name: " + postname)
             console.log("Thread link: " + postlink)
             console.log("Thread author: " + postauthor)
             // If there is a post
-            if (postname !== undefined && postlink !== undefined && postauthor !== undefined) {
+            if (postname && postlink && postauthor) {
                 postname = postname.trim()
-                postlink = postlink.trim().split('tid_').join("").trim()
+                postlink = postlink.replace('tid_', '').trim()
                 postauthor = postauthor.trim()
                 console.log('Repeated Threads: ' + require(rep_path).repeated_th)
             } else {
@@ -173,23 +150,11 @@ exports.check = async function(fid, checkbypass) {
                 checkdata[0] = 'notappl' // replaces undefined
                 servertype[1] = 'Server' // replaces undefined
                 switch (sectionlist[selector]) {
-                    // DarkRP
-                    case 87:
+                    case 130:
                         checkdata[0] = 'appl'
-                    case 93:
-                    case 340:
-                    case 81:
-                    case 91:
-                        servertype = [darkrp, 'DarkRP']
-                        break
-                    // Deathrun
-                    case 311:
-                        checkdata[0] = 'appl'
-                    case 327:
-                    case 339:
-                    case 312:
-                    case 313:
-                        servertype = [deathrun, 'Deathrun']
+                    case 338:
+                    case 133:
+                        servertype = [csgo5v5, 'CS:GO 5v5']
                         break
                     // MC TTT
                     case 48: 
@@ -209,20 +174,29 @@ exports.check = async function(fid, checkbypass) {
                     case 272:
                         servertype = [prophunt, 'PropHunt']
                         break
-                    // Minecraft Survival (does not support hours/stats)
-                    case 231:
-                    case 341:
-                    case 321:
-                    case 229:
+                    // True Vanilla TTT
+                    case 311:
+                        checkdata[0] = 'appl'
+                        break
+                    case 339:
+                    case 312:
+                    case 313:
+                        servertype = [tvanilla, 'True Vanilla TTT']
+                        break
                     // Threads that don't need Steam/GT info
+                        // Developer corner (suggestion/bug report)
                     case '256&sortby=lastpost&order=desc':
                     case '255&sortby=lastpost&order=desc':
+                        // Global area (Smithtainment Gaming)
+                    case 241: // forum ban appeal
+                    case 302: // discord ban appeal
+                    case 303: // network ban appeal
                         checkdata[0] = 'notneeded' // gets sent with thread preview
                 }
                 console.log('servertype: '+servertype)
                 // checkdata[0] tells if it's an application or if info is found to send
                 console.log('checkdata[0]: ' + checkdata[0])
-                postlink = "http://forums.guccittt.site.nfoservers.com/showthread.php?tid=" + postlink
+                postlink = "http://forums.guccittt.site.nfoservers.com/" + postlink
                 console.log("Thread link: " + postlink)
                 // Goes to the post
                 request(postlink, options, function(error, response, html) {
@@ -239,12 +213,12 @@ exports.check = async function(fid, checkbypass) {
                             if (checkbypass === false) {
                                 // Repeated thread file writer
                                 console.log('Old repeated threads list: ' + rep_th)
-                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=').join('') + "\"\n}"
+                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.replace('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=', '') + "\"\n}"
                                 fs.writeFile(rep_path2, rep_th_file, function (err) {
                                     if (err) throw err
                                     delete require.cache[require.resolve(rep_path)]
                                     rep_th = require(rep_path).repeated_th
-                                    console.log('Repeated threads list updated with: ' + postlink.split('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=').join(''))
+                                    console.log('Repeated threads list updated with: ' + postlink.replace('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=', ''))
                                 })
                                 await sleep(500)
                                 console.log('Repeated threads from now: ' + rep_th)
@@ -255,7 +229,7 @@ exports.check = async function(fid, checkbypass) {
                                 var thread_title = $('title').text().trim()
                                 var text_preview = $('.post_body').first().text().trim()
                                 text_preview = text_preview + ''
-                                text_preview = text_preview.split(' ').slice(0,35) // Word count in preview
+                                text_preview = text_preview.split(' ').slice(0,40) // Word count in preview
                                 text_preview = text_preview.join(' ') + ''
                                 text_preview = text_preview.split('\n').join(' ').trim() + ' [...]'
                                 poststeamid = undefined
@@ -313,42 +287,41 @@ exports.check = async function(fid, checkbypass) {
                 // Next condition tests if the SteamID/64 was found, if not it will continue to send the message in the other part of the code
                 if (poststeamid !== undefined && poststeamid !== '765611' && poststeamid !== 'STEAM_' && poststeamid !== "" && poststeamid !== " " && sectionlist[selector] !== 241) {
                     await sleep(5250) // This awaits for the steaminfo function
-                    var out = require('./steaminfo.js').output
+                    var out = require('./steaminfo.js').output || {}
                     checkdata.push(out.d1, out.d2, out.d3, out.d4, out.d5) // checkdata 1-5
-                    // Checks post type and selects what data to get for sending
-                    if (checkdata[0] == 'appl') {
-                        console.log('---Starting serverh function')
-                        exports.checkdata = checkdata
-                        exports.servertype = servertype
-                        ext_serverh.scrapGT(null, null, 'autoreq', null)
-                        console.log('>>> Starting sleep for serverh (6,5s)')
-                        await sleep(6500) // This awaits for the serverh function
-                        console.log('>>> Sleep for serverh ended')
-                        out = require('./serverh.js').output
-                        checkdata.push(out) // checkdata 6
-                        console.log('---Starting stats function')
-                        ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1])
-                        console.log('>>> Starting sleep for stats (5,5s)')
-                        await sleep(5500) // This awaits for the stats function
-                        console.log('>>> Sleep for stats ended')
-                        out = require('./stats.js').output
-                        checkdata.push(out.d1, out.d2, out.d3) // checkdata 7-9
-
+                    try {
+                        // Checks post type and selects what data to get for sending
+                        if (checkdata[0] == 'appl') {
+                            console.log('---Starting serverh function')
+                            exports.checkdata = checkdata
+                            exports.servertype = servertype
+                            console.log(checkdata, servertype)
+                            ext_serverh.scrapGT(null, null, 'autoreq', null)
+                            console.log('>>> Starting sleep for serverh (6,5s)')
+                            await sleep(6500) // This awaits for the serverh function
+                            console.log('>>> Sleep for serverh ended')
+                            out = require('./serverh.js').output
+                            checkdata.push(out) // checkdata 6
+                            console.log('---Starting stats function')
+                            ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1])
+                            console.log('>>> Starting sleep for stats (5,5s)')
+                            await sleep(5500) // This awaits for the stats function
+                            console.log('>>> Sleep for stats ended')
+                            out = require('./stats.js').output
+                            checkdata.push(out.d1, out.d2, out.d3) // checkdata 7-9
+                        } else {
+                            console.log('---Starting stats function')
+                            ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1])
+                            console.log('>>> Starting sleep for stats (5,75s)')
+                            await sleep(5750)
+                            console.log('>>> Sleep for stats ended')
+                            out = require('./stats.js').output
+                            checkdata[6] = 'not found' // checkdata 6
+                            checkdata.push(out.d1, out.d2, out.d3) // checkdata 7-9
+                        }
+                        out = 'empty'
                         checksender()
-                    } else {
-                        console.log('---Starting stats function')
-                        ext_stats.stats(null, null, 'autoreq', servertype[0], checkdata[1])
-                        console.log('>>> Starting sleep for stats (5,75s)')
-                        await sleep(5750)
-                        console.log('>>> Sleep for stats ended')
-                        out = require('./stats.js').output
-                        checkdata[6] = 'not found' // checkdata 6
-                        checkdata.push(out.d1, out.d2, out.d3) // checkdata 7-9
-
-                        checksender()
-                        await sleep(500)
-                    }
-                    out = 'empty'
+                    } catch (error) { console.log("\n><><><><><><><>\nError happened:\n" + error + "\ncheckdata: " + checkdata + "\n><><><><><><><>\n") }
                 }
             } else { await sleep(500)}
         }
@@ -386,31 +359,22 @@ function checksender(thread_title, text_preview) {
         bot-chat -> "491775954864046080" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
         test -> "496868812478742529"
     */
-    const target = "496868812478742529"
+    const target = "491775954864046080"
     // If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')')
     }
-    if (sectiontype[selector] !== "Bug Report")
+    if (sectionfrom[selector] !== 'Developer Corner')
         bot.channels.get(target).send(sectionmention[selector])
     else {
         var extramention = sectionmention[selector] + " "
         console.log(thread_title.substring(1,thread_title.indexOf("]")))
         switch (thread_title.substring(1,thread_title.indexOf("]"))) {
-            case "DRP":
-                extramention += M_rp
-                break
-            case "DR":
-                extramention += M_dr
-                break
             case "MCTTT":
                 extramention += M_mc
                 break
             case "PH":
                 extramention += M_ph
-                break
-            case "MC":
-                extramention += M_su
                 break
         }
         bot.channels.get(target).send(extramention)

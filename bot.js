@@ -23,10 +23,10 @@ var prefix = require('./config/prefix.json');
 	Server Information for commands
 */
 //Server Addresses
-const darkrp = "192.223.24.186:27015"
-const deathrun = "70.42.74.160:27015"
+const csgo5v5 = '192.99.4.87:28791'
 const mcttt = "192.223.31.40:27015"
-const prophunt = "192.99.239.40:27015"
+const prophunt = "208.103.169.108:27024"
+const tvanilla = '173.26.48.4:27045'
 
 
 /*
@@ -49,6 +49,14 @@ bot.on("ready", () => {
 */
 bot.on("message", (msg) => { //Detect messages
 	/*
+		Channel log
+	*/
+	if (msg.channel.id == '559392429254639626') // Public Discord Announcements
+		require('fs').appendFile('log/announcements.txt', msg.content.replace("@", '') + '\n', () => {})
+	if (msg.channel.id == '379434065033560074' && msg.content.length !== 0) // Staff Discord MCTTT Relay
+		require('fs').appendFile('log/mcttt_relay.txt', msg.content + '\n', () => {})
+
+	/*
 		Message Filter
 	*/
 	//Ignore the message if it doesn't start with the prefix or it's from a bot
@@ -68,32 +76,28 @@ bot.on("message", (msg) => { //Detect messages
 	if (msg.content.includes(botinfo.name + ' has started.') === true && msg.author.bot) {
 		// Commands executed on start
 		//bot.channels.get("468491525379194880").send(prefix.prefix + 'startauto');
-		//msg.content = prefix.prefix + 'checkbypass start';
 		msg.content = prefix.prefix + 'checkbypass 270';
-		//return; //Comment if a command above is executed, uncomment otherwise
+		//msg.content = prefix.prefix + 'checkbypass 241';
+		//return; //Comment if a msg.content is changed, uncomment otherwise
 	}
 
+
+
+	/*
+		Message parsing
+	*/
 	//Log in the console about the command
-	if (msg.author.tag !== 'SGStats#6003' && msg.author.tag !== 'SGStats-test#5661') { //If it's not this bot saying
-		console.log('=> Command by ' + msg.author.tag + ' in #' + msg.channel.name + ': ' + msg.content);
-	}
+	console.log('=> Command by ' + msg.author.tag + ' in #' + msg.channel.name + ': ' + msg.content);
+
 	//Separate the prefix from the rest ('!hue br 123' -> 'hue br 123')
 	var p_cmd_arg = msg + ''; //Transforms the command into a string
 	var cmd_arg = p_cmd_arg.replace(prefix.prefix, ''); //Replaces the prefix for nothing ('');
 	cmd_arg = cmd_arg.toString();
-	//Separation between command (w/o prefix) and arguments  
-	//Separate arguments (['hue', 'br', '123'] -> ['br', '123'])
-	var args = cmd_arg.trim().split(' ').slice(1);
-	//Separate command (['hue', 'br', '123'] -> ['hue'])
-	var cmd = cmd_arg.trim().split(' ').slice(0,1);
-	cmd = cmd.toString();
-	if (msg.author.tag !== 'SGStats#6003' && msg.author.tag !== 'SGStats-test#5661') {
-		console.log('=> Command: ' + cmd);
-		console.log('=> Arguments: ' + args);
-		//Output of the operations above:
-		//cmd = ['hue'];
-		//args = ['br, '123']
-	}
+	//Separation between the command (without prefix) and arguments  
+	var args = cmd_arg.trim().split(' ').slice(1); //Separate arguments (['hue', 'br', '123'] -> ['br', '123'])
+	var cmd = cmd_arg.trim().split(' ').slice(0, 1).toString(); //Separate command (['hue', 'br', '123'] -> ['hue'])
+	console.log('=> Command: ' + cmd);
+	console.log('=> Arguments: ' + args);
 
 
 
@@ -101,6 +105,7 @@ bot.on("message", (msg) => { //Detect messages
 		Command Filter
 	*/
 	cmd = cmd.toLowerCase(); //remove case-sensitivity for commands (not args)
+	var cmd_m // Command module: stores the file that will be required
 	switch (cmd) {
 		/*
 			Regular commands
@@ -108,267 +113,206 @@ bot.on("message", (msg) => { //Detect messages
 		//Help command
 		case '':
 		case 'help':
-			var ext_help = require('./commands/help.js');
+			cmd_m = require('./commands/help.js');
 			args = args.join(' ').trim();
-			ext_help.help(msg,args);
+			cmd_m.help(msg, args);
 			break;
 
 
 		//Online command
 		case 'online':
-			if (args[0] !== undefined) {
+			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
-			var ext_online = require('./commands/online.js');
+			var cmd_m = require('./commands/online.js');
 			args = args.join('').trim();
-			ext_online.onlineplayers(msg,args);
+			cmd_m.onlineplayers(msg, args);
 			break;
 
 
 		//Population command
 		case 'population':
-			if (args[0] !== undefined) {
+			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
-			var ext_population = require('./commands/population.js');
-			ext_population.populationgraph(msg,args[0], args[1]);
+			cmd_m = require('./commands/population.js');
+			cmd_m.populationgraph(msg, args[0], args[1]);
 			break;
 
 
 		//stats command
 		case 'stats':
-			if (args[0] !== undefined) {
+			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
-			var ext_stats = require('./commands/stats.js');
-			ext_stats.stats(msg,args);
+			cmd_m = require('./commands/stats.js');
+			cmd_m.stats(msg, args);
 			break;
 
 
 		//Server (stats) commands
 		case 'server':
-			msg.channel.send({embed: { 
-				"description": "You have to select a server! Use ``" + prefix.prefix + "help server`` for more information.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
-				}
-			}});
+			msg.channel.send({ embed: { "description": "You have to select a server! Use ``" + prefix.prefix + "help server`` for more information.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176" } } });
 			break;
-		case 'rp':
-		case 'darkrp':
-			var ext_server_stats = require('./commands/server_stats.js');
-			ext_server_stats.server_stats(msg, 'attt', '20', 'DarkRP');
-			break;
-		case 'dr':
-		case 'deathrun':
-			var ext_server_stats = require('./commands/server_stats.js');
-			ext_server_stats.server_stats(msg, 'murder', '23', 'Deathrun')
+		case 'cs':
+		case 'csgo':
+			cmd_m = require('./commands/server_stats.js');
+			cmd_m.server_stats(msg, 'csgo5v5', '21', 'CS:GO 5v5');
 			break;
 		case 'mc':
 		case 'mcttt':
 		case 'mcmd':
-			var ext_server_stats = require('./commands/server_stats.js');
-			ext_server_stats.server_stats(msg, 'mcttt', '19', 'MC TTT');
-			break;
-		case 'pmc':
-		case 'puremc':
-		case 'pureva':
-		case 'minecraft':
-			var ext_server_stats = require('./commands/server_stats.js');
-			ext_server_stats.server_stats(msg, 'mc', '21', 'Pure Vanilla Minecraft');
+			cmd_m = require('./commands/server_stats.js');
+			cmd_m.server_stats(msg, 'mcttt', '19', 'MC TTT');
 			break;
 		case 'ph':
 		case 'prophunt':
-			var ext_server_stats = require('./commands/server_stats.js');
-			ext_server_stats.server_stats(msg, 'prophunt', '18', 'PropHunt');
+			cmd_m = require('./commands/server_stats.js');
+			cmd_m.server_stats(msg, 'prophunt', '18', 'PropHunt');
+			break;
+		case 'va':
+		case 'vanilla':
+			cmd_m = require('./commands/server_stats.js')
+			cmd_m.server_stats(msg, 'vttt', '22', 'True Vanilla TTT')
 			break;
 
 
 		//Serverh command
 		case 'serverh':
-			msg.channel.send({embed: { 
-				"description": "You have to select a server! Use ``" + prefix.prefix + "help serverh`` for more information.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
-				}
-			}});
-			break;
-		case 'rph':
-		case 'darkrph':
-			if (args[0] !== undefined) {
-				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
-			exports.args = args;
-			var ext_serverh = require('./commands/serverh.js');
-			ext_serverh.hourscmd_argsorganize(darkrp, args);
-			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
-			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, darkrp, 'main', ext_serverh.args);
-			break;
-		case 'drh':
-		case 'deathrunh':
-		case 'runh':
-			if (args[0] !== undefined) {
-				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
-			exports.args = args;
-			var ext_serverh = require('./commands/serverh.js');
-			ext_serverh.hourscmd_argsorganize(deathrun, args);
-			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
-			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, deathrun, 'main', ext_serverh.args);
+			msg.channel.send({ embed: { "description": "You have to select a server! Use ``" + prefix.prefix + "help serverh`` for more information.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176" } } });
 			break;
 		case 'mch':
 		case 'mcttth':
 		case 'mcmdh':
-			if (args[0] !== undefined) {
+			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
 			exports.args = args;
-			var ext_serverh = require('./commands/serverh.js');
-			ext_serverh.hourscmd_argsorganize(mcttt, args);
-			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
-			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, mcttt, 'main', ext_serverh.args); 
+			cmd_m = require('./commands/serverh.js');
+			cmd_m.hourscmd_argsorganize(mcttt, args);
+			cmd_m.graphtypeselector(msg, require('./commands/serverh.js').args);
+			cmd_m = require('./commands/serverh.js'); //reload
+			if (cmd_m.errorcheck !== true) cmd_m.scrapGT(msg, mcttt, 'main', cmd_m.args);
 			break;
 		case 'phh':
 		case 'prophunth':
-			if (args[0] !== undefined) {
+			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-			}
 			exports.args = args;
-			var ext_serverh = require('./commands/serverh.js');
-			ext_serverh.hourscmd_argsorganize(prophunt, args);
-			ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
-			ext_serverh = require('./commands/serverh.js'); //reload
-			if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, prophunt, 'main', ext_serverh.args);
+			cmd_m = require('./commands/serverh.js');
+			cmd_m.hourscmd_argsorganize(prophunt, args);
+			cmd_m.graphtypeselector(msg, require('./commands/serverh.js').args);
+			cmd_m = require('./commands/serverh.js'); //reload
+			if (cmd_m.errorcheck !== true) cmd_m.scrapGT(msg, prophunt, 'main', cmd_m.args);
 			break;
-		case 'pmch':
-		case 'puremch':
-		case 'minecrafth':
-			msg.channel.send({embed: { 
-				"description": "Gamertracker does not support player hours in Minecraft servers.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
-				}
-			}});
+		case 'vah':
+		case 'vanillah':
+			if (args[0] !== undefined)
+				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
+			exports.args = args;
+			cmd_m = require('./commands/serverh.js');
+			cmd_m.hourscmd_argsorganize(csgo5v5, args);
+			cmd_m.graphtypeselector(msg, require('./commands/serverh.js').args);
+			cmd_m = require('./commands/serverh.js'); //reload
+			if (cmd_m.errorcheck !== true) cmd_m.scrapGT(msg, csgo5v5, 'main', cmd_m.args);
 			break;
-			
+		case 'csh':
+		case 'csgoh':
+			msg.channel.send({ embed: { "description": "Gamertracker does not support player hours in CS:GO servers.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk3.png?1552863583494" } } });
+			break;
+
 
 		//Steaminfo command
 		case 'steaminfo':
-			var ext_steaminfo = require('./commands/steaminfo.js');
+			cmd_m = require('./commands/steaminfo.js');
 			args = args.join(' ');
-			ext_steaminfo.steaminfo(msg,args, "main");
+			cmd_m.steaminfo(msg, args, "main");
 			break;
 
-			
+
+		// Bug Report command
+		case 'bugreport':
+			cmd_m = require('./commands/pm_bug_report.js')
+			cmd_m.startBugReport(msg)
+			break;
+
+		// Suggestion command
+		case 'suggestion':
+			cmd_m = require('./commands/pm_suggestion.js')
+			cmd_m.startNewSuggestion(msg)
+			break;
+
 		/*
 			Test, automatic and configuration commands
 		*/
 		//Message test command
 		case 'hue':
-			var ext_hue = require('./commands/hue.js');
-			ext_hue.hue(msg);
+			cmd_m = require('./commands/hue.js');
+			cmd_m.hue(msg);
 			break;
 
 		case 'say':
-			if (msg.author !== "Skeke#2155") return
-			var say = require('./commands/say.js')
-			say.sendMessage(msg.channel, args)
+			if (msg.author.tag !== "Skeke#2155") return
+			cmd_m = require('./commands/say.js')
+			cmd_m.sendMessage(msg.channel, args)
 			break;
-		case 'test':
-			var test = require('./commands/Check2/Check2.js')
-			test.test();
+		/*case 'test':
+			cmd_m = require('./commands/Check2/Check2.js')
+			cmd_m.test();
 			break;
-			
+		*/
 
 		//Forums check commands
 		case 'check':
-			var ext_check = require('./commands/check.js');
-			ext_check.check(args, false);
+			cmd_m = require('./commands/check.js');
+			cmd_m.check(args, false);
 			break;
 		case 'checkbypass':
-			var ext_check = require('./commands/check.js');
-			ext_check.check(args, true);
+			if (msg.author.tag !== "Skeke#2155" && msg.author.tag !== 'SGStats#6003' && msg.author.tag != 'SGStats-test#5661')
+				return
+			cmd_m = require('./commands/check.js');
+			cmd_m.check(args, true);
 			break;
 
 
 		//Forums auto checking commands
 		case 'startauto': //Starts auto check
-			var ext_check = require('./commands/check.js');
+			cmd_m = require('./commands/check.js');
 			console.log('breaker: ' + breaker);
-			if (breaker === false) {	
-				interval = setInterval(function(){ext_check.check('auto', false)}, 600000); //60000 = 1min; 600000 = 10min;
+			if (!breaker) {
+				interval = setInterval(function () { cmd_m.check('auto', false) }, 600000); //60000 = 1min; 600000 = 10min;
 				breaker = true;
-				console.log('Auto checker started. breaker: ' + breaker +'\n');
-				if (msg.author.bot) { msg.delete(); return};
-				msg.channel.send({embed: { 
-					"description": "Forums auto checker is now running.", 
-					"color": 0x0000ff,	
-					"thumbnail": { 
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk8.png?1518561204876"
-					}
-				}});
+				console.log('Auto checker started. breaker: ' + breaker + '\n');
+				if (msg.author.bot) { msg.delete(); return };
+				msg.channel.send({ embed: { "description": "Forums auto checker is now running.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk8.png?1518561204876" } } });
 				console.log('Forums auto checker is now running.');
 			} else {
-				msg.channel.send({embed: { 
-					"description": "Forums auto checker is already running!", 
-					"color": 0x0000ff,	
-					"thumbnail": { 
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"
-					}
-				}});
+				msg.channel.send({ embed: { "description": "Forums auto checker is already running!", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898" } } });
 				console.log('Forums auto checker is already running!');
 			}
 			break;
 		case 'stopauto': //Stop auto check
-			var ext_check = require('./commands/check.js');
+			cmd_m = require('./commands/check.js');
 			console.log('breaker: ' + breaker);
 			if (breaker === true) {
 				clearInterval(interval);
 				breaker = false;
-				console.log('Auto checker stopped. breaker: ' + breaker +'\n');
-				msg.channel.send({embed: { 
-					"description": "Forums auto checker is now disabled.", 
-					"color": 0x0000ff,	
-					"thumbnail": { 
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk7.png?1518561202966"
-					}
-				}});
+				console.log('Auto checker stopped. breaker: ' + breaker + '\n');
+				msg.channel.send({ embed: { "description": "Forums auto checker is now disabled.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk7.png?1518561202966" } } });
 				console.log('Forums auto checker is now disabled.');
 			} else {
-				msg.channel.send({embed: { 
-					"description": "Forums auto checker is already disabled!", 
-					"color": 0x0000ff,	
-					"thumbnail": { 
-						"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"
-					}
-				}});
+				msg.channel.send({ embed: { "description": "Forums auto checker is already disabled!", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898" } } });
 				console.log('Forums auto checker is already disabled!');
-			}			
+			}
 			break;
 
 
 		//Prefix changer command
 		case 'prefix':
-			var ext_prefix = require('./commands/prefix_change.js');
-			ext_prefix.prefixChange(msg,args);
+			cmd_m = require('./commands/prefix_change.js');
+			ext_prefix.prefixChange(msg, args);
 			break;
 
 
 		//Unknown command
 		default:
-			msg.channel.send({embed: { 
-				"description": "'" + cmd + "' is not a known command.\nType ``" + prefix.prefix + "help`` for a list of commands.", 
-				"color": 0x0000ff,	
-				"thumbnail": { 
-					"url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
-				}
-			}});
+			msg.channel.send({ embed: { "description": "'" + cmd + "' is not a known command.\nType ``" + prefix.prefix + "help`` for a list of commands.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682" } } });
 			console.log('!! Invalid command !!');
 			console.log('----------\n');
 	}
@@ -389,7 +333,6 @@ exports.req_num = Math.floor(Math.random() * 9999999999999990);
 	Autoping (anti-sleep) for glitch.com
 */
 //require('./config/autoping.js').antiSleep();
-
 
 
 

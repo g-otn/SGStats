@@ -24,7 +24,7 @@ exports.help = function(msg,command) {
         "hue"
         ];
     commandlist = commandlist.join('\n');
-    notes_srv = "Servers: 'darkrp', 'deathrun', 'mcttt', 'prophunt' or 'puremc'";
+    notes_srv = "Servers: 'csgo', 'mcttt', 'prophunt' or 'vanilla'";
     notes_per = "Period: 'day', 'week' or 'month'";
     notes = " ";
     switch (command) {
@@ -32,7 +32,7 @@ exports.help = function(msg,command) {
             desc = "Shows info about a specific server";
             syntax = "<server>";
             notes = notes_srv;
-            ex = "mcttt\n" + prefix.prefix + "puremc\n" + prefix.prefix + "ph";
+            ex = "mcttt\n" + prefix.prefix + "prophunt\n" + prefix.prefix + "ph";
             thumb = thumbGT;
             footer = 'status.smithtainment.com';
             icon = 'https://cdn.discordapp.com/avatars/153550726793003008/08bb5ec777ab048d045ceca6254dac34.png?size=128';
@@ -76,7 +76,7 @@ exports.help = function(msg,command) {
         case 'stats':
             desc = "Shows a player stats in a specific SG server.";
             syntax = "stats <server> <player>";
-            notes = notes_srv.split("'puremc', ").join('');
+            notes = notes_srv.split("'mcttt', ").join('');
             ex = "stats mc Skeke\n" + prefix.prefix + "stats ph Skeke";
             thumb = thumbGT;
             footer = 'gametracker.com';

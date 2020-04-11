@@ -14,35 +14,27 @@ const options = {
 };
 
 //Server Addresses
-const darkrp = "192.223.24.186:27015"
-const deathrun = "70.42.74.160:27015"
+const csgo5v5 = '192.99.4.87:28791'
 const mcttt = "192.223.31.40:27015"
-const prophunt = "192.99.239.40:27015"
-const pure_mc = "206.221.183.139:25575" 
+const prophunt = "208.103.169.108:27024"
+const tvanilla = '173.26.48.4:27045'
 
 //A ID gamertracker generates and uses
-const darkrpid = "5052174";
-const mctttid = "5086005";
-const deathrunid = "5493690"
-const prophuntid = "5709398";
-const pure_mcid = "5865486";
+const csgo5v5id = '6003210'
+const mctttid = "5086005"
+const prophuntid = "5709398"
+const tvanillaid = '6002734'
 
 exports.onlineplayers = function(msg,server) {
     var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, /*finaltable,*/serverid, servername;
     errorcheck2 = false;
     switch (server) {
-        case 'rp':
-        case 'darkrp':
-            server = darkrp;
-            serverid = darkrpid;
-            servername = 'DarkRP';
+        case 'cs':
+        case 'csgo':
+            server = csgo5v5
+            serverid = csgo5v5id
+            servername = 'CS:GO 5v5'
             break;
-        case 'dr':
-        case 'deathrun':
-            server = deathrun
-            serverid = deathrunid
-            servername = 'Deathrun'
-            break
         case 'mc':
         case 'mcttt':
         case 'mcmd':
@@ -56,12 +48,11 @@ exports.onlineplayers = function(msg,server) {
             serverid = prophuntid;
             servername = 'PropHunt';
             break;
-        case 'pmc':
-        case 'puremc':
-        case 'minecraft':
-            server = pure_mc;
-            serverid = pure_mcid;
-            servername = 'Pure Vanilla Minecraft';
+        case 'va':
+        case 'vanilla':
+            server = tvanilla
+            serverid = tvanillaid
+            servername = 'True Vanilla TTT'
             break;
         default:
             errorcheck2 = true;
@@ -191,7 +182,7 @@ exports.onlineplayers = function(msg,server) {
                 break;
             default:
                 msg.channel.send({embed: { 
-                    "description": "'" + server + "' is not a known server. please use 'darkrp', 'deathrun', 'mcttt' or 'prophunt'.", 
+                    "description": "'" + server + "' is not a known server. please use 'csgo', 'mcttt', 'prophunt' or 'vanilla'.", 
                     "color": 0x0000ff,	
                     "thumbnail": { 
                         "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
