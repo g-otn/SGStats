@@ -130,8 +130,9 @@ exports.scrapGT = function(server_address, requesttype, args) {
                 var player = $('.table_lst').children().children().eq(1).children().children('a').text().trim();
                 scrapertarget = "https://www.gametracker.com/player/" + player + "/" + server_address + "/";
             } else { //If it can't access
+                playersearch = playersearch.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
                 msg.channel.send({embed: { 
-                    "description": "Player '" + args + "' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
+                    "description": "Player '[" + args + "]("+playersearch+")' doesn't play on this server, doesn't exist or has special characters on its name. HTTP Code "  + response.statusCode, 
                     "color": 0x0000ff,	
                     "thumbnail": { 
                         "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk2.png?1518561205095"
@@ -164,36 +165,51 @@ exports.scrapGT = function(server_address, requesttype, args) {
                         async function waitscrap() {
                             await sleep3(1500); //waits for scrap of raw link
                             //separate the scraped raw link and get the base64 username
-                            rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
-                            b64user = rawlink.trim().split('&host=').slice(0,1);
-                            console.log('Base64 Username: ' + b64user);
-                            var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + server_address + '&start=-' + graphtype + "&request=0" + requestnumber;
-                            if (requesttype == 'autoreq') {
-                                exports.output = finalimage; //checkdata[6]
-                                console.log('---End of serverh function');
-                            } else {
-                                //(finnally) send the image
-                                console.log('errorcheck: ' + errorcheck);
-                                console.log('Graph type: ' + graphtype);
-                                console.log('Image to send: ' + finalimage);
-                                //String cleaning (removes spaces and parethensis) and assembling
-                                scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
-                                scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
+                            if (rawlink !== undefined) {
+                                rawlink = rawlink.trim().split('nameb64=').slice(1,2).join('');
+                                b64user = rawlink.trim().split('&host=').slice(0,1);
+                                console.log('Base64 Username: ' + b64user);
+                                var finalimage = 'https://cache.gametracker.com/images/graphs/player_time.php?nameb64=' + b64user + '&host=' + server_address + '&start=-' + graphtype + "&request=0" + requestnumber;
+                                if (requesttype == 'autoreq') {
+                                    exports.output = finalimage; //checkdata[6]
+                                    console.log('---End of serverh function');
+                                } else {
+                                    //(finnally) send the image
+                                    console.log('errorcheck: ' + errorcheck);
+                                    console.log('Graph type: ' + graphtype);
+                                    console.log('Image to send: ' + finalimage);
+                                    //String cleaning (removes spaces and parethensis) and assembling
+                                    scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
+                                    scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
+                                    scrapertarget = scrapertarget.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
+                                    scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
+                                    playersearch = playersearch.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
+                                    //Sends the message
+                                    msg.channel.send({embed: {
+                                        "description": "Showing [" + player + "](" + scrapertarget + ")'s activity,\nfor players with similar names, click [here](" + playersearch + ").",
+                                        "color": 0xFFBF52,
+                                        "footer": {
+                                            "text": scanned + " via GT"
+                                        },
+                                        "image": {
+                                            "url": finalimage
+                                        }
+                                    }});
+                                    console.log('----------\n');
+                                }
+                            } else if (requesttype !== 'autoreq') {
                                 scrapertarget = scrapertarget.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
-                                scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
                                 playersearch = playersearch.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
-                                //Sends the message
                                 msg.channel.send({embed: {
-                                    "description": "Showing [" + player + "](" + scrapertarget + ")'s activity,\nfor players with similar names, click [here](" + playersearch + ").",
+                                    "description": "Couldn't gather [" + player + "](" + scrapertarget + ")'s activity graph because of special characters in name, use link for manual viewing.\nFor players with similar names, click [here](" + playersearch + ").",
                                     "color": 0xFFBF52,
                                     "footer": {
                                         "text": scanned + " via GT"
-                                    },
-                                    "image": {
-                                        "url": finalimage
                                     }
-                                }});
-                                console.log('----------\n');
+                                }});                                
+                            } else {
+                                exports.output = 'notfound';
+                                console.log('---End of serverh function (not get, special characters)');
                             }
                             //Cleans global variables (not reseted by functions)
                             errorcheck = false;

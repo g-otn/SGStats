@@ -72,7 +72,7 @@ bot.on("message", (msg) => {
 		console.log('Bot startup message found.\n');
 		//commands executed on start
 		//bot.channels.get("413088508819800064").send(prefix.prefix + 'startauto');
-		//msg.content = prefix.prefix + 'checkbypass 132';
+		//msg.content = prefix.prefix + 'checkbypass start';
 		//msg.content = prefix.prefix + 'checkbypass 59';
 		return; //Comment if a command above is executed, uncomment otherwise
 	}
@@ -291,6 +291,9 @@ bot.on("message", (msg) => {
 			Test, automatic and configuration commands
 		*/
 		//Test command
+		case 'test':
+			console.log(bot.channels);// find('client',.send('test');
+			break;
 		case 'hue':
 			var ext_hue = require('./commands/hue.js');
 			ext_hue.hue();
