@@ -22,9 +22,9 @@ exports.help = function(command) {
         , //idk why but without this it sends without the first value
         "online",
         "population",
-        "playerhours",
         "server",
         "serverh",
+        "stats",
         "steaminfo",
         "hue"
         ];
@@ -68,11 +68,11 @@ exports.help = function(command) {
             ex = "population vanilla month\n" + prefix.prefix + "population md week";
             thumb = thumbGT;
             break;
-        case 'playerhours':
-            desc = "Shows a player total hours in a specific SG server.";
-            syntax = "playerhours <server> <player>";
+        case 'stats':
+            desc = "Shows a player stats in a specific SG server.";
+            syntax = "stats <server> <player>";
             notes = notes_srv.split("'puremc', ").join('');
-            ex = "playerhours modded Skeke\n" + prefix.prefix + "playerhours va Skeke";
+            ex = "stats modded Skeke\n" + prefix.prefix + "stats va Skeke";
             thumb = thumbGT;
             break;
         case 'hue':

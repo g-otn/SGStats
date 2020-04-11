@@ -111,7 +111,7 @@ bot.on("message", (msg) => {
 	var ext_help = require('./commands/help.js');
 	var ext_hue = require('./commands/hue.js');
 	var ext_online = require('./commands/online.js');
-	var ext_playerhours = require('./commands/playerhours.js');
+	var ext_stats = require('./commands/stats.js');
 	var ext_population = require('./commands/population.js');
 	var ext_server_stats = require('./commands/server_stats.js');
 	var ext_serverh = require('./commands/serverh.js');
@@ -148,13 +148,13 @@ bot.on("message", (msg) => {
 			var ext_population = require('./commands/population.js');
 			ext_population.populationgraph(args[0], args[1]);
 			break;
-		//Playerhours command
-		case 'playerhours':
+		//stats command
+		case 'stats':
 			if (args[0] !== undefined) {
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
 			}
-			var ext_playerhours = require('./commands/playerhours.js');
-			ext_playerhours.playerhours(args);
+			var ext_stats = require('./commands/stats.js');
+			ext_stats.stats(args);
 			break;
 		//Server (stats) command
 		case 'server':

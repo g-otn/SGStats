@@ -17,7 +17,7 @@ const fs = require('fs');
 //Commands used by the command
 const ext_steaminfo = require('./steaminfo.js');
 const ext_serverh = require('./serverh.js');
-const ext_playerhours = require('./playerhours.js');
+const ext_stats = require('./stats.js');
 //Variables used by the command
 var breaker = require('../bot.js').breaker;
 //File path for repeated threads list
@@ -249,19 +249,22 @@ exports.check = async function(fid, checkbypass) {
                         //Checks if thread is recent (<1h) to avoid spamming when bot starts
                         if (postdate.includes('minute') === true || checkbypass === true) { //Change condition to "... == true" to work proprely
                             console.log('New recent thread found.');
-                            //Repeated thread file writer
-                            console.log('Old repeated threads list: ' + rep_th);
-                            var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join('') + "\"\n}"
-                            //File writer module
-                            var fs = require('fs');
-                            fs.writeFile(rep_path2, rep_th_file, function (err) {
-                                if (err) throw err;
-                                delete require.cache[require.resolve(rep_path)];
-                                rep_th = require(rep_path).repeated_th;
-                                console.log('Repeated threads list updated with: ' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join(''));
-                            });
-                            await sleep(500);
-                            console.log('Repeated threads from now: ' + rep_th);
+                            if (checkbypass === false) {
+                                //Repeated thread file writer
+                                console.log('Old repeated threads list: ' + rep_th);
+                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join('') + "\"\n}"
+                                //File writer module
+                                var fs = require('fs');
+                                fs.writeFile(rep_path2, rep_th_file, function (err) {
+                                    if (err) throw err;
+                                    delete require.cache[require.resolve(rep_path)];
+                                    rep_th = require(rep_path).repeated_th;
+                                    console.log('Repeated threads list updated with: ' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join(''));
+                                });
+                                await sleep(500);
+                                console.log('Repeated threads from now: ' + rep_th);
+                            }
+
                             //Doesn't look for the SteamID and other stuff if it's not needed                         
                             if (checkdata[0] == 'notneeded') {
                                 var thread_title = $('title').text().trim();
@@ -336,18 +339,18 @@ exports.check = async function(fid, checkbypass) {
                         out = require('./serverh.js').output;
                         checkdata.push(out); //checkdata 6
                         
-                        console.log('---Starting playerhours function');
-                        ext_playerhours.playerhours(null, 'autoreq', servertype[0], checkdata[1]);
-                        await sleep(5500); //This awaits for the playerhours function
-                        out = require('./playerhours.js').output;
+                        console.log('---Starting stats function');
+                        ext_stats.stats(null, 'autoreq', servertype[0], checkdata[1]);
+                        await sleep(5500); //This awaits for the stats function
+                        out = require('./stats.js').output;
                         checkdata.push(out.d1, out.d2, out.d3); //checkdata 7-9
 
                         checksender();
                     } else {
-                        console.log('---Starting playerhours function');
-                        ext_playerhours.playerhours(null, 'autoreq', servertype[0], checkdata[1]);
+                        console.log('---Starting stats function');
+                        ext_stats.stats(null, 'autoreq', servertype[0], checkdata[1]);
                         await sleep(5750);
-                        out = require('./playerhours.js').output;
+                        out = require('./stats.js').output;
                         checkdata[6] = 'not found'; //checkdata 6
                         checkdata.push(out.d1, out.d2, out.d3); //checkdata 7-9
 
@@ -386,7 +389,7 @@ function checksender(thread_title, text_preview) {
     }
     /*
         Channels
-        spam_spam_spam -> "429815221041758210" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
+        spam_spam_spam -> "448536720623796244" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
         test -> "403969093595693066"
     */
     const target = "403969093595693066";

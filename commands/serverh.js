@@ -176,12 +176,12 @@ exports.scrapGT = function(server_address, requesttype, args) {
                                 console.log('errorcheck: ' + errorcheck);
                                 console.log('Graph type: ' + graphtype);
                                 console.log('Image to send: ' + finalimage);
-                                //Fix to links that are broken when sent to discord if the player has space in its name
+                                //String cleaning (removes spaces and parethensis) and assembling
                                 scrapertarget = scrapertarget.split("https://www.gametracker.com/player/").slice(1,2).join();
                                 scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
-                                scrapertarget = scrapertarget.split(" ").join("%20");
+                                scrapertarget = scrapertarget.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
                                 scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
-                                playersearch = playersearch.split(" ").join("%20");
+                                playersearch = playersearch.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
                                 //Sends the message
                                 msg.channel.send({embed: {
                                     "description": "Showing [" + player + "](" + scrapertarget + ")'s activity,\nfor players with similar names, click [here](" + playersearch + ").",

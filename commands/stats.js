@@ -1,6 +1,6 @@
 /*
-    Command: playerhours
-    Function: Shows a player total hours in a specific SG server.
+    Command: stats
+    Function: Shows a player rank, hours, score and score/min in specific SG server.
     Author: Skeke#2155
 */
 //Scrap modules
@@ -27,13 +27,13 @@ const pure_mcid = "5865486";
 const starwarsid = "5493690";
 const vanillaid = "5052174";
 
-exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
+exports.stats = function(args, requesttype, checkserver, checkplayer) {
 
     //Update message parameters for this execution
     const msg = require('../bot.js').msg;
 
     var server, player, playername, searchlink, serverlink, noplayercheck, playerlink, servername;
-    var scanned, hours;
+    var scanned, rank, score, hours, score_min;
     var errorcheck = false;
     var errorcheck2 = false;
     if (requesttype !== 'autoreq') {
@@ -103,23 +103,49 @@ exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
                     if (noplayercheck !== 'No results found.') {
                         noplayercheck = false;
                         console.log('noplayercheck: ' + noplayercheck);
+                        rank = $('.table_lst').children().children().eq(1).children().eq(0).text().trim();
                         player = $('.table_lst').children().children().eq(1).children().children('a').text().trim();
+                        score = $('.table_lst').children().children().eq(1).children().eq(3).text().trim();
                         hours = $('.table_lst').children().children().eq(1).children().eq(4).text().split('.').slice(0,1).join().trim();
-                        console.log('player: ' + player);
-                        console.log('hours: ' + hours);
+                        score_min = $('.table_lst').children().children().eq(1).children().eq(5).text().trim();
+                        console.log('rank:', rank, 'player:', player, 'score:', score, 'hours:', hours, 'score/min:', score_min);
                         if (requesttype !== 'autoreq') {
-                            //If the player name has spaces
+                            //String cleaning (removes spaces and parethensis) and assembling
                             playername = player;
-                            player = player.split(" ").join("%20");
+                            player = player.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
                             playerlink = "https://www.gametracker.com/player/" + player + "/" + server + "/";
-                            searchlink = searchlink.split(" ").join("%20");
+                            searchlink = searchlink.split(" ").join("%20").split("(").join("%28").split(")").join("%29");
                             //Sends the message
                             msg.channel.send({embed: {
-                                "description": "[" + playername + "](" + playerlink + ")'s hours on [" + servername + "](" + serverlink + "): **" + hours + "**\nFor players with similar names, click [here](" + searchlink + ").",
+                                "title": playername + "'s stats on " + servername,
+                                "url": playerlink,
+                                "description": "For players with similar names, click [here](" + searchlink + ").",
                                 "color": 0xFFBF52,
                                 "footer": {
                                     "text": scanned + " via GT"
                                 },
+                                "fields": [
+                                    {
+                                        "name": "Rank",
+                                        "value": rank,
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "Score",
+                                        "value": score,
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "Hours",
+                                        "value": hours,
+                                        "inline": true
+                                    },
+                                    {
+                                        "name": "Score/Min",
+                                        "value": score_min,
+                                        "inline": true
+                                    }
+                                ]
                             }});
                             console.log('----------\n');
                         } else {
@@ -131,7 +157,7 @@ exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
                                 'd2': player, //checkdata[8]
                                 'd3': searchlink //checkdata[9]
                             }
-                            console.log('---End of playerhours function');
+                            console.log('---End of stats function');
                         }
                     } else {
                         if (requesttype !== 'autoreq') {
@@ -148,7 +174,7 @@ exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
                             exports.output = {
                                 'd1': 'not found\nPlayer not found in GT!'
                             }
-                            console.log('---End of playerhours function');
+                            console.log('---End of stats function');
                         }
                     }
                 } else {
@@ -186,7 +212,7 @@ exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
                 case "":
                 case " ":
                     msg.channel.send({embed: { 
-                        "description": "You have to select a server! Type ``!!help playerhours`` for more information.", 
+                        "description": "You have to select a server! Type ``!!help stats`` for more information.", 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
@@ -205,7 +231,7 @@ exports.playerhours = function(args, requesttype, checkserver, checkplayer) {
             console.log('!! Info not sent because of wrong/missing server name !!');
         } else {
             msg.channel.send({embed: { 
-                "description": "You have to type a player name! Type ``!!help playerhours`` for more information.", 
+                "description": "You have to type a player name! Type ``!!help stats`` for more information.", 
                 "color": 0x0000ff,	
                 "thumbnail": { 
                     "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"
