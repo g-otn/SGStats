@@ -1,16 +1,28 @@
-//Auto ping so Glitch doesn't sleep
-const http = require('http');
+const request = require("request");
 const express = require('express');
 const app = express();
 
+app.get("/", (request, response) => {
+  //console.log(Date(Date.now()) + " Ping received");
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
 
-exports.autopingfunction = function(){
-    app.get("/", (request, response) => {
-      console.log(Date(Date.now()) + " Ping Received");
-      response.sendStatus(200);
-    });
-    app.listen(process.env.PORT);
-    setInterval(() => {
-      http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-    }, 280000);
+const url = ['https://sgstats.glitch.me/','https://bot-ping-machine.glitch.me/'];
+var which = 0;
+
+function ping() {
+  request.get(url[which], (error, response, body) => {
+    //console.log('Pinged ' + url[which]);
+  });
+  which++;
+  if (which > 1) {
+    which = 0;
   }
+}
+ping();
+
+exports.autopingfunction = function() {
+  var repeat = setInterval(ping,60000);
+  console.log('Auto ping started.');
+}

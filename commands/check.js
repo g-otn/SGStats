@@ -392,7 +392,7 @@ function checksender(thread_title, text_preview) {
         spam_spam_spam -> "448536720623796244" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
         test -> "403969093595693066"
     */
-    const target = "403969093595693066";
+    const target = "448536720623796244";
     //If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')');

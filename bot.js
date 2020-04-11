@@ -71,10 +71,10 @@ bot.on("message", (msg) => {
 	if (msg.content.includes(botinfo.name + ' has started.') === true && msg.author.bot) {
 		console.log('Bot startup message found.\n');
 		//commands executed on start
-		//bot.channels.get("413088508819800064").send(prefix.prefix + 'startauto');
-		//msg.content = prefix.prefix + 'checkbypass start';
+		bot.channels.get("413088508819800064").send(prefix.prefix + 'startauto');
+		msg.content = prefix.prefix + 'check start';
 		//msg.content = prefix.prefix + 'checkbypass 59';
-		return; //Comment if a command above is executed, uncomment otherwise
+		//return; //Comment if a command above is executed, uncomment otherwise
 	}
 
     //Log in the console about the command
@@ -291,9 +291,6 @@ bot.on("message", (msg) => {
 			Test, automatic and configuration commands
 		*/
 		//Test command
-		case 'test':
-			console.log(bot.channels);// find('client',.send('test');
-			break;
 		case 'hue':
 			var ext_hue = require('./commands/hue.js');
 			ext_hue.hue();
@@ -410,15 +407,14 @@ exports.req_num = Math.floor(Math.random() * 9999999999999990);
 /*
 	Autoping (anti-sleep) for glitch.com
 */
-/*
 const autoping = require('./config/autoping.js');
 autoping.autopingfunction();
-*/
+
 
 
 
 /*
 	Bot login options (console and glitch.com)
 */
-//bot.login(process.env.TOKEN);
-bot.login(require('./config/token.json').token);
+bot.login(process.env.TOKEN);
+//bot.login(require('./config/token.json').token);

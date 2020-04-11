@@ -39,6 +39,7 @@ exports.steaminfo = function(input, requesttype)  {
                     name = $('title').text();
                     name = name.split('(').slice(1,2).join();
                     name = name.split(')').slice(0,1).join();
+                    //if (name.indexOf(' ') > -1) { name = name.split(' ').join('%20');}
                     console.log('Name: ' + name);
                     //Gathers the steam profile link
                     profilelink = $('code').children('a').text().trim().split('http://steamcommunity.com/profiles/').slice(1,2).join();
@@ -92,9 +93,6 @@ exports.steaminfo = function(input, requesttype)  {
                         //Again I need to put this inside otherwise it tries to send the message before the request above finishes
                         switch (requesttype) {
                             case 'main':
-                                //String cleaning (removes space and parenthesis)
-                                
-                                //Sends the message
                                 msg.channel.send({embed: {
                                     "description": "'"+input+"' info: \n\nName: **"+name+"** ("+customID+")\nProfile: ["+profilestate+"]("+profilelink+")\nSteamID: `"+steamid+"`\nSteamID64: `"+steamid64+"`\nGmod hours: "+gmodh+" [(check)]("+gameslist+")",
                                     "color": 0x293956,
@@ -154,7 +152,7 @@ exports.steaminfo = function(input, requesttype)  {
                     console.log('!! Steam info not sent because of website error !!');
                     console.log('----------\n');
                 } else { 
-                    console.log('steaminfo command could not access the website');  
+                    console.log('steaminfo command could not access the website');
                 }
             }
         });
