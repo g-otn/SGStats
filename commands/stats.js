@@ -14,7 +14,7 @@ const options = {
 //Server Addresses
 const anime = "70.42.74.129:27015";
 const mcttt = "192.223.31.40:27015";
-const modded = "192.223.24.186:27015";
+const deathrun = "70.42.74.160:27015"
 const prophunt = "192.99.239.40:27015";
 
 exports.stats = async function(msg, args, requesttype, checkserver, checkplayer) {
@@ -35,17 +35,16 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
                 server = anime;
                 servername = 'Anime TTT';
                 break;
+            case 'dr':
+            case 'deathrun':
+                server = deathrun
+                servername = 'Deathrun'
+                break
             case 'mc':
             case 'mcttt':
             case 'mcmd':
                 server = mcttt;
                 servername = 'MC TTT';
-                break;
-            case 'md':
-            case 'modded':
-            case 'mdttt':
-                server = modded;
-                servername = 'Modded TTT';
                 break;
             case 'pmc':
             case 'puremc':

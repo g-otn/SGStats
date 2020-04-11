@@ -116,8 +116,6 @@ exports.steaminfo = async function(msg, input, requesttype)  {
                                 };
                                 console.log('---End of steaminfo function');
                                 break;
-                            default:
-                                console.log('Unknown request type (steaminfo function): ' + requesttype);
                         }
                     });
                 } else {
@@ -132,7 +130,14 @@ exports.steaminfo = async function(msg, input, requesttype)  {
                         console.log('!! User not found !!');
                         console.log('----------\n');
                     } else { 
-                        console.log('steaminfo command could not find the user');
+                        console.log('steaminfo command could not find the user');                                
+                        exports.output = {
+                            'd1': name, //checkdata[1]
+                            'd2': profilelink, //checkdata[2]
+                            'd3': profileicon, //checkdata[3]
+                            'd4': gmodh, //checkdata[4]
+                            'd5': profilestate //checkdata[5]
+                        }
                     }
 
                 }
@@ -149,7 +154,14 @@ exports.steaminfo = async function(msg, input, requesttype)  {
                     console.log('!! Steam info not sent because of website error !!');
                     console.log('----------\n');
                 } else { 
-                    console.log('steaminfo command could not access the website');
+                    console.log('steaminfo command could not access the website');                                
+                    exports.output = {
+                        'd1': name, //checkdata[1]
+                        'd2': profilelink, //checkdata[2]
+                        'd3': profileicon, //checkdata[3]
+                        'd4': gmodh, //checkdata[4]
+                        'd5': profilestate //checkdata[5]
+                    }
                 }
             }
         });

@@ -93,7 +93,7 @@ const sectionmention = [
 ];
 exports.check = async function(fid, checkbypass) {
     checkdata = [];
-    console.log('time bypass: ' + checkbypass);
+    //console.log('time bypass: ' + checkbypass);
     //Checks for manual test (with fid)
     var i;
     var fidcheck = false;
@@ -105,33 +105,34 @@ exports.check = async function(fid, checkbypass) {
         if (fid == sectionlist[i]) {
             fidcheck = true;
             forbreaker = true;
-            console.log('fidcheck: ' + fidcheck);
-            console.log('forbreaker: ' + forbreaker);
+            //console.log('fidcheck: ' + fidcheck);
+            //console.log('forbreaker: ' + forbreaker);
         }
     }
     //loop for each forums section
     for (selector = 0; selector < sectionlist.length; selector++) {
-        console.log("==Forums search #" + (selector+1) + ' | fid: ' + fid + ' | bypass: ' + checkbypass);
+        //console.log("==Forums search #" + (selector+1) + ' | fid: ' + fid + ' | bypass: ' + checkbypass);
         //condition below is function to select a specific section and set vars for testing
         if (fidcheck === true) { 
-            seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + fid;
+            seclink = "http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=" + fid;
             for (i = 0; i < sectionlist.length; i++) { 
                 if (fid == sectionlist[i]) {
                     selector = i;
                 }
             }
         } else {
-            seclink = "http://forums.smithtainment.com/forumdisplay.php?fid=" + sectionlist[selector];
+            seclink = "http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=" + sectionlist[selector];
         }
-        console.log('Section #' + selector + ' ID: ' + sectionlist[selector]);
-        console.log('Type: ' + sectiontype[selector]);
-        console.log('From: ' + sectionfrom[selector]);
+        //console.log('Section #' + selector + ' ID: ' + sectionlist[selector]);
+        //console.log('Type: ' + sectiontype[selector]);
+        //console.log('From: ' + sectionfrom[selector]);
         //console.log('Forum link: ' + seclink);
         var poststeamid;
         request(seclink, options, function(error, response, html) {
             var $ = cheerio.load(html); 
             //Selects the post info from the forums section. eq(2) for first thread, eq(8) for second
             var scrapRoot = $('.forumdisplay_regular').eq(2).children();
+            //console.log(scrapRoot.eq(0))
             if (sectiontype[selector] !== 'Bug Report') {
                 //Any thread
                 postname = scrapRoot.children('span').children('span').eq(0).children('a').text();
@@ -145,18 +146,18 @@ exports.check = async function(fid, checkbypass) {
                     : scrapRoot.children('span').children('span').eq(0).attr('id');
                 postauthor = scrapRoot.children('div').children('a').text();
             }
-            console.log("Thread name: " + postname);
-            console.log("Thread link: " + postlink);
-            console.log("Thread author: " + postauthor);
+            //console.log("Thread name: " + postname);
+            //console.log("Thread link: " + postlink);
+            //console.log("Thread author: " + postauthor);
             //If there is a post
-            if (postname !==  undefined && postlink !== undefined && postauthor !== undefined) {
+            if (postname !== undefined && postlink !== undefined && postauthor !== undefined) {
                 postname = postname.trim();
                 postlink = postlink.trim().split('tid_').join("").trim();
                 postauthor = postauthor.trim();
-                console.log('Repeated Threads: ' + require(rep_path).repeated_th);
+                //console.log('Repeated Threads: ' + require(rep_path).repeated_th);
             } else {
-                console.log('No thread found.');
-                console.log('==End of forums search #' + (selector+1) + '\n');
+                //console.log('No thread found. name:', postname, 'author:', postauthor);
+                //console.log('==End of forums search #' + (selector+1) + '\n');
             }
         });
         delete require.cache[require.resolve(rep_path)];
@@ -166,7 +167,7 @@ exports.check = async function(fid, checkbypass) {
         if (postname !== undefined && postlink !== undefined && postauthor !== undefined) {
             //Checks if thread has already been seen or if there is a thread
             if (rep_th.includes(postlink) === false || checkbypass === true) { 
-                console.log('Thread found.');
+                //console.log('Thread found.');
                 //Sets the thread type
                 checkdata[0] = 'notappl'; //replaces undefined
                 servertype[1] = 'Server'; //replaces undefined
@@ -212,19 +213,19 @@ exports.check = async function(fid, checkbypass) {
                     case '300&sortby=lastpost&order=desc':
                         checkdata[0] = 'notneeded'; //gets sent with thread preview
                 }
-                console.log('servertype: '+servertype);
+                //console.log('servertype: '+servertype);
                 //checkdata[0] tells if it's an application or if info is found to send
-                console.log('checkdata[0]: ' + checkdata[0]);
-                postlink = "http://forums.smithtainment.com/showthread.php?tid=" + postlink;
-                console.log("Thread link: " + postlink);
+                //console.log('checkdata[0]: ' + checkdata[0]);
+                postlink = "http://forums.guccittt.site.nfoservers.com/showthread.php?tid=" + postlink;
+                //console.log("Thread link: " + postlink);
                 //Goes to the post
                 request(postlink, options, function(error, response, html) {
                     var $ = cheerio.load(html);
                     //Scraps date and SteamID if the author wrote it
                     postdate = $('.post_date').first().text().trim();
-                    console.log('Post date: ' + postdate);
+                    //console.log('Post date: ' + postdate);
                     async function reqwait() {
-                        console.log('waiting for scrap of post date...');
+                        //console.log('waiting for scrap of post date...');
                         await sleep2(2000); //Waits for the request to finish
                         //Checks if thread is recent (<1h) to avoid spamming when bot starts
                         if (postdate.includes('minute') === true || checkbypass === true) { //Change condition to "... == true" to work proprely
@@ -232,12 +233,12 @@ exports.check = async function(fid, checkbypass) {
                             if (checkbypass === false) {
                                 //Repeated thread file writer
                                 console.log('Old repeated threads list: ' + rep_th);
-                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join('') + "\"\n}";
+                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=').join('') + "\"\n}";
                                 fs.writeFile(rep_path2, rep_th_file, function (err) {
                                     if (err) throw err;
                                     delete require.cache[require.resolve(rep_path)];
                                     rep_th = require(rep_path).repeated_th;
-                                    console.log('Repeated threads list updated with: ' + postlink.split('http://forums.smithtainment.com/showthread.php?tid=').join(''));
+                                    console.log('Repeated threads list updated with: ' + postlink.split('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=').join(''));
                                 });
                                 await sleep(500);
                                 console.log('Repeated threads from now: ' + rep_th);
@@ -288,15 +289,15 @@ exports.check = async function(fid, checkbypass) {
                                 checksender();
                             }
                         } else {
-                            console.log('New thread found, but not recent.');
-                            console.log('==End of forums search #' + (selector+1) + '\n');
+                            //console.log('New thread found, but not recent.');
+                            //console.log('==End of forums search #' + (selector+1) + '\n');
                         }
                     }
                     reqwait(); //Calls next function (that continues)
                 });
             } else {
-                console.log('Thread found, but not new.');
-                console.log('==End of forums search #' + (selector+1) + '\n');
+                //console.log('Thread found, but not new.');
+                //console.log('==End of forums search #' + (selector+1) + '\n');
             }
             //This awaits for the confirmation of a new recent post or not
             await sleep(4500);
@@ -345,7 +346,7 @@ exports.check = async function(fid, checkbypass) {
                 }
             } else { await sleep(500);}
         }
-        if (forbreaker === true) {
+        if (forbreaker) {
             checkbypass = false;
             break;
         }
@@ -354,7 +355,7 @@ exports.check = async function(fid, checkbypass) {
     await sleep(500);
     checkdata = [];
     checkbypass = false;
-    console.log('===End of checking. fid: ' + fid + '\n');
+    //console.log('===End of checking. fid: ' + fid + '\n');
 }
 
 
@@ -367,6 +368,8 @@ function checksender(thread_title, text_preview) {
     for (var i=1;i<10;i++) { //Transforms undefined into 'not found' to stop some erros
         if (checkdata[i] === undefined) { checkdata[i] = 'not found';}
     }
+    postlink = postlink.replace("guccittt.site.nfoservers", "smithtainment")
+    seclink = seclink.replace("guccittt.site.nfoservers", "smithtainment")
     if (text_preview === undefined) { //If data is needed, show in console what will be sent
         console.log("Data recevied:\nservertype:" + servertype + "\n1 name: " + checkdata[1] + '\n2 profile link: ' + checkdata[2] + '\n3 profile image: ' + checkdata[3].substring(0, 35) + '...\n4 gmod hours: '+ checkdata[4] +'\n5 profile state: ' + checkdata[5] + '\n6 graph: ' + checkdata[6] + '\n7 gt hours: ' + checkdata[7] + '\n8 gt name: ' + checkdata[8] + '\n9 gt link: ' + checkdata[9]);       
     } else { //If it's not, show the text preview, which threads that don't need data have
@@ -377,7 +380,7 @@ function checksender(thread_title, text_preview) {
         bot-chat -> "491775954864046080" (REMINDER: TEST BOT IS NOT IN THE STAFF DISCORD)
         test -> "496868812478742529"
     */
-    const target = "496868812478742529";
+    const target = "491775954864046080";
     //If spam_spam_spam is remade and channel ID changes, it'll search by name (fix ID asap)
     if (bot.channels.get(target) === undefined) {
         bot.channels.get("413088508819800064").send('target not found! ('+target+')');

@@ -25,9 +25,8 @@
 	//Server Addresses
 	const anime = "70.42.74.129:27015";
 	const mcttt = "192.223.31.40:27015";
-	const modded = "192.223.24.186:27015";
 	const prophunt = "192.99.239.40:27015";
-	const pure_mc = "206.221.183.139:25575";
+	const deathrun = "70.42.74.160:27015";
 
 
 	/*
@@ -69,8 +68,8 @@
 		if (msg.content.includes(botinfo.name + ' has started.') === true && msg.author.bot) {
 			//commands executed on start
 			bot.channels.get("468491525379194880").send(prefix.prefix + 'startauto');
-			//msg.content = prefix.prefix + 'checkbypass start';
-			msg.content = prefix.prefix + 'checkbypass start';
+			msg.content = prefix.prefix + 'check start';
+			//msg.content = prefix.prefix + 'checkbypass 303';
 			//return; //Comment if a command above is executed, uncomment otherwise
 		}
 
@@ -161,17 +160,16 @@
 				var ext_server_stats = require('./commands/server_stats.js');
 				ext_server_stats.server_stats(msg, 'attt', '20', 'Anime TTT');
 				break;
+			case 'dr':
+			case 'deathrun':
+				var ext_server_stats = require('./commands/server_stats.js');
+				ext_server_stats.server_stats(msg, 'murder', '23', 'Deathrun')
+				break;
 			case 'mc':
 			case 'mcttt':
 			case 'mcmd':
 				var ext_server_stats = require('./commands/server_stats.js');
 				ext_server_stats.server_stats(msg, 'mcttt', '19', 'MC TTT');
-				break;
-			case 'md':
-			case 'modded':
-			case 'moddedttt':
-				var ext_server_stats = require('./commands/server_stats.js');
-				ext_server_stats.server_stats(msg, 'vttt', '22', 'Modded TTT');
 				break;
 			case 'pmc':
 			case 'puremc':
@@ -209,6 +207,19 @@
 				ext_serverh = require('./commands/serverh.js'); //reload
 				if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, anime, 'main', ext_serverh.args);
 				break;
+			case 'drh':
+			case 'deathrunh':
+			case 'runh':
+				if (args[0] !== undefined) {
+					args[0] = args[0].toLowerCase(); //Removes args case sensitivity
+				}
+				exports.args = args;
+				var ext_serverh = require('./commands/serverh.js');
+				ext_serverh.hourscmd_argsorganize(deathrun, args);
+				ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
+				ext_serverh = require('./commands/serverh.js'); //reload
+				if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, deathrun, 'main', ext_serverh.args);
+				break;
 			case 'mch':
 			case 'mcttth':
 			case 'mcmdh':
@@ -221,19 +232,6 @@
 				ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
 				ext_serverh = require('./commands/serverh.js'); //reload
 				if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, mcttt, 'main', ext_serverh.args); 
-				break;
-			case 'mdh':
-			case 'moddedh':
-			case 'mdttth':
-				if (args[0] !== undefined) {
-					args[0] = args[0].toLowerCase(); //Removes args case sensitivity
-				}
-				exports.args = args;
-				var ext_serverh = require('./commands/serverh.js');
-				ext_serverh.hourscmd_argsorganize(modded, args);
-				ext_serverh.graphtypeselector(msg, require('./commands/serverh.js').args);
-				ext_serverh = require('./commands/serverh.js'); //reload
-				if (ext_serverh.errorcheck !== true) ext_serverh.scrapGT(msg, modded, 'main', ext_serverh.args);
 				break;
 			case 'phh':
 			case 'prophunth':
@@ -277,6 +275,16 @@
 				ext_hue.hue(msg);
 				break;
 
+			case 'say':
+				if (msg.author !== "Skeke#2155") return
+				var say = require('./commands/say.js')
+				say.sendMessage(msg.channel, args)
+				break;
+			case 'test':
+				var test = require('./commands/Check2/Check2.js')
+				test.test();
+				break;
+				
 
 			//Forums check commands
 			case 'check':
@@ -367,6 +375,7 @@
 		args = '';
 		cmd = '';
 	});
+
 	var interval;
 	var breaker = false; //Prevents autocheck to run twice at the same time
 
@@ -379,8 +388,7 @@
 	/*
 		Autoping (anti-sleep) for glitch.com
 	*/
-	//const autoping = require('./config/autoping.js');
-	//autoping.autopingfunction();
+	require('./config/autoping.js').antiSleep();
 
 
 
@@ -388,5 +396,5 @@
 	/*
 		Bot login options (console and glitch.com)
 	*/
-	//bot.login(process.env.TOKEN);
-	bot.login(require('./config/token.json').token);
+	bot.login(process.env.TOKEN);
+	//bot.login(require('./config/token.json').token);

@@ -15,15 +15,15 @@ const options = {
 
 //Server Addresses
 const anime = "70.42.74.129:27015";
+const deathrun = "70.42.74.160:27015"
 const mcttt = "192.223.31.40:27015";
-const modded = "192.223.24.186:27015";
 const prophunt = "192.99.239.40:27015";
 const pure_mc = "206.221.183.139:25575"; 
 
 //A ID gamertracker generates and uses
 const animeid = "5704089";
+const deathrunid = "5493690"
 const mctttid = "5086005";
-const moddedid = "5052174";
 const prophuntid = "5709398";
 const pure_mcid = "5865486";
 
@@ -37,18 +37,18 @@ exports.onlineplayers = function(msg,server) {
             serverid = animeid;
             servername = 'Anime TTT';
             break;
+        case 'dr':
+        case 'deathrun':
+            server = deathrun
+            serverid = deathrunid
+            servername = 'Deathrun'
+            break
         case 'mc':
         case 'mcttt':
         case 'mcmd':
             server = mcttt;
             serverid = mctttid;
             servername = 'MC TTT';
-            break;
-        case 'md':
-        case 'modded':
-            server = modded;
-            serverid = moddedid;
-            servername = 'Modded TTT';
             break;
         case 'ph':
         case 'prophunt':
