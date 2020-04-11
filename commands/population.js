@@ -14,14 +14,14 @@ const options = {
 };
 
 //Server Addresses
-const anime = "70.42.74.129:27015";
-const mcttt = "192.223.31.40:27015";
+const darkrp = "192.223.24.186:27015"
 const deathrun = "70.42.74.160:27015"
-const prophunt = "192.99.239.40:27015";
+const mcttt = "192.223.31.40:27015"
+const prophunt = "192.99.239.40:27015"
 const pure_mc = "206.221.183.139:25575"; 
 
 //A ID gamertracker generates and uses
-const animeid = "5704089";
+const darkrpid = "5052174";
 const mctttid = "5086005";
 const deathrunid = "5493690"
 const prophuntid = "5709398";
@@ -34,11 +34,11 @@ exports.populationgraph = function(msg,server, graphtype) {
     var errorcheck = false;
     console.log('Server: ' + server);
     switch (server) {
-        case 'an':
-        case 'anime':
-            server = anime;
-            serverid = animeid;
-            servername = "Anime TTT";
+        case 'rp':
+        case 'darkrp':
+            server = darkrp;
+            serverid = darkrpid;
+            servername = "DarkRP";
             break;
         case 'dr':
         case 'deathrun':
@@ -163,7 +163,7 @@ exports.populationgraph = function(msg,server, graphtype) {
                 break;
             default:
                 msg.channel.send({embed: { 
-                    "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt' or 'vanilla'.", 
+                    "description": "'" + server + "' is not a known server. Please use 'darkrp', 'deathrun', 'mcttt' or 'prophunt'.", 
                     "color": 0x0000ff,	
                     "thumbnail": { 
                         "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"

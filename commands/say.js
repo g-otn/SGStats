@@ -8,7 +8,12 @@ const bot = require('../bot.js').bot //sends message
 async function sendMessage(senderChannel, args) {
     var channel = args[0]
     var text = args.slice(1)
-    
+    console.log("senderChannel: " + senderChannel)
+    console.log("args: " + args)
+    console.log("channel: " + channel)
+    console.log("text: " + text)
+
+    // No channel selected
     if (text == "" || text == undefined) {
         senderChannel = senderChannel.toString().replace().replace("<#", "").replace(">", "")
         bot.channels.get(senderChannel).send(channel)

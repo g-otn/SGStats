@@ -12,10 +12,10 @@ const options = {
 };
 
 //Server Addresses
-const anime = "70.42.74.129:27015";
-const mcttt = "192.223.31.40:27015";
+const darkrp = "192.223.24.186:27015"
 const deathrun = "70.42.74.160:27015"
-const prophunt = "192.99.239.40:27015";
+const mcttt = "192.223.31.40:27015"
+const prophunt = "192.99.239.40:27015"
 
 exports.stats = async function(msg, args, requesttype, checkserver, checkplayer) {
     var server, player, playername, searchlink, serverlink, noplayercheck, playerlink, servername;
@@ -30,10 +30,10 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
         console.log('Server: ' + server);
         console.log('Player: ' + player);
         switch (server) {
-            case 'an':
-            case 'anime':
-                server = anime;
-                servername = 'Anime TTT';
+            case 'rp':
+            case 'darkrp':
+                server = darkrp;
+                servername = 'DarkRP';
                 break;
             case 'dr':
             case 'deathrun':
@@ -203,7 +203,7 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
                     break;
                 default:
                     msg.channel.send({embed: { 
-                        "description": "'" + server + "' is not a known server. Please use 'anime', 'modded', 'prophunt' or 'vanilla'.", 
+                        "description": "'" + server + "' is not a known server. Please use 'darkrp', 'deathrun', 'mcttt' or 'prophunt'.", 
                         "color": 0x0000ff,	
                         "thumbnail": { 
                             "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"
