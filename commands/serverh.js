@@ -181,6 +181,7 @@ exports.scrapGT = function(server_address, requesttype, args) {
                                 scrapertarget = scrapertarget.split("/" + server_address + "/").slice(0,1).join();
                                 scrapertarget = scrapertarget.split(" ").join("%20");
                                 scrapertarget = "https://www.gametracker.com/player/" + scrapertarget + "/" + server_address + "/";
+                                playersearch = playersearch.split(" ").join("%20");
                                 //Sends the message
                                 msg.channel.send({embed: {
                                     "description": "Showing [" + player + "](" + scrapertarget + ")'s activity,\nfor players with similar names, click [here](" + playersearch + ").",
