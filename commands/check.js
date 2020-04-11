@@ -130,7 +130,7 @@ exports.check = async function(fid, checkbypass) {
             // If there is a post
             if (postname && postlink && postauthor) {
                 postname = postname.trim()
-                postlink = postlink.replace('tid_', '').trim()
+                postlink = postlink.trim().split('tid_').join("").trim()
                 postauthor = postauthor.trim()
                 console.log('Repeated Threads: ' + require(rep_path).repeated_th)
             } else {
@@ -150,12 +150,6 @@ exports.check = async function(fid, checkbypass) {
                 checkdata[0] = 'notappl' // replaces undefined
                 servertype[1] = 'Server' // replaces undefined
                 switch (sectionlist[selector]) {
-                    case 130:
-                        checkdata[0] = 'appl'
-                    case 338:
-                    case 133:
-                        servertype = [csgo5v5, 'CS:GO 5v5']
-                        break
                     // MC TTT
                     case 48: 
                         checkdata[0] = 'appl'
@@ -174,7 +168,6 @@ exports.check = async function(fid, checkbypass) {
                     case 272:
                         servertype = [prophunt, 'PropHunt']
                         break
-                    // True Vanilla TTT
                     case 311:
                         checkdata[0] = 'appl'
                         break
@@ -213,12 +206,12 @@ exports.check = async function(fid, checkbypass) {
                             if (checkbypass === false) {
                                 // Repeated thread file writer
                                 console.log('Old repeated threads list: ' + rep_th)
-                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.replace('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=', '') + "\"\n}"
+                                var rep_th_file = "{\n	\"repeated_th\": \"" + rep_th + ',' + postlink.split('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=').join('') + "\"\n}"
                                 fs.writeFile(rep_path2, rep_th_file, function (err) {
                                     if (err) throw err
                                     delete require.cache[require.resolve(rep_path)]
                                     rep_th = require(rep_path).repeated_th
-                                    console.log('Repeated threads list updated with: ' + postlink.replace('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=', ''))
+                                    console.log('Repeated threads list updated with: ' + postlink.split('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=').join(''))
                                 })
                                 await sleep(500)
                                 console.log('Repeated threads from now: ' + rep_th)

@@ -12,6 +12,7 @@ const options = {
 };
 
 //Server Addresses
+const animeph = '209.126.103.165:27045'
 const mcttt = "192.223.31.40:27015"
 const prophunt = "208.103.169.108:27024"
 const tvanilla = '173.26.48.4:27045'
@@ -28,7 +29,13 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
         player = args.split(server).join(' ').trim(); 
         console.log('Server: ' + server);
         console.log('Player: ' + player);
-        switch (server) {
+        switch (server) {        
+            case 'an':
+            case 'anime':
+            case 'animeph':
+                server = animeph
+                servername = 'Anime Prophunt'
+                break
             case 'mc':
             case 'mcttt':
             case 'mcmd':
@@ -48,7 +55,7 @@ exports.stats = async function(msg, args, requesttype, checkserver, checkplayer)
             case 'va':
             case 'vanilla':
                 server = tvanilla
-                sservername = 'True Vanilla TTT'
+                servername = 'True Vanilla TTT'
                 break;
             default:
                 errorcheck = true;

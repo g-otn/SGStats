@@ -14,12 +14,14 @@ const options = {
 };
 
 //Server Addresses
+const animeph = '209.126.103.165:27045'
 const csgo5v5 = '192.99.4.87:28791'
 const mcttt = "192.223.31.40:27015"
 const prophunt = "208.103.169.108:27024"
 const tvanilla = '173.26.48.4:27045'
 
 //A ID gamertracker generates and uses
+const animephid = '6035198'
 const csgo5v5id = '6003210'
 const mctttid = "5086005"
 const prophuntid = "5709398"
@@ -29,6 +31,13 @@ exports.onlineplayers = function(msg,server) {
     var errorcheck2, gtserverlink, tablecount, noplayercheck, scrapedplayer, scrapedtime, playerlist, timelist, /*finaltable,*/serverid, servername;
     errorcheck2 = false;
     switch (server) {
+        case 'an':
+        case 'anime':
+        case 'animeph':
+            server = animeph
+            serverid = animephid
+            servername = 'Anime Prophunt'
+            break
         case 'cs':
         case 'csgo':
             server = csgo5v5

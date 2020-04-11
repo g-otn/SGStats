@@ -23,6 +23,7 @@ var prefix = require('./config/prefix.json');
 	Server Information for commands
 */
 //Server Addresses
+const animeph = "209.126.103.165:27045"
 const csgo5v5 = '192.99.4.87:28791'
 const mcttt = "192.223.31.40:27015"
 const prophunt = "208.103.169.108:27024"
@@ -52,10 +53,10 @@ bot.on("message", (msg) => { //Detect messages
 		Channel log
 	*/
 	if (msg.channel.id == '559392429254639626') // Public Discord Announcements
-		require('fs').appendFile('log/announcements.txt', msg.content.replace("@", '') + '\n', () => {})
-	if (msg.channel.id == '379434065033560074' && msg.content.length !== 0) // Staff Discord MCTTT Relay
-		require('fs').appendFile('log/mcttt_relay.txt', msg.content + '\n', () => {})
-
+		require('fs').appendFile('log/announcements.txt', msg.content.replace('@', '') + '\n', () => {})
+	if (msg.channel.id == '379434065033560074' && msg.content.length !== 0) // Staff Discord MCTTT Relay 
+    require('fs').appendFile('log/mcttt_relay.txt', msg.content + '\n', () => {})
+  
 	/*
 		Message Filter
 	*/
@@ -76,9 +77,9 @@ bot.on("message", (msg) => { //Detect messages
 	if (msg.content.includes(botinfo.name + ' has started.') === true && msg.author.bot) {
 		// Commands executed on start
 		//bot.channels.get("468491525379194880").send(prefix.prefix + 'startauto');
-		msg.content = prefix.prefix + 'checkbypass 270';
+		//msg.content = prefix.prefix + 'checkbypass 255&sortby=lastpost&order=desc';
 		//msg.content = prefix.prefix + 'checkbypass 241';
-		//return; //Comment if a msg.content is changed, uncomment otherwise
+		return; //Comment if a msg.content is changed, uncomment otherwise
 	}
 
 
@@ -95,7 +96,7 @@ bot.on("message", (msg) => { //Detect messages
 	cmd_arg = cmd_arg.toString();
 	//Separation between the command (without prefix) and arguments  
 	var args = cmd_arg.trim().split(' ').slice(1); //Separate arguments (['hue', 'br', '123'] -> ['br', '123'])
-	var cmd = cmd_arg.trim().split(' ').slice(0, 1).toString(); //Separate command (['hue', 'br', '123'] -> ['hue'])
+	var cmd = cmd_arg.trim().split(' ').slice(0,1).toString(); //Separate command (['hue', 'br', '123'] -> ['hue'])
 	console.log('=> Command: ' + cmd);
 	console.log('=> Arguments: ' + args);
 
@@ -115,7 +116,7 @@ bot.on("message", (msg) => { //Detect messages
 		case 'help':
 			cmd_m = require('./commands/help.js');
 			args = args.join(' ').trim();
-			cmd_m.help(msg, args);
+			cmd_m.help(msg,args);
 			break;
 
 
@@ -125,7 +126,7 @@ bot.on("message", (msg) => { //Detect messages
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
 			var cmd_m = require('./commands/online.js');
 			args = args.join('').trim();
-			cmd_m.onlineplayers(msg, args);
+			cmd_m.onlineplayers(msg,args);
 			break;
 
 
@@ -134,7 +135,7 @@ bot.on("message", (msg) => { //Detect messages
 			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
 			cmd_m = require('./commands/population.js');
-			cmd_m.populationgraph(msg, args[0], args[1]);
+			cmd_m.populationgraph(msg,args[0], args[1]);
 			break;
 
 
@@ -143,13 +144,13 @@ bot.on("message", (msg) => { //Detect messages
 			if (args[0] !== undefined)
 				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
 			cmd_m = require('./commands/stats.js');
-			cmd_m.stats(msg, args);
+			cmd_m.stats(msg,args);
 			break;
 
 
 		//Server (stats) commands
 		case 'server':
-			msg.channel.send({ embed: { "description": "You have to select a server! Use ``" + prefix.prefix + "help server`` for more information.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176" } } });
+			msg.channel.send({embed: { "description": "You have to select a server! Use ``" + prefix.prefix + "help server`` for more information.", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"}}});
 			break;
 		case 'cs':
 		case 'csgo':
@@ -176,8 +177,20 @@ bot.on("message", (msg) => { //Detect messages
 
 		//Serverh command
 		case 'serverh':
-			msg.channel.send({ embed: { "description": "You have to select a server! Use ``" + prefix.prefix + "help serverh`` for more information.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176" } } });
+			msg.channel.send({embed: { "description": "You have to select a server! Use ``" + prefix.prefix + "help serverh`` for more information.", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk10.png?1521343597176"}}});
 			break;
+    case 'anh':
+    case 'animeh':
+    case 'animeph':
+			if (args[0] !== undefined)
+				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
+			exports.args = args;
+			cmd_m = require('./commands/serverh.js');
+			cmd_m.hourscmd_argsorganize(animeph, args);
+			cmd_m.graphtypeselector(msg, require('./commands/serverh.js').args);
+			cmd_m = require('./commands/serverh.js'); //reload
+			if (cmd_m.errorcheck !== true) cmd_m.scrapGT(msg, animeph, 'main', cmd_m.args); 
+      break
 		case 'mch':
 		case 'mcttth':
 		case 'mcmdh':
@@ -188,7 +201,7 @@ bot.on("message", (msg) => { //Detect messages
 			cmd_m.hourscmd_argsorganize(mcttt, args);
 			cmd_m.graphtypeselector(msg, require('./commands/serverh.js').args);
 			cmd_m = require('./commands/serverh.js'); //reload
-			if (cmd_m.errorcheck !== true) cmd_m.scrapGT(msg, mcttt, 'main', cmd_m.args);
+			if (cmd_m.errorcheck !== true) cmd_m.scrapGT(msg, mcttt, 'main', cmd_m.args); 
 			break;
 		case 'phh':
 		case 'prophunth':
@@ -204,7 +217,7 @@ bot.on("message", (msg) => { //Detect messages
 		case 'vah':
 		case 'vanillah':
 			if (args[0] !== undefined)
-				args[0] = args[0].toLowerCase(); //Removes args case sensitivity
+			args[0] = args[0].toLowerCase(); //Removes args case sensitivity
 			exports.args = args;
 			cmd_m = require('./commands/serverh.js');
 			cmd_m.hourscmd_argsorganize(csgo5v5, args);
@@ -214,9 +227,9 @@ bot.on("message", (msg) => { //Detect messages
 			break;
 		case 'csh':
 		case 'csgoh':
-			msg.channel.send({ embed: { "description": "Gamertracker does not support player hours in CS:GO servers.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk3.png?1552863583494" } } });
+			msg.channel.send({embed: { "description": "Gamertracker does not support player hours in CS:GO servers.", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk3.png?1552863583494"}}});
 			break;
-
+			
 
 		//Steaminfo command
 		case 'steaminfo':
@@ -224,7 +237,7 @@ bot.on("message", (msg) => { //Detect messages
 			args = args.join(' ');
 			cmd_m.steaminfo(msg, args, "main");
 			break;
-
+			
 
 		// Bug Report command
 		case 'bugreport':
@@ -237,7 +250,7 @@ bot.on("message", (msg) => { //Detect messages
 			cmd_m = require('./commands/pm_suggestion.js')
 			cmd_m.startNewSuggestion(msg)
 			break;
-
+			
 		/*
 			Test, automatic and configuration commands
 		*/
@@ -264,7 +277,7 @@ bot.on("message", (msg) => { //Detect messages
 			cmd_m.check(args, false);
 			break;
 		case 'checkbypass':
-			if (msg.author.tag !== "Skeke#2155" && msg.author.tag !== 'SGStats#6003' && msg.author.tag != 'SGStats-test#5661')
+			if (msg.author.tag !== "Skeke#2155" && msg.author.tag !== 'SGStats#6003' && msg.author.tag != 'SGStats-test#5661') 
 				return
 			cmd_m = require('./commands/check.js');
 			cmd_m.check(args, true);
@@ -275,15 +288,15 @@ bot.on("message", (msg) => { //Detect messages
 		case 'startauto': //Starts auto check
 			cmd_m = require('./commands/check.js');
 			console.log('breaker: ' + breaker);
-			if (!breaker) {
-				interval = setInterval(function () { cmd_m.check('auto', false) }, 600000); //60000 = 1min; 600000 = 10min;
+			if (!breaker) {	
+				interval = setInterval(function(){cmd_m.check('auto', false)}, 600000); //60000 = 1min; 600000 = 10min;
 				breaker = true;
-				console.log('Auto checker started. breaker: ' + breaker + '\n');
-				if (msg.author.bot) { msg.delete(); return };
-				msg.channel.send({ embed: { "description": "Forums auto checker is now running.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk8.png?1518561204876" } } });
+				console.log('Auto checker started. breaker: ' + breaker +'\n');
+				if (msg.author.bot) { msg.delete(); return};
+				msg.channel.send({embed: { "description": "Forums auto checker is now running.", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk8.png?1518561204876"}}});
 				console.log('Forums auto checker is now running.');
 			} else {
-				msg.channel.send({ embed: { "description": "Forums auto checker is already running!", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898" } } });
+				msg.channel.send({embed: { "description": "Forums auto checker is already running!", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"}}});
 				console.log('Forums auto checker is already running!');
 			}
 			break;
@@ -293,26 +306,26 @@ bot.on("message", (msg) => { //Detect messages
 			if (breaker === true) {
 				clearInterval(interval);
 				breaker = false;
-				console.log('Auto checker stopped. breaker: ' + breaker + '\n');
-				msg.channel.send({ embed: { "description": "Forums auto checker is now disabled.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk7.png?1518561202966" } } });
+				console.log('Auto checker stopped. breaker: ' + breaker +'\n');
+				msg.channel.send({embed: { "description": "Forums auto checker is now disabled.", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk7.png?1518561202966"}}});
 				console.log('Forums auto checker is now disabled.');
 			} else {
-				msg.channel.send({ embed: { "description": "Forums auto checker is already disabled!", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898" } } });
+				msg.channel.send({embed: { "description": "Forums auto checker is already disabled!", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk4.png?1518561202898"}}});
 				console.log('Forums auto checker is already disabled!');
-			}
+			}			
 			break;
 
 
 		//Prefix changer command
 		case 'prefix':
 			cmd_m = require('./commands/prefix_change.js');
-			ext_prefix.prefixChange(msg, args);
+			cmd_m.prefixChange(msg,args);
 			break;
 
 
 		//Unknown command
 		default:
-			msg.channel.send({ embed: { "description": "'" + cmd + "' is not a known command.\nType ``" + prefix.prefix + "help`` for a list of commands.", "color": 0x0000ff, "thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682" } } });
+			msg.channel.send({embed: { "description": "'" + cmd + "' is not a known command.\nType ``" + prefix.prefix + "help`` for a list of commands.", "color": 0x0000ff,	"thumbnail": { "url": "https://cdn.glitch.com/4ffc454b-6ce7-4018-83e1-63084831192f%2Fk1.png?1518561202682"}}});
 			console.log('!! Invalid command !!');
 			console.log('----------\n');
 	}
@@ -332,7 +345,7 @@ exports.req_num = Math.floor(Math.random() * 9999999999999990);
 /*
 	Autoping (anti-sleep) for glitch.com
 */
-//require('./config/autoping.js').antiSleep();
+require('./config/autoping.js').antiSleep();
 
 
 

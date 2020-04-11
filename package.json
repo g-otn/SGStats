@@ -1,23 +1,23 @@
 {
-  "name": "SGStats-test",
-  "version": "3.6.2",
-  "description": "Test version of the Bot made for the Smithtainment Discord server.",
-  "bot_id": "<@439196372152090625>",
+  "name": "SGStats",
+  "version": "3.7.0",
+  "description": "Bot made for the Smithtainment Discord server.",
   "main": "bot.js",
   "engines": {
     "node": "8.9.3"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.5.0",
     "express": "^4.16.4",
-    "fs": "0.0.1-security",
+    "fs": "^0.0.2",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "lodash": "^4.17.14"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot.js"
   },
   "author": "Skeke#2155",
   "license": "ISC"
