@@ -153,14 +153,14 @@
     },
     "va": {
         "name": "True Vanilla TTT",
-        "ip": "185.249.196.5:27015",
+        "ip": "192.223.29.13:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "6022841",
         "supportedBySmithtainmentAPI": true
     },
     "vanilla": {
         "name": "True Vanilla TTT",
-        "ip": "185.249.196.5:27015",
+        "ip": "192.223.29.13:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "6022841",
         "supportedBySmithtainmentAPI": true
