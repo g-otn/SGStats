@@ -23,7 +23,7 @@ bot.on("message", (msg) => {
 
     switch (cmd) {
         case 'forums':
-            if (msg.author.id == '310491216393404416')
+            if (msg.author.id == process.env.FORUMS_CHECK_ADMIN_ID)
                 commands.forums.checkForums(bot, args[0], args[1])
             break
         case 'help':

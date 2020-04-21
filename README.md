@@ -43,6 +43,7 @@ SMITHTAINMENT_API_KEY=         # The Smithtainment API v2 key
 DEBUG_CHANNEL=                 # The Discord channel to send startup and specific error messages
 FORUMS_CHECK_MESSAGE_CHANNEL=  # The Discord server channel to send the forums sections logs
 FORUMS_CHECK_LOGGING=          # true or false, toggles logging at bot/commands/forums.js
+FORUMS_CHECK_ADMIN_ID=         # Discord ID (numbers only) of user that can use the forums command
 ```
 
 #### Running
