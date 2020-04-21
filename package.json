@@ -4,17 +4,17 @@
   "description": "Discord bot for the Smithtainment gaming network to scrap Steam and GamerTracker data",
   "main": "main.js",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "discord.js": "^11.4.2",
-    "dotenv": "^8.0.0",
+    "cheerio": "^1.0.0-rc.3",
+    "discord.js": "^11.6.4",
+    "dotenv": "^8.2.0",
     "encodeurl": "^1.0.2",
     "express": "^4.17.1",
-    "js-base64": "^2.5.1",
+    "js-base64": "^2.5.2",
     "pug": "^2.0.4",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
     "steamidconvert": "^0.2.4",
-    "timeago.js": "^4.0.0-beta.2"
+    "timeago.js": "^4.0.2"
   },
   "scripts": {
     "start": "node main.js"
