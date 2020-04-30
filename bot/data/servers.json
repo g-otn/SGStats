@@ -164,5 +164,19 @@
         "supportedByGameTracker": true,
         "gametrackerID": "6022841",
         "supportedBySmithtainmentAPI": true
+    },
+    "wph": {
+        "name": "Wolvin PH",
+        "ip": "66.23.204.44:2002",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6131319",
+        "supportedBySmithtainmentAPI": true
+    },
+    "wolvin": {
+        "name": "Wolvin PH",
+        "ip": "66.23.204.44:2002",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6131319",
+        "supportedBySmithtainmentAPI": true
     }
 }
