@@ -29,14 +29,14 @@
     },
     "dr": {
         "name": "Deathrun",
-        "ip": "74.91.119.53:27015",
+        "ip": "185.249.196.91:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "5493690",
         "supportedBySmithtainmentAPI": true
     },
     "deathrun": {
         "name": "Deathrun",
-        "ip": "74.91.119.53:27015",
+        "ip": "185.249.196.91:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "5493690",
         "supportedBySmithtainmentAPI": true
