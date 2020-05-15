@@ -41,34 +41,6 @@
         "gametrackerID": "6137317",
         "supportedBySmithtainmentAPI": true
     },
-    "euttt": {
-        "name": "EU Vanilla TTT",
-        "ip": "45.85.194.10:2006",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6091934",
-        "supportedBySmithtainmentAPI": true
-    },
-    "euvanillattt": {
-        "name": "EU Vanilla TTT",
-        "ip": "45.85.194.10:2006",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6091934",
-        "supportedBySmithtainmentAPI": true
-    },
-    "euph": {
-        "name": "EU Vanilla Prophunt",
-        "ip": "45.85.194.10:2047",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6091935",
-        "supportedBySmithtainmentAPI": true
-    },
-    "euprophunt": {
-        "name": "EU Vanilla Prophunt",
-        "ip": "45.85.194.10:2047",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6091935",
-        "supportedBySmithtainmentAPI": true
-    },
     "minecraft": {
         "name": "Minecraft Survival",
         "ip": "192.99.221.49:2090",

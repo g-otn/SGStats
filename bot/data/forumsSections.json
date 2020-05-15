@@ -89,39 +89,6 @@
         ]
     },
     {
-        "serverKey": "murder",
-        "rolesToPing": [
-            "<@&387409402250002434>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "128",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Donator Support thread",
-                "fid": "338",
-                "color": "DARK_GREEN"
-            },
-            {
-                "name": "Application",
-                "fid": "133",
-                "color": "AQUA"
-            },
-            {
-                "name": "Ban Appeal",
-                "fid": "59",
-                "color": "RED"
-            },
-            {
-                "name": "Warn Appeal",
-                "fid": "368",
-                "color": "ORANGE"
-            }
-        ]
-    },
-    {
         "serverKey": "vanilla",
         "rolesToPing": [
             "<@&387409354204250122>"
@@ -213,62 +180,6 @@
             {
                 "name": "Warn Appeal",
                 "fid": "393",
-                "color": "ORANGE"
-            }
-        ]
-    },
-    {
-        "serverKey": "euprophunt",
-        "rolesToPing": [
-            "<@&677695960457150464>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "385",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "386",
-                "color": "AQUA"
-            },
-            {
-                "name": "Ban Appeal",
-                "fid": "387",
-                "color": "RED"
-            },
-            {
-                "name": "Warn Appeal",
-                "fid": "388",
-                "color": "ORANGE"
-            }
-        ]
-    },
-    {
-        "serverKey": "euvanillattt",
-        "rolesToPing": [
-            "<@&677695966203084800>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "380",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "381",
-                "color": "AQUA"
-            },
-            {
-                "name": "Ban Appeal",
-                "fid": "382",
-                "color": "RED"
-            },
-            {
-                "name": "Warn Appeal",
-                "fid": "383",
                 "color": "ORANGE"
             }
         ]
