@@ -23,6 +23,32 @@
         ]
     },
     {
+        "serverKey": "deathrun",
+        "rolesToPing": [],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "421",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "422",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "423",
+                "color": "RED"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "424",
+                "color": "ORANGE"
+            }
+        ]
+    },
+    {
         "serverKey": "prophunt",
         "rolesToPing": [
             "<@&421155441519755284>"
