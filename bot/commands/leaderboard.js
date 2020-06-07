@@ -7,6 +7,8 @@ const thumbs = require('../data/thumbnails.json')
 const getAvailableServers = require('./help').getAvailableServers
 const searchPlayer = require('./player').searchPlayer
 
+const MAX_RANK = 4000
+
 async function getLeaderboard(server, displayValue, player) {
     let options = { headers: { 'User-Agent': 'Request-Promise' } }
     let leaderboard = { players: [] }
@@ -16,7 +18,7 @@ async function getLeaderboard(server, displayValue, player) {
         .then(foundPlayer => leaderboard.foundPlayer = foundPlayer)
 
     // If player is not found or rank is too low (very low ranks require too many requests)
-    if (!leaderboard.foundPlayer.rank || leaderboard.foundPlayer.rank > 25000)
+    if (!leaderboard.foundPlayer.rank || leaderboard.foundPlayer.rank > MAX_RANK)
         return leaderboard
 
     // Requests leadboard pages until it finds the table which contains the player
@@ -24,7 +26,8 @@ async function getLeaderboard(server, displayValue, player) {
         leaderboard.players = [] // Resets the player every loop so the new rows can be stored
 
         // Generates URI based on ip, player rank and notFoundIndex
-        options.uri = `https://www.gametracker.com/server_info/${server.ip}/top_players/?searchpge=${1 + Math.floor((leaderboard.foundPlayer.rank - 1) / 25) + notFoundIndex}&searchipp=25`
+        const currentSearchPage = 1 + Math.floor((leaderboard.foundPlayer.rank - 1) / 25) + notFoundIndex
+        options.uri = `https://www.gametracker.com/server_info/${server.ip}/top_players/?searchpge=${currentSearchPage}&searchipp=25`
 
         await rp(options)
             .then(html => {
@@ -55,6 +58,7 @@ async function getLeaderboard(server, displayValue, player) {
                     })
                 }
             })
+            .delay(800) // Attempt to prevent 403 - "error code: 1006", probably caused by too many requests
     }
 
     leaderboard.uri = options.uri
@@ -114,11 +118,11 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
                         .addField(displayValue == 's' ? 'Score' : (displayValue == 't' ? 'Time played' : 'Score/min'), leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.value}**__` : player.value).join('\n'), true)
                         .setColor('BLUE')
                 )
-            else if (leaderboard.foundPlayer && leaderboard.foundPlayer.rank > 25000)
+            else if (leaderboard.foundPlayer && leaderboard.foundPlayer.rank > MAX_RANK)
                 msg.channel.send(
                     new Discord.RichEmbed()
                         .setTitle('Rank too low')
-                        .setDescription(`[${leaderboard.foundPlayer.name}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)})'s rank on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) was too low (${leaderboard.foundPlayer.rank}) it must be at least 25000.`)
+                        .setDescription(`[${leaderboard.foundPlayer.name}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)})'s rank on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) is too low (${leaderboard.foundPlayer.rank}) it must be at least ${MAX_RANK}.`)
                         .setThumbnail(thumbs.sad)
                         .setColor('RED')
                 )
