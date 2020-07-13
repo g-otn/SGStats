@@ -69,20 +69,6 @@
         "gametrackerID": "5086005",
         "supportedBySmithtainmentAPI": true
     },
-    "mu": {
-        "name": "Horror Murder",
-        "ip": "185.249.196.95:27210",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6075516",
-        "supportedBySmithtainmentAPI": true
-    },
-    "murder": {
-        "name": "Horror Murder",
-        "ip": "185.249.196.95:27210",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6075516",
-        "supportedBySmithtainmentAPI": true
-    },
     "ph": {
         "name": "Vanilla Prophunt",
         "ip": "208.103.169.108:27024",
@@ -95,18 +81,6 @@
         "ip": "208.103.169.108:27024",
         "supportedByGameTracker": true,
         "gametrackerID": "6022066",
-        "supportedBySmithtainmentAPI": true
-    },
-    "scp": {
-        "name": "SCP:SL Vanilla",
-        "ip": "51.79.18.127:7862",
-        "supportedByGameTracker": false,
-        "supportedBySmithtainmentAPI": true
-    },
-    "scpsl": {
-        "name": "SCP:SL Vanilla",
-        "ip": "51.79.18.127:7862",
-        "supportedByGameTracker": false,
         "supportedBySmithtainmentAPI": true
     },
     "trueph": {
