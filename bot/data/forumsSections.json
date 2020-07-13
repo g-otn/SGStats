@@ -60,11 +60,6 @@
                 "color": "LIGHT_GREY"
             },
             {
-                "name": "Donator Support thread",
-                "fid": "336",
-                "color": "DARK_GREEN"
-            },
-            {
                 "name": "Application",
                 "fid": "270",
                 "color": "AQUA"
@@ -121,11 +116,6 @@
                 "color": "LIGHT_GREY"
             },
             {
-                "name": "Donator Support thread",
-                "fid": "53",
-                "color": "DARK_GREEN"
-            },
-            {
                 "name": "Application",
                 "fid": "48",
                 "color": "AQUA"
@@ -152,11 +142,6 @@
                 "name": "General Discussion thread",
                 "fid": "310",
                 "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Donator Support thread",
-                "fid": "339",
-                "color": "DARK_GREEN"
             },
             {
                 "name": "Application",
@@ -211,11 +196,6 @@
                 "name": "General Discussion thread",
                 "fid": "330",
                 "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Donator Support thread",
-                "fid": "340",
-                "color": "DARK_GREEN"
             },
             {
                 "name": "Application",
