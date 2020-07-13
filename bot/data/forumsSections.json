@@ -82,6 +82,34 @@
         ]
     },
     {
+        "serverKey": "sandbox",
+        "rolesToPing": [
+            "<@&387409402250002434>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "128",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "130",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "133",
+                "color": "RED"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "368",
+                "color": "ORANGE"
+            }
+        ]
+    },
+    {
         "serverKey": "mcttt",
         "rolesToPing": [
             "<@&387409235249594368>"
@@ -143,6 +171,32 @@
             {
                 "name": "Warn Appeal",
                 "fid": "313",
+                "color": "ORANGE"
+            }
+        ]
+    },
+    {
+        "serverKey": "vanillaplus",
+        "rolesToPing": [],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "353",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "327",
+                "color": "AQUA"
+            },
+            {
+                "name": "Ban Appeal",
+                "fid": "93",
+                "color": "RED"
+            },
+            {
+                "name": "Warn Appeal",
+                "fid": "417",
                 "color": "ORANGE"
             }
         ]

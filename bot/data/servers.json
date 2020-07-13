@@ -83,6 +83,20 @@
         "gametrackerID": "6022066",
         "supportedBySmithtainmentAPI": true
     },
+    "sb": {
+        "name": "Vanilla Sandbox",
+        "ip": "185.249.196.95:27210",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6022066",
+        "supportedBySmithtainmentAPI": true
+    },
+    "sandbox": {
+        "name": "Vanilla Sandbox",
+        "ip": "185.249.196.95:27210",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6022066",
+        "supportedBySmithtainmentAPI": true
+    },
     "trueph": {
         "name": "True PropHunt",
         "ip": "142.44.142.134:27230",
@@ -109,6 +123,20 @@
         "ip": "192.223.29.13:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "6125356",
+        "supportedBySmithtainmentAPI": true
+    },
+    "vap": {
+        "name": "Vanilla+ TTT",
+        "ip": "192.223.24.186:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "5052174",
+        "supportedBySmithtainmentAPI": true
+    },
+    "vanillaplus": {
+        "name": "Vanilla+ TTT",
+        "ip": "192.223.24.186:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "5052174",
         "supportedBySmithtainmentAPI": true
     },
     "wph": {
