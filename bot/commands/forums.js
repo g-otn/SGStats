@@ -22,7 +22,7 @@ async function checkSection(serverKey, section, checkRepeated, checkOld) {
     let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
 
     // Requests section and gets first normal thread link
-    await rp('http://forums.guccittt.site.nfoservers.com/forumdisplay.php?fid=' + section.fid)
+    await rp('https://smithtainment.com/forums/forumdisplay.php?fid=' + section.fid)
         .then(html => {
             let $ = cheerio.load(html)
             let threadHref = $('.forumdisplay_regular div:nth-child(1) a[href^="showthread"]').attr('href')
@@ -55,7 +55,7 @@ async function checkSection(serverKey, section, checkRepeated, checkOld) {
     }
 
     // Requests thread and gets threadInfo and SteamID (if available)
-    await rp('http://forums.guccittt.site.nfoservers.com/showthread.php?tid=' + c.threadInfo.tid)
+    await rp('https://smithtainment.com/forums/showthread.php?tid=' + c.threadInfo.tid)
         .then(html => {
             let $ = cheerio.load(html)
             c.threadInfo.title = $('title').text()
@@ -167,10 +167,10 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
 
     // Adds threadInfo and color
     let richEmbed = new Discord.RichEmbed()
-        .setAuthor(c.threadInfo.author.name, c.threadInfo.author.avatar, 'https://forums.smithtainment.com/' + c.threadInfo.author.profile)
+        .setAuthor(c.threadInfo.author.name, c.threadInfo.author.avatar, 'https://smithtainment.com/forums/' + c.threadInfo.author.profile)
         .setTitle(c.threadInfo.title)
-        .setURL('https://forums.smithtainment.com/showthread.php?tid=' + c.threadInfo.tid)
-        .setDescription(`New **[${sectionGroup.sections[sectionIndex].name}](${'https://forums.smithtainment.com/showthread.php?tid=' + c.threadInfo.tid})** on [${sectionGroup.name ? sectionGroup.name : servers[sectionGroup.serverKey].name}](${'https://forums.smithtainment.com/forumdisplay.php?fid=' + sectionGroup.sections[sectionIndex].fid})!`)
+        .setURL('https://smithtainment.com/forums/showthread.php?tid=' + c.threadInfo.tid)
+        .setDescription(`New **[${sectionGroup.sections[sectionIndex].name}](${'https://smithtainment.com/forums/showthread.php?tid=' + c.threadInfo.tid})** on [${sectionGroup.name ? sectionGroup.name : servers[sectionGroup.serverKey].name}](${'https://smithtainment.com/forums/forumdisplay.php?fid=' + sectionGroup.sections[sectionIndex].fid})!`)
         .setFooter('Posted ' + c.threadInfo.postDate + ' by ' + c.threadInfo.author.name)
         .setColor(sectionGroup.sections[sectionIndex].color)
     if (sectionGroup.sections[sectionIndex].name !== 'Application')

@@ -1,5 +1,5 @@
 # SGStats
-SGStats is a Discord scraper bot specifically made for the [Smithtainment gaming network](https://forums.smithtainment.com/).
+SGStats is a Discord scraper bot specifically made for the [Smithtainment gaming network](https://smithtainment.com).
 It is partially hard-coded to get information about their game servers and forums.
 
 Along with the Discord bot, this Node.js application also runs a server which serves pages with the changelog and some redirect links directly to the Steam game servers.
@@ -9,7 +9,7 @@ You can check the live version of the bot with the updated changelog on [Glitch.
 Some of the data gathered for the network members includes:
 - [gametracker.com](https://www.gametracker.com) data and generated images
 - Steam user basic information through [Steam Web API](https://steamcommunity.com/dev)
-- [Smithtainment Forums](https://forums.smithtainment.com/) specific posts
+- [Smithtainment Forums](https://smithtainment.com/forums/) specific posts
 - Smithtainment server info through [Smithtainment Status API v2](https://dev.smithtainment.com/api/)
 - SCP:SL server info through Kigen's [SCP:SL Server Browser](https://kigen.co/scpsl/browser.php).
 
