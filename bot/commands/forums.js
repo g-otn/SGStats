@@ -67,9 +67,9 @@ async function checkSection(serverKey, section, checkRepeated, checkOld) {
                 return
 
             c.threadInfo.author = {
-                name: author.find('.author_information .largetext').text(),
-                avatar: author.find('.postbit_avatar img').attr('src'),
-                profile: author.find('.postbit_avatar a').attr('href'),
+                name: author.find('.largetext').text().trim(),
+                avatar: author.find('.author_avatar img').attr('src'),
+                profile: author.find('.author_avatar a').attr('href'),
             }
 
             c.threadInfo.postDate = post.find('.post_date').text().trim()
