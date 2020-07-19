@@ -22,10 +22,10 @@ async function checkSection(serverKey, section, checkRepeated, checkOld) {
     let c = {} // Will contain found threadInfo, steamInfo and gametrackerInfo
 
     // Requests section and gets first normal thread link
-    await rp('https://smithtainment.com/forums/forumdisplay.php?fid=' + section.fid)
+    await rp(`https://smithtainment.com/forums/forum-${section.fid}.html`)
         .then(html => {
             let $ = cheerio.load(html)
-            let threadHref = $('.forumdisplay_regular div:nth-child(1) a[href^="showthread"]').attr('href')
+            let threadHref = $('.forumdisplay_regular div:nth-child(1) span[id^=tid_] a').attr('href')
             // TODO: Ignore Moved threads
             c.threadInfo = {
                 tid: threadHref ? threadHref.match(/\d+/)[0] : threadHref
@@ -55,7 +55,7 @@ async function checkSection(serverKey, section, checkRepeated, checkOld) {
     }
 
     // Requests thread and gets threadInfo and SteamID (if available)
-    await rp('https://smithtainment.com/forums/showthread.php?tid=' + c.threadInfo.tid)
+    await rp(`https://smithtainment.com/forums/thread-${c.threadInfo.tid}.html`)
         .then(html => {
             let $ = cheerio.load(html)
             c.threadInfo.title = $('title').text()
