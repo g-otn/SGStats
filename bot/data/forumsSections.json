@@ -6,11 +6,6 @@
         ],
         "sections": [
             {
-                "name": "Network Ban Appeal",
-                "fid": "303",
-                "color": "LUMINOUS_VIVID_PINK"
-            },
-            {
                 "name": "Forum Ban Appeal",
                 "fid": "241",
                 "color": "PURPLE"
@@ -162,7 +157,9 @@
     },
     {
         "serverKey": "vanillaplus",
-        "rolesToPing": [],
+        "rolesToPing": [
+            "<@&677695966203084800>"
+        ],
         "sections": [
             {
                 "name": "General Discussion thread",
