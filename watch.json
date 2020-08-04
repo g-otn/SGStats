@@ -1,6 +1,7 @@
 {
   "install": {
     "include": [
+      "^main\\.js$",
       "^package\\.json$",
       "^\\.env$"
     ]
