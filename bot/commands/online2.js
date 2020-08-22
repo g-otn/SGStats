@@ -60,7 +60,7 @@ exports.sendOnline = (msg, server) => {
                     new Discord.RichEmbed()
                         .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) online players. **[Join now!](${process.env.BASEURI}/redirect/${server})**`)
                         .addField('Name', onlinePlayers.map(player => player.Name).join('\n'), true)
-                        .addField('Time played', onlinePlayers.map(player => player.TimeF).join('\n'), true)
+                        .addField('Time played', onlinePlayers.map(player => formatPlayerTime(player.Time)).join('\n'), true)
                         .setColor('GOLD')
                 )
             }
@@ -82,6 +82,11 @@ exports.sendOnline = (msg, server) => {
                     .setColor('DARK_RED')
             )
         })
+}
+
+function formatPlayerTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    return (minutes / 60 >= 1 ? Math.floor(minutes / 60) + 'h ' : '') + minutes % 60 + 'min';
 }
 
 exports.getOnlinePlayers = getOnlinePlayers
