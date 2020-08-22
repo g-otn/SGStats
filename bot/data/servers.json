@@ -44,15 +44,13 @@
     "minecraft": {
         "name": "Minecraft Survival",
         "ip": "192.99.221.49:2090",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6068612",
+        "supportedByGameTracker": false,
         "supportedBySmithtainmentAPI": false
     },
     "survival": {
         "name": "Minecraft Survival",
         "ip": "192.99.221.49:2090",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6068612",
+        "supportedByGameTracker": false,
         "supportedBySmithtainmentAPI": false
     },
     "mc": {
@@ -83,20 +81,6 @@
         "gametrackerID": "6022066",
         "supportedBySmithtainmentAPI": true
     },
-    "sb": {
-        "name": "Vanilla Sandbox",
-        "ip": "185.249.196.95:27210",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6157864",
-        "supportedBySmithtainmentAPI": true
-    },
-    "sandbox": {
-        "name": "Vanilla Sandbox",
-        "ip": "185.249.196.95:27210",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6157864",
-        "supportedBySmithtainmentAPI": true
-    },
     "trueph": {
         "name": "True PropHunt",
         "ip": "142.44.142.134:27230",
@@ -112,45 +96,17 @@
         "supportedBySmithtainmentAPI": true
     },
     "va": {
-        "name": "True Vanilla TTT",
+        "name": "Vanilla TTT",
         "ip": "192.223.29.13:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "6125356",
         "supportedBySmithtainmentAPI": true
     },
     "vanilla": {
-        "name": "True Vanilla TTT",
+        "name": "Vanilla TTT",
         "ip": "192.223.29.13:27015",
         "supportedByGameTracker": true,
         "gametrackerID": "6125356",
-        "supportedBySmithtainmentAPI": true
-    },
-    "vap": {
-        "name": "Vanilla+ TTT",
-        "ip": "74.91.120.52:27015",
-        "supportedByGameTracker": true,
-        "gametrackerID": "5052174",
-        "supportedBySmithtainmentAPI": true
-    },
-    "vanillaplus": {
-        "name": "Vanilla+ TTT",
-        "ip": "74.91.120.52:27015",
-        "supportedByGameTracker": true,
-        "gametrackerID": "5052174",
-        "supportedBySmithtainmentAPI": true
-    },
-    "wph": {
-        "name": "Wolvin PH",
-        "ip": "66.23.204.44:2002",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6131319",
-        "supportedBySmithtainmentAPI": true
-    },
-    "wolvin": {
-        "name": "Wolvin PH",
-        "ip": "66.23.204.44:2002",
-        "supportedByGameTracker": true,
-        "gametrackerID": "6131319",
         "supportedBySmithtainmentAPI": true
     }
 }

@@ -1,25 +1,9 @@
 [
     {
-        "name": "Smithtainment Gaming",
-        "rolesToPing": [
-            "<@&387409444109025280>"
-        ],
-        "sections": [
-            {
-                "name": "Forum Ban Appeal",
-                "fid": "241",
-                "color": "PURPLE"
-            },
-            {
-                "name": "Discord Ban Appeal",
-                "fid": "302",
-                "color": "DARK_BLUE"
-            }
-        ]
-    },
-    {
         "serverKey": "deathrun",
-        "rolesToPing": [],
+        "rolesToPing": [
+            "<@&732453435005468722>"
+        ],
         "sections": [
             {
                 "name": "General Discussion thread",
@@ -57,29 +41,6 @@
             {
                 "name": "Appeal",
                 "fid": "271",
-                "color": "RED"
-            }
-        ]
-    },
-    {
-        "serverKey": "sandbox",
-        "rolesToPing": [
-            "<@&387409402250002434>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "128",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "130",
-                "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "133",
                 "color": "RED"
             }
         ]
@@ -124,42 +85,9 @@
                 "color": "AQUA"
             },
             {
-                "name": "Ban Appeal",
+                "name": "Appeal",
                 "fid": "312",
                 "color": "RED"
-            },
-            {
-                "name": "Warn Appeal",
-                "fid": "313",
-                "color": "ORANGE"
-            }
-        ]
-    },
-    {
-        "serverKey": "vanillaplus",
-        "rolesToPing": [
-            "<@&677695966203084800>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "353",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "327",
-                "color": "AQUA"
-            },
-            {
-                "name": "Ban Appeal",
-                "fid": "93",
-                "color": "RED"
-            },
-            {
-                "name": "Warn Appeal",
-                "fid": "417",
-                "color": "ORANGE"
             }
         ]
     },
