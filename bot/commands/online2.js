@@ -21,6 +21,7 @@ async function getOnlinePlayers(serverIP) {
             if (!data)
                 throw new Error(`No response data from API. IP: \`${serverIP}\`, type: \`players\``)
 
+            data = data.filter(p => p.Name) // Remove players with empty names
             onlinePlayers = data
         })
 
