@@ -68,26 +68,9 @@
                 "gametrackerID"
             ]
         },
-        "online": {
-            "category": "Server",
-            "description": "Shows a list of the server's online players and their time played since the last join. Also shows a graph of the server's population through the day.",
-            "syntax": [
-                "**``$online <server>``**",
-                "**Abbreviation:** ``$on``"
-            ],
-            "examples": [
-                "``$online mcttt``",
-                "``$on mc``"
-            ],
-            "requiredProperties": [
-                "ip",
-                "supportedByGameTracker",
-                "gametrackerID"
-            ]
-        },
         "online2": {
             "category": "Server",
-            "description": "Shows a list of the server's online players. **The data is practically realtime.**, compared to the 3-5 minutes update delay in the online command. It also does not show the activity graph.",
+            "description": "Shows a list of currently online players in the server and their time played since the last join. Also shows a graph of the server population throughout the day.\nThe list is updated every 5 minutes or so, but the command is faster than the online command",
             "syntax": [
                 "**``$online2 <server>``**",
                 "**Abbreviation:** ``$on2``"
@@ -95,6 +78,23 @@
             "examples": [
                 "``$online2 mcttt``",
                 "``$on2 mc``"
+            ],
+            "requiredProperties": [
+                "ip",
+                "supportedByGameTracker",
+                "gametrackerID"
+            ]
+        },
+        "online": {
+            "category": "Server",
+            "description": "Shows a list of currently online players in the server and their time played since the last join. It does not show the server activity graph.\nThe data is realtime although the command may take a few seconds more than the online2 command",
+            "syntax": [
+                "**``$online <server>``**",
+                "**Abbreviation:** ``$on``"
+            ],
+            "examples": [
+                "``$online mcttt``",
+                "``$on mc``"
             ],
             "requiredProperties": [
                 "ip",
