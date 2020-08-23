@@ -106,4 +106,8 @@ bot.on("message", (msg) => {
     }
 })
 
-bot.login(process.env.TOKEN)
+require('../scripts/discordGateway').waitForDiscordGateway()
+    .then(() => {
+        bot.login(process.env.TOKEN)
+    })
+    .catch(err => console.error('Error waiting for Discord gateway / logging in:', err))
