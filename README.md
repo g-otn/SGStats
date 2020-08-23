@@ -80,8 +80,8 @@ names and parameters.
 Server commands
 - `join`: Generates a link to quickly join a server.
 - `map`: Shows a graph of the most used maps in a server over the last day, week or month.
-- `online`: Shows a list of the server's online players and their time played since the last join. Also shows a graph of the server's population through the day.
-- `online2`: Shows a list of the server's online players. Uses Smithtainment Status API v2.
+- `online`: Shows a list of the server's online players. Uses Smithtainment Status API v2.
+- `online2`: Shows a list of the server's online players and their time played since the last join. Also shows a graph of the server's population through the day.
 - `population`: Shows a graph of the population of a server over the last day, week or month.
 - `rank`: Shows a graph of the server rank over the last day, week or month.
 - `server`: Shows current display name, status, ip and online player count/slots of a server.
@@ -97,7 +97,7 @@ Other commands
 
 ### Screenshots
 <details>
-    <summary>Click to see some screenshots of the above commands response</summary>
+    <summary>Click to see some screenshots of the above commands</summary>
     <p>
         <img width="300" src="https://user-images.githubusercontent.com/44736064/68536758-b2bbf080-0336-11ea-9b4c-a8491c36ee09.png">
         <img width="300" src="https://user-images.githubusercontent.com/44736064/68536759-b2bbf080-0336-11ea-9fa4-1e544c229c3a.png">
