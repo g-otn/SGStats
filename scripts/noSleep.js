@@ -12,10 +12,10 @@ const url = [
 ]
 let which = 0
 
-function access() {
+async function access() {
     console.log(`Requesting '${url[which]}' (${which + 1}/${url.length})`)
     const reqStartTime = new Date().getTime();
-    rp({
+    await rp({
       uri: url[which],
       credentials: "omit",
       headers: {
@@ -27,12 +27,16 @@ function access() {
     })
         .then(() => {
             console.log('Acessed ' + url[which] + ' (' + (new Date().getTime() - reqStartTime) + 'ms)')
-            which++
-            if (which == url.length) which = 0
-            setTimeout(access, delay)
         })
-        .catch(err => { console.log('Error: ' + err.statusCode + ' (' + (new Date().getTime() - reqStartTime) + 'ms)')})
+        .catch(err => { 
+            console.log('Error: ' + err.statusCode + ' (' + (new Date().getTime() - reqStartTime) + 'ms)')
+        })
+
+    if (++which == url.length)
+        which = 0
+
+    setTimeout(access, delay)
 }
 
-console.log('Glitch no sleep script started')
+console.log(`Glitch no sleep script started. URLs: ${url.length}, delay: ${delay}`)
 access()
