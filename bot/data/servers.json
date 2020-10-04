@@ -95,6 +95,20 @@
         "gametrackerID": "6093321",
         "supportedBySmithtainmentAPI": true
     },
+    "uk": {
+        "name": "UK Vanilla TTT",
+        "ip": "54.37.245.82:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6174641",
+        "supportedBySmithtainmentAPI": true
+    },
+    "ukttt": {
+        "name": "UK Vanilla TTT",
+        "ip": "54.37.245.82:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6174641",
+        "supportedBySmithtainmentAPI": true
+    },
     "va": {
         "name": "Vanilla TTT",
         "ip": "192.223.29.13:27015",
