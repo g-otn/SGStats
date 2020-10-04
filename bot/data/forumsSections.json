@@ -1,31 +1,36 @@
 [
     {
-        "serverKey": "deathrun",
+        "name": "Appeals Section",
         "rolesToPing": [
-            "<@&732453435005468722>"
+            "@here"
         ],
         "sections": [
             {
-                "name": "General Discussion thread",
-                "fid": "421",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "422",
-                "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "423",
+                "name": "Garry's Mod Ban Appeal",
+                "fid": "443",
                 "color": "RED"
+            },
+            {
+                "name": "Garry's Mod Warn Appeal",
+                "fid": "445",
+                "color": "ORANGE"
+            },
+            {
+                "name": "Forums Ban Appeal",
+                "fid": "241",
+                "color": "DARK_GREEN"
+            },
+            {
+                "name": "Discord Ban Appeal",
+                "fid": "302",
+                "color": "DARK_BLUE"
             }
         ]
     },
     {
-        "serverKey": "prophunt",
+        "name": "Prophunt",
         "rolesToPing": [
-            "<@&421155441519755284>"
+            "<@&421155441519755284>", "<@&537876007731068940>", "<@&680210624617250830>", "<@&387409402250002434>"
         ],
         "sections": [
             {
@@ -37,103 +42,24 @@
                 "name": "Application",
                 "fid": "270",
                 "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "271",
-                "color": "RED"
             }
         ]
     },
     {
-        "serverKey": "mcttt",
+        "name": "Trouble in Terrorist Town",
         "rolesToPing": [
-            "<@&387409235249594368>"
+            "<@&677695966203084800>", "<@&387409235249594368>", "<@&387409354204250122>"
         ],
         "sections": [
             {
                 "name": "General Discussion thread",
-                "fid": "45",
+                "fid": "268",
                 "color": "LIGHT_GREY"
             },
             {
                 "name": "Application",
-                "fid": "48",
+                "fid": "270",
                 "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "59",
-                "color": "RED"
-            }
-        ]
-    },
-    {
-        "serverKey": "vanilla",
-        "rolesToPing": [
-            "<@&387409354204250122>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "310",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "311",
-                "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "312",
-                "color": "RED"
-            }
-        ]
-    },
-    {
-        "serverKey": "classic",
-        "rolesToPing": [
-            "<@&537876007731068940>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "330",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "87",
-                "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "81",
-                "color": "RED"
-            }          
-        ]
-    },
-    {
-        "serverKey": "trueprophunt",
-        "rolesToPing": [
-            "<@&680210624617250830>"
-        ],
-        "sections": [
-            {
-                "name": "General Discussion thread",
-                "fid": "390",
-                "color": "LIGHT_GREY"
-            },
-            {
-                "name": "Application",
-                "fid": "391",
-                "color": "AQUA"
-            },
-            {
-                "name": "Appeal",
-                "fid": "392",
-                "color": "RED"
             }
         ]
     },
@@ -157,6 +83,70 @@
             {
                 "name": "Appeal",
                 "fid": "229",
+                "color": "RED"
+            }
+        ]
+    },
+    {
+        "serverKey": "deathrun",
+        "rolesToPing": [
+            "<@&387409444109025280>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "421",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "422",
+                "color": "AQUA"
+            }
+        ]
+    },
+    {
+        "name": "Unturned",
+        "rolesToPing": [
+            "<@&387409444109025280>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "385",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "386",
+                "color": "AQUA"
+            },
+            {
+                "name": "Appeal",
+                "fid": "387",
+                "color": "RED"
+            }
+        ]
+    },
+    {
+        "name": "Rust",
+        "rolesToPing": [
+            "<@&650632163313844225>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "353",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "327",
+                "color": "AQUA"
+            },
+            {
+                "name": "Appeal",
+                "fid": "93",
                 "color": "RED"
             }
         ]
