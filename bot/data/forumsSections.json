@@ -16,11 +16,6 @@
                 "color": "ORANGE"
             },
             {
-                "name": "Forums Ban Appeal",
-                "fid": "241",
-                "color": "DARK_GREEN"
-            },
-            {
                 "name": "Discord Ban Appeal",
                 "fid": "302",
                 "color": "DARK_BLUE"
@@ -53,12 +48,12 @@
         "sections": [
             {
                 "name": "General Discussion thread",
-                "fid": "268",
+                "fid": "45",
                 "color": "LIGHT_GREY"
             },
             {
                 "name": "Application",
-                "fid": "270",
+                "fid": "48",
                 "color": "AQUA"
             }
         ]
