@@ -44,10 +44,10 @@ exports.sendHelpMenu = (msg, commandName) => {
     } else {                                // Unknown or no command
         helpmsg
         .setTitle('SGStats')
-        .setURL('https://sgstats.glitch.me/')
+        .setURL(`${process.env.BASEURI}`)
         .setColor('DARK_BLUE')
 
-        let description = 'Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command.\nCheck out the [changelog](https://sgstats.glitch.me/) and its [source code](https://github.com/g-otn/SGStats)!'
+        let description = 'Use ``' + process.env.PREFIX + 'help <command>`` for help on a specific command.\nCheck out the [changelog](' + process.env.BASEURI + ') and its [source code](https://github.com/g-otn/SGStats)!'
         commands.categories.forEach(category => {
             helpmsg.addField(category.name + ' commands', '```' + category.language + '\n' + Object.keys(commands.list).filter(commandKey => {
                 return commands.list[commandKey].category == category.name
