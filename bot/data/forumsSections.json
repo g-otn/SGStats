@@ -101,6 +101,24 @@
         ]
     },
     {
+        "serverKey": "darkrp",
+        "rolesToPing": [
+            "<@&677695960457150464>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "455",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "456",
+                "color": "AQUA"
+            }
+        ]
+    },
+    {
         "name": "Unturned",
         "rolesToPing": [
             "<@&387409444109025280>"

@@ -27,6 +27,20 @@
         "gametrackerID": "6055306",
         "supportedBySmithtainmentAPI": true
     },
+    "rp": {
+        "name": "DarkRP",
+        "ip": "74.91.114.3:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6185098",
+        "supportedBySmithtainmentAPI": true
+    },
+    "darkrp": {
+        "name": "DarkRP",
+        "ip": "74.91.114.3:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6185098",
+        "supportedBySmithtainmentAPI": true
+    },
     "dr": {
         "name": "Deathrun",
         "ip": "185.249.196.91:27015",
