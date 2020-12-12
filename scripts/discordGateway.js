@@ -4,14 +4,18 @@ function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Resolves whenever Discord allows to make requests
-exports.waitForDiscordGateway = async () => {
-  // curl -I https://discordapp.com/api/v7/gateway
-  await rp('https://discordapp.com/api/v7/gateway', {
+const getDiscordGatewayResponse = async () => {
+  return rp('https://discordapp.com/api/v7/gateway', {
     method: 'HEAD',
     resolveWithFullResponse: true, // Include headers (and other stuff) in response
     simple: false // Will resolve even if http code is not 2XX
   })
+}
+
+// Resolves whenever Discord allows to make requests
+exports.waitForDiscordGateway = async () => {
+  // curl -I https://discordapp.com/api/v7/gateway
+  await getDiscordGatewayResponse()
     .then(async res => {
       const status = res.statusCode
 
@@ -22,3 +26,5 @@ exports.waitForDiscordGateway = async () => {
       }
     })
 }
+
+exports.getDiscordGatewayResponse = getDiscordGatewayResponse;
