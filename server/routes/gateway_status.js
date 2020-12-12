@@ -3,7 +3,7 @@ const app = module.exports = express()
 const timeago = require('timeago.js')
 const { getDiscordGatewayResponse } = require('../../scripts/discordGateway')
 
-const minRequestIntervalSeconds = 10
+const minRequestIntervalSeconds = 300
 let lastRequestDate = Number.MIN_SAFE_INTEGER, cachedGatewayResponse = {}
 
 app.get('/discordGateway', async (req, res) => {
