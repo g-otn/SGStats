@@ -8,4 +8,4 @@ require('./server')
 require('./bot')
 
 // Glitch.com no sleep script
-require('./scripts/noSleep')
+//require('./scripts/noSleep')
