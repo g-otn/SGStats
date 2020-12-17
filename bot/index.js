@@ -106,6 +106,8 @@ bot.on("message", (msg) => {
     }
 })
 
+bot.on('error', (err) => console.error(new Date(), 'Bot error:', err))
+
 require('../scripts/discordGateway').waitForDiscordGateway()
     .then(() => {
         bot.login(process.env.TOKEN)
