@@ -1,9 +1,30 @@
 {
-    "amongus": {
-        "name": "Among Us",
+    "au": {
+        "name": "Among Us (US)",
         "ip": "104.243.42.187:27025",
         "supportedByGameTracker": true,
         "gametrackerID": "6191767",
+        "supportedBySmithtainmentAPI": true
+    },
+    "amongus": {
+        "name": "Among Us (US)",
+        "ip": "104.243.42.187:27025",
+        "supportedByGameTracker": true,
+        "gametrackerID": "6191767",
+        "supportedBySmithtainmentAPI": true
+    },
+    "au2": {
+        "name": "Among Us 2 (NYC)",
+        "ip": "74.91.123.11:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "",
+        "supportedBySmithtainmentAPI": true
+    },
+    "amongus2": {
+        "name": "Among Us 2 (NYC)",
+        "ip": "74.91.123.11:27015",
+        "supportedByGameTracker": true,
+        "gametrackerID": "",
         "supportedBySmithtainmentAPI": true
     },
     "cl": {

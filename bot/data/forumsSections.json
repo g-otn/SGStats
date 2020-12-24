@@ -119,6 +119,24 @@
         ]
     },
     {
+        "serverKey": "amongus",
+        "rolesToPing": [
+            "<@&650632163313844225>"
+        ],
+        "sections": [
+            {
+                "name": "General Discussion thread",
+                "fid": "385",
+                "color": "LIGHT_GREY"
+            },
+            {
+                "name": "Application",
+                "fid": "386",
+                "color": "AQUA"
+            }
+        ]
+    },
+    {
         "name": "Unturned",
         "rolesToPing": [
             "<@&387409444109025280>"
