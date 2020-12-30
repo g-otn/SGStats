@@ -81,16 +81,30 @@
         "supportedByGameTracker": false,
         "supportedBySmithtainmentAPI": false
     },
+    "sv": {
+        "name": "Semi-Vanilla TTT",
+        "ip": "208.103.169.56:27023",
+        "supportedByGameTracker": true,
+        "gametrackerID": "5086005",
+        "supportedBySmithtainmentAPI": true
+    },
+    "svttt": {
+        "name": "Semi-Vanilla TTT",
+        "ip": "208.103.169.56:27023",
+        "supportedByGameTracker": true,
+        "gametrackerID": "5086005",
+        "supportedBySmithtainmentAPI": true
+    },
     "mc": {
-        "name": "Minecraft TTT",
-        "ip": "192.223.31.40:27015",
+        "name": "Semi-Vanilla TTT",
+        "ip": "208.103.169.56:27023",
         "supportedByGameTracker": true,
         "gametrackerID": "5086005",
         "supportedBySmithtainmentAPI": true
     },
     "mcttt": {
-        "name": "Minecraft TTT",
-        "ip": "192.223.31.40:27015",
+        "name": "Semi-Vanilla TTT",
+        "ip": "208.103.169.56:27023",
         "supportedByGameTracker": true,
         "gametrackerID": "5086005",
         "supportedBySmithtainmentAPI": true
