@@ -43,16 +43,16 @@
     },
     "rp": {
         "name": "DarkRP",
-        "ip": "74.91.114.3:27015",
+        "ip": "208.103.169.108:27016",
         "supportedByGameTracker": true,
-        "gametrackerID": "6185098",
+        "gametrackerID": "6197971",
         "supportedBySmithtainmentAPI": true
     },
     "darkrp": {
         "name": "DarkRP",
-        "ip": "74.91.114.3:27015",
+        "ip": "208.103.169.108:27016",
         "supportedByGameTracker": true,
-        "gametrackerID": "6185098",
+        "gametrackerID": "6197971",
         "supportedBySmithtainmentAPI": true
     },
     "dr": {
@@ -85,28 +85,28 @@
         "name": "Semi-Vanilla TTT",
         "ip": "208.103.169.56:27023",
         "supportedByGameTracker": true,
-        "gametrackerID": "5086005",
+        "gametrackerID": "6196469",
         "supportedBySmithtainmentAPI": true
     },
     "svttt": {
         "name": "Semi-Vanilla TTT",
         "ip": "208.103.169.56:27023",
         "supportedByGameTracker": true,
-        "gametrackerID": "5086005",
+        "gametrackerID": "6196469",
         "supportedBySmithtainmentAPI": true
     },
     "mc": {
         "name": "Semi-Vanilla TTT",
         "ip": "208.103.169.56:27023",
         "supportedByGameTracker": true,
-        "gametrackerID": "5086005",
+        "gametrackerID": "6196469",
         "supportedBySmithtainmentAPI": true
     },
     "mcttt": {
         "name": "Semi-Vanilla TTT",
         "ip": "208.103.169.56:27023",
         "supportedByGameTracker": true,
-        "gametrackerID": "5086005",
+        "gametrackerID": "6196469",
         "supportedBySmithtainmentAPI": true
     },
     "ph": {
