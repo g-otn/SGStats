@@ -52,61 +52,69 @@ function sendMessage(msg, steamInfo, err) {
 
     if (err) {
         err = err.err.toString()
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('Error')
-                .setDescription('Something happened while getting ' + input + '\'s Steam information.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.length > 250 ? err.substr(0, 250) + ' [...]' : err) + '\n```')
-                .setThumbnail(thumbs.sad)
-                .setColor('DARK_RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Error')
+                    .setDescription('Something happened while getting ' + input + '\'s Steam information.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.length > 250 ? err.substr(0, 250) + ' [...]' : err) + '\n```')
+                    .setThumbnail(thumbs.sad)
+                    .setColor('DARK_RED')
+            ]
+        })
     }
     else if (!steamInfo)
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('User not found')
-                .setDescription(`No Steam user with the SteamID, SteamID64 or CustomURL of \"${input}\" was found.`)
-                .setThumbnail(thumbs.sad)
-                .setColor('DARK_RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('User not found')
+                    .setDescription(`No Steam user with the SteamID, SteamID64 or CustomURL of \"${input}\" was found.`)
+                    .setThumbnail(thumbs.sad)
+                    .setColor('DARK_RED')
+            ]
+        })
     else
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle(steamInfo.personaname + '\'s info')
-                .setDescription(
-                    '**Display name:** ' + steamInfo.personaname
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle(steamInfo.personaname + '\'s info')
+                    .setDescription(
+                        '**Display name:** ' + steamInfo.personaname
 
-                    + '\n**Name:** ' + (steamInfo.communityvisibilitystate == 3 ? (steamInfo.realname ? steamInfo.realname : '(not set)') : '(unknown)')
+                        + '\n**Name:** ' + (steamInfo.communityvisibilitystate == 3 ? (steamInfo.realname ? steamInfo.realname : '(not set)') : '(unknown)')
 
-                    + '\n**SteamID:** ``' + steam.convertToText(steamInfo.steamid) + '``'
+                        + '\n**SteamID:** ``' + steam.convertToText(steamInfo.steamid) + '``'
 
-                    + '\n**SteamID64:** ``' + steamInfo.steamid + '``'
-                    + '\n**CustomURL:** ' + (steamInfo.profileurl.match(/\/id\//) ? `[${steamInfo.profileurl.match(/\/id\/(\w+)/)[1]}](${steamInfo.profileurl})` : '(not set)')
+                        + '\n**SteamID64:** ``' + steamInfo.steamid + '``'
+                        + '\n**CustomURL:** ' + (steamInfo.profileurl.match(/\/id\//) ? `[${steamInfo.profileurl.match(/\/id\/(\w+)/)[1]}](${steamInfo.profileurl})` : '(not set)')
 
-                    + `\n**Profile:** [${steamInfo.communityvisibilitystate !== 3 ? 'private' : 'public'}](https://steamcommunity.com/profiles/${steamInfo.steamid}/)`
+                        + `\n**Profile:** [${steamInfo.communityvisibilitystate !== 3 ? 'private' : 'public'}](https://steamcommunity.com/profiles/${steamInfo.steamid}/)`
 
-                    + '\n\n**Garry\'s Mod hours:** ' + (steamInfo.gmodHours ? `${steamInfo.gmodHours}` : '(unknown)')
+                        + '\n\n**Garry\'s Mod hours:** ' + (steamInfo.gmodHours ? `${steamInfo.gmodHours}` : '(unknown)')
 
-                    + '\n**Playing:** ' + (steamInfo.gameextrainfo ? (steamInfo.gameserverip ? `[${steamInfo.gameextrainfo}](steam://connect/${steamInfo.gameserverip}/)` : steamInfo.gameextrainfo) : '(unknown)')
+                        + '\n**Playing:** ' + (steamInfo.gameextrainfo ? (steamInfo.gameserverip ? `[${steamInfo.gameextrainfo}](steam://connect/${steamInfo.gameserverip}/)` : steamInfo.gameextrainfo) : '(unknown)')
 
-                    + '\n\n**Last time online:** ' + (steamInfo.lastlogoff ? '\n' + new Date(steamInfo.lastlogoff * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ` (${timeago.format(new Date(steamInfo.lastlogoff * 1000))})` : '(unknown)')
+                        + '\n\n**Last time online:** ' + (steamInfo.lastlogoff ? '\n' + new Date(steamInfo.lastlogoff * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ` (${timeago.format(new Date(steamInfo.lastlogoff * 1000))})` : '(unknown)')
 
-                    + '\n**Created:** ' + (steamInfo.timecreated ? '\n' + new Date(steamInfo.timecreated * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ` (${timeago.format(new Date(steamInfo.timecreated * 1000))})` : '(unknown)')
-                )
-                .setThumbnail(steamInfo.avatarmedium)
-                .setColor('GREY')
-        )
+                        + '\n**Created:** ' + (steamInfo.timecreated ? '\n' + new Date(steamInfo.timecreated * 1000).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ` (${timeago.format(new Date(steamInfo.timecreated * 1000))})` : '(unknown)')
+                    )
+                    .setThumbnail(steamInfo.avatarmedium)
+                    .setColor('GREY')
+            ]
+        })
 }
 
 exports.sendSteamInfo = (msg, input) => {
     // Data validation
     if (!input) {
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('Missing input')
-                .setDescription('You must type an input!\n' + commands.list.steaminfo.syntax[1] + '\nType ``' + process.env.PREFIX + 'help steaminfo`` for more information.')
-                .setThumbnail(thumbs.giggle)
-                .setColor('RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Missing input')
+                    .setDescription('You must type an input!\n' + commands.list.steaminfo.syntax[1] + '\nType ``' + process.env.PREFIX + 'help steaminfo`` for more information.')
+                    .setThumbnail(thumbs.giggle)
+                    .setColor('RED')
+            ]
+        })
         return
     }
 
@@ -122,10 +130,10 @@ exports.sendSteamInfo = (msg, input) => {
             .catch(err => sendMessage(msg, null, { err: err }))
     } else {                                          // CustomURL
         // Removes the rest of the URL (if detected)
-        let customURLInLink = input.match(/\/id\/([\w]+)\/{0,1}/) 
+        let customURLInLink = input.match(/\/id\/([\w]+)\/{0,1}/)
         if (customURLInLink)
             input = customURLInLink[1]
-        
+
         steam.convertVanity(input, (err, res) => {
             if (err) // Invalid CustomURL
                 sendMessage(msg, null) // No error but no steamInfo (user not found)

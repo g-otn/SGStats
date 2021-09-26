@@ -68,35 +68,41 @@ async function getLeaderboard(server, displayValue, player) {
 exports.sendLeaderboard = (msg, server, displayValue, player) => {
     // Data validation
     if (!server) {
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('Missing server')
-                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('leaderboard').join(', ') + '\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
-                .setThumbnail(thumbs.giggle)
-                .setColor('RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Missing server')
+                    .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('leaderboard').join(', ') + '\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
+                    .setThumbnail(thumbs.giggle)
+                    .setColor('RED')
+            ]
+        })
         return
     }
     server = server.toLowerCase()
     if (!servers[server] || !getAvailableServers('leaderboard', null).includes(server)) {
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('Invalid server')
-                .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('leaderboard').join(', ') + '\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
-                .setThumbnail(thumbs.confused)
-                .setColor('RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Invalid server')
+                    .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('leaderboard').join(', ') + '\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
+                    .setThumbnail(thumbs.confused)
+                    .setColor('RED')
+            ]
+        })
         return
     }
     if (!displayValue) {
         // displayValue is optional, so only player name needs to be input, if player name is inserted and sorting method is ommited, part of player name is inside displayValue (args[0])
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('Missing player')
-                .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
-                .setThumbnail(thumbs.giggle)
-                .setColor('RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Missing player')
+                    .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help leaderboard`` for more information.')
+                    .setThumbnail(thumbs.giggle)
+                    .setColor('RED')
+            ]
+        })
         return
     }
 
@@ -111,38 +117,46 @@ exports.sendLeaderboard = (msg, server, displayValue, player) => {
     getLeaderboard(servers[server], displayValue, player)
         .then(leaderboard => {
             if (leaderboard.players.length > 0)
-                msg.channel.send(
-                    new Discord.MessageEmbed()
-                        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip})'s [leaderboard](${leaderboard.uri}) around [${leaderboard.foundPlayer.name}](${leaderboard.foundPlayer.profile}):`)
-                        .addField('Rank and name', leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.rank} - ${player.name}**__` : `**${player.rank}** - ${player.name}`).join('\n'), true)
-                        .addField(displayValue == 's' ? 'Score' : (displayValue == 't' ? 'Time played' : 'Score/min'), leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.value}**__` : player.value).join('\n'), true)
-                        .setColor('BLUE')
-                )
+                msg.channel.send({
+                    embeds: [
+                        new Discord.MessageEmbed()
+                            .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip})'s [leaderboard](${leaderboard.uri}) around [${leaderboard.foundPlayer.name}](${leaderboard.foundPlayer.profile}):`)
+                            .addField('Rank and name', leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.rank} - ${player.name}**__` : `**${player.rank}** - ${player.name}`).join('\n'), true)
+                            .addField(displayValue == 's' ? 'Score' : (displayValue == 't' ? 'Time played' : 'Score/min'), leaderboard.players.map(player => player.name == leaderboard.foundPlayer.name ? `__**${player.value}**__` : player.value).join('\n'), true)
+                            .setColor('BLUE')
+                    ]
+                })
             else if (leaderboard.foundPlayer && leaderboard.foundPlayer.rank > MAX_RANK)
-                msg.channel.send(
-                    new Discord.MessageEmbed()
-                        .setTitle('Rank too low')
-                        .setDescription(`[${leaderboard.foundPlayer.name}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)})'s rank on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) is too low (${leaderboard.foundPlayer.rank}) it must be at least ${MAX_RANK}.`)
-                        .setThumbnail(thumbs.sad)
-                        .setColor('RED')
-                )
+                msg.channel.send({
+                    embeds: [
+                        new Discord.MessageEmbed()
+                            .setTitle('Rank too low')
+                            .setDescription(`[${leaderboard.foundPlayer.name}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)})'s rank on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) is too low (${leaderboard.foundPlayer.rank}) it must be at least ${MAX_RANK}.`)
+                            .setThumbnail(thumbs.sad)
+                            .setColor('RED')
+                    ]
+                })
             else
-                msg.channel.send(
-                    new Discord.MessageEmbed()
-                        .setTitle('Player not found')
-                        .setDescription(`No player with the name of [${player}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)}) was found on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}).`)
-                        .setThumbnail(thumbs.sad)
-                        .setColor('RED')
-                )
+                msg.channel.send({
+                    embeds: [
+                        new Discord.MessageEmbed()
+                            .setTitle('Player not found')
+                            .setDescription(`No player with the name of [${player}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)}) was found on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}).`)
+                            .setThumbnail(thumbs.sad)
+                            .setColor('RED')
+                    ]
+                })
         })
-        .catch(err => 
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                    .setTitle('Error')
-                    .setDescription('Something happened while getting the leaderboard.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
-                    .setThumbnail(thumbs.sad)
-                    .setColor('DARK_RED')
-            )
+        .catch(err =>
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Error')
+                        .setDescription('Something happened while getting the leaderboard.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
+                        .setThumbnail(thumbs.sad)
+                        .setColor('DARK_RED')
+                ]
+            })
         )
 }
 

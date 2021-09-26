@@ -19,13 +19,15 @@ exports.sendData = (msg, cmd, period, server) => {
     // Data validation
     if (!period && !server) {
         // Missing server
-        msg.channel.send(
-            new Discord.MessageEmbed()
-            .setTitle('Missing server')
-            .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-            .setThumbnail(thumbs.giggle)
-            .setColor('RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Missing server')
+                    .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                    .setThumbnail(thumbs.giggle)
+                    .setColor('RED')
+            ]
+        })
         return
     }
     period = period.toLowerCase()
@@ -33,29 +35,33 @@ exports.sendData = (msg, cmd, period, server) => {
         // server is undefined, so period must contain a server name and if it contains, the server must support/have gametrackerID
         if (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/)) {
             // Correct period but missing server name
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                .setTitle('Missing server')
-                .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail(thumbs.giggle)
-                .setColor('RED')
-            )
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Missing server')
+                        .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                        .setThumbnail(thumbs.giggle)
+                        .setColor('RED')
+                ]
+            })
             return
         }
         if (!getAvailableServers('map', null).includes(period)) {
             // Invalid server name inside period variable
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                .setTitle('Invalid server')
-                .setDescription('\"' + period + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail(thumbs.confused)
-                .setColor('RED')
-            )
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Invalid server')
+                        .setDescription('\"' + period + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                        .setThumbnail(thumbs.confused)
+                        .setColor('RED')
+                ]
+            })
             return
         }
 
         // period contains valid server name
-        server = period 
+        server = period
         switch (cmd) {
             case 'map':
             case 'rank':
@@ -68,24 +74,28 @@ exports.sendData = (msg, cmd, period, server) => {
         server = server.toLowerCase()
         if (!period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/)) {
             // Invalid period (and full command is used)
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                .setTitle('Invalid period')
-                .setDescription('\"' + period + '\" is not a valid period!\n' + commands.list[cmd].syntax[1] + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail(thumbs.confused)
-                .setColor('RED')
-            )
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Invalid period')
+                        .setDescription('\"' + period + '\" is not a valid period!\n' + commands.list[cmd].syntax[1] + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                        .setThumbnail(thumbs.confused)
+                        .setColor('RED')
+                ]
+            })
             return
         }
         if (!getAvailableServers('map', null).includes(server)) {
             // Invalid server name inside server variable
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                .setTitle('Invalid server')
-                .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
-                .setThumbnail(thumbs.sad)
-                .setColor('RED')
-            )
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Invalid server')
+                        .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
+                        .setThumbnail(thumbs.sad)
+                        .setColor('RED')
+                ]
+            })
             return
         }
     }
@@ -93,12 +103,14 @@ exports.sendData = (msg, cmd, period, server) => {
     let graphURL = getGraphURL(cmd, period[0] /* Transform to d|w|m */, server)
 
     // Send message
-    msg.channel.send(
-        new Discord.MessageEmbed()
-        .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) ${cmd == 'map' ? 'maps' : cmd}\nthroughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}. **[Join now!](${process.env.BASEURI}/redirect/${server})**`)
-        .setImage(graphURL)
-        .setColor('GOLD')
-    )
+    msg.channel.send({
+        embeds: [
+            new Discord.MessageEmbed()
+                .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) ${cmd == 'map' ? 'maps' : cmd}\nthroughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}. **[Join now!](${process.env.BASEURI}/redirect/${server})**`)
+                .setImage(graphURL)
+                .setColor('GOLD')
+        ]
+    })
 }
 
 exports.getGraphURL = getGraphURL

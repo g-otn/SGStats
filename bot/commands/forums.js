@@ -210,7 +210,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
         richEmbed
             .addField('Preview', '```\n' + c.threadInfo.preview + '\n```', false)
 
-    bot.channels.cache.get(channel).send(richEmbed)
+    bot.channels.cache.get(channel).send({ embeds: [richEmbed] })
 }
 
 exports.checkForums = async (bot, checkRepeated = true, checkOld = true) => {
@@ -225,15 +225,19 @@ exports.checkForums = async (bot, checkRepeated = true, checkOld = true) => {
             await checkSection(sectionGroup.serverKey, section, checkRepeated, checkOld)
                 .then(checkInfo => sendMessage(bot, sectionGroup, s, checkInfo))
                 .catch(err =>
+                    console.error('Forums check error', sectionGroup.sections[s])
                     // Sends error
-                    bot.channels.cache.get(process.env.DEBUG_CHANNEL).send(
-                        new Discord.MessageEmbed()
-                            .setTitle('Forums check error')
-                            .setDescription('Something happened while checking the forums. Stack trace:\n```js\n' + (err.stack.toString().length > 1900 ? err.stack.toString().substr(0, 1900) + ' [...]' : err.stack.toString()) + '\n```')
-                            .addField('Values', 'section: ```json\n' + JSON.stringify(sectionGroup.sections[s], null, ' ') + '\n```\n s: ' + s + '\ncheckRepeated: ' + checkRepeated + '\ncheckOld: ' + checkOld, true)
-                            .setTimestamp(new Date())
-                            .setColor('DARK_RED')
-                    )
+                    // bot.channels.cache.get(process.env.DEBUG_CHANNEL).send({
+                    //     embeds: [
+                    //         new Discord.MessageEmbed()
+                    //             .setTitle('Forums check error')
+                    //             .setDescription('Something happened while checking the forums. Stack trace:\n```js\n' + (err.stack.toString().length > 1900 ? err.stack.toString().substr(0, 1900) + ' [...]' : err.stack.toString()) + '\n```')
+                    //             .addField('Values', 'section: ```json\n' + JSON.stringify(sectionGroup.sections[s], null, ' ') + '\n```\n s: ' + s + '\ncheckRepeated: ' + checkRepeated + '\ncheckOld: ' + checkOld, true)
+                    //             .setTimestamp(new Date())
+                    //             .setColor('DARK_RED')
+
+                    //     ]
+                    // })
                 )
         }
         log('\n\n')

@@ -1,16 +1,16 @@
 const Discord = require('discord.js')
-const bot = new Discord.Client()
+const bot = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] })
 const commands = require('./commands')
 const servers = require('./data/servers.json')
 const thumbs = require('./data/thumbnails.json')
 
 bot.on("ready", () => {
     console.log(bot.user.tag + " v" + require('../package.json').version + " is online with prefix '" + process.env.PREFIX + "'")
-    bot.user.setPresence({ game: { name: process.env.PREFIX + 'help' } })
+    bot.user.setPresence({ activities: [{ name: process.env.PREFIX + 'help' }] })
     setInterval(() => { commands.forums.checkForums(bot) }, 600000)
 })
 
-bot.on("message", (msg) => {
+bot.on("messageCreate", (msg) => {
     if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX)) return
 
     let cmd = msg.content.split(' ')[0].substring(process.env.PREFIX.length).toLowerCase()
@@ -39,7 +39,8 @@ bot.on("message", (msg) => {
         case 'lb':
         case 'lead':
         case 'leaderboard':
-            commands.leaderboard.sendLeaderboard(msg, args[0], args[1], args.slice(2).join(' '))
+            msg.channel.send('Command disabled.')
+            // commands.leaderboard.sendLeaderboard(msg, args[0], args[1], args.slice(2).join(' '))
             break
         case 'pop':
             cmd = 'population' // Removes abbreviation
@@ -96,13 +97,15 @@ bot.on("message", (msg) => {
             }
 
             // Unknown command
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                    .setTitle('Unknown command')
-                    .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
-                    .setThumbnail(thumbs.confused)
-                    .setColor('RED')
-            )
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Unknown command')
+                        .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
+                        .setThumbnail(thumbs.confused)
+                        .setColor('RED')
+                ]
+            })
     }
 })
 

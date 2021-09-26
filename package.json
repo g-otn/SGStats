@@ -5,16 +5,20 @@
   "main": "main.js",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.1.0",
     "dotenv": "^8.2.0",
     "encodeurl": "^1.0.2",
     "express": "^4.17.1",
     "js-base64": "^2.5.2",
-    "pug": "^2.0.4",
+    "node": "^16.9.1",
+    "pug": "^3.0.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "steamidconvert": "^0.2.4",
     "timeago.js": "^4.0.2"
+  },
+  "engines": {
+    "node": ">=16"
   },
   "scripts": {
     "start": "node main.js"

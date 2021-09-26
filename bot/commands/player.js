@@ -29,7 +29,7 @@ async function searchPlayer(graphType, server, period, player) {
             if (foundPlayer.name) {
                 foundPlayer.profile = 'https://www.gametracker.com' + firstRow.eq(1).children().eq(0).attr('href')
                 if (graphType && period)
-                    foundPlayer.graphURL = `https://cache.gametracker.com/images/graphs/player_${graphType == 'h' ? 'time' : 'score'}.php?nameb64=${encodeUrl(Base64.encode(foundPlayer.name))}&host=${server.ip}&start=-1${period}&request=0${Math.floor(Math.random()*9999999999999999)}`
+                    foundPlayer.graphURL = `https://cache.gametracker.com/images/graphs/player_${graphType == 'h' ? 'time' : 'score'}.php?nameb64=${encodeUrl(Base64.encode(foundPlayer.name))}&host=${server.ip}&start=-1${period}&request=0${Math.floor(Math.random() * 9999999999999999)}`
             }
         })
     return foundPlayer
@@ -39,13 +39,15 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
     // Data validation
     if (!period || (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/i) && !player)) {
         // Missing player name
-        msg.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle('Missing player')
-                .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help player' + graphType + '`` for more information.')
-                .setThumbnail(thumbs.giggle)
-                .setColor('RED')
-        )
+        msg.channel.send({
+            embeds: [
+                new Discord.MessageEmbed()
+                    .setTitle('Missing player')
+                    .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help player' + graphType + '`` for more information.')
+                    .setThumbnail(thumbs.giggle)
+                    .setColor('RED')
+            ]
+        })
         return
     }
     // Data parsing
@@ -63,29 +65,35 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
         .then(foundPlayer => {
             // Send message
             if (foundPlayer.name)
-                msg.channel.send(
-                    new Discord.MessageEmbed()
-                        .setDescription(`Showing [${foundPlayer.name}](${foundPlayer.profile})'s ${graphType == 'h' ? 'activity' : 'score'} on\n[${server.name}](https://www.gametracker.com/server_info/${server.ip}) throughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}.\nFor similar names, click [here](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}).`)
-                        .setImage(foundPlayer.graphURL)
-                        .setColor('BLUE')
-                )
+                msg.channel.send({
+                    embeds: [
+                        new Discord.MessageEmbed()
+                            .setDescription(`Showing [${foundPlayer.name}](${foundPlayer.profile})'s ${graphType == 'h' ? 'activity' : 'score'} on\n[${server.name}](https://www.gametracker.com/server_info/${server.ip}) throughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}.\nFor similar names, click [here](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}).`)
+                            .setImage(foundPlayer.graphURL)
+                            .setColor('BLUE')
+                    ]
+                })
             else
-                msg.channel.send(
-                    new Discord.MessageEmbed()
-                        .setTitle('Player not found')
-                        .setDescription(`No player with the name of [${unencodedPlayerName}](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}) was found on [${server.name}](https://www.gametracker.com/server_info/${server.ip}).`)
-                        .setThumbnail(thumbs.sad)
-                        .setColor('RED')
-                )
+                msg.channel.send({
+                    embeds: [
+                        new Discord.MessageEmbed()
+                            .setTitle('Player not found')
+                            .setDescription(`No player with the name of [${unencodedPlayerName}](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}) was found on [${server.name}](https://www.gametracker.com/server_info/${server.ip}).`)
+                            .setThumbnail(thumbs.sad)
+                            .setColor('RED')
+                    ]
+                })
         })
-        .catch(err => 
-            msg.channel.send(
-                new Discord.MessageEmbed()
-                    .setTitle('Error')
-                    .setDescription('Something happened while getting ' + unencodedPlayerName + '\'s graph.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
-                    .setThumbnail(thumbs.sad)
-                    .setColor('DARK_RED')
-            )
+        .catch(err =>
+            msg.channel.send({
+                embeds: [
+                    new Discord.MessageEmbed()
+                        .setTitle('Error')
+                        .setDescription('Something happened while getting ' + unencodedPlayerName + '\'s graph.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
+                        .setThumbnail(thumbs.sad)
+                        .setColor('DARK_RED')
+                ]
+            })
         )
 }
 

@@ -35,9 +35,6 @@ PREFIX=                        # The prefix character for commands (Ex: !!)
 TOKEN=                         # The Discord bot app token
 STEAMWEBAPI_KEY=               # The Steam Web API key
 
-# Scripts
-GLITCH_NO_SLEEP=false          # true or false, toggles noSleep script for Glitch.com
-
 # Smithtainment
 SMITHTAINMENT_API_KEY=         # The Smithtainment API v2 key
 DEBUG_CHANNEL=                 # The Discord channel to send startup and specific error messages
