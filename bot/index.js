@@ -97,7 +97,7 @@ bot.on("message", (msg) => {
 
             // Unknown command
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                     .setTitle('Unknown command')
                     .setDescription('"' + cmd + '" is not a known command.\nType ``' + process.env.PREFIX + 'help`` for a list of commands.')
                     .setThumbnail(thumbs.confused)

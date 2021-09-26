@@ -39,7 +39,7 @@ exports.sendPlayerStats = (msg, server, player) => {
     // Data validation
     if (!server) { // no server and no player
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Missing server')
                 .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('stats').join(', ') + '\nType ``' + process.env.PREFIX + 'help stats`` for more information.')
                 .setThumbnail(thumbs.giggle)
@@ -50,7 +50,7 @@ exports.sendPlayerStats = (msg, server, player) => {
     server = server.toLowerCase()
     if (!servers[server]) {
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Invalid server')
                 .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('stats').join(', ') + '\nType ``' + process.env.PREFIX + 'help stats`` for more information.')
                 .setThumbnail(thumbs.confused)
@@ -60,7 +60,7 @@ exports.sendPlayerStats = (msg, server, player) => {
     }
     if (!player) {
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Missing player')
                 .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help stats`` for more information.')
                 .setThumbnail(thumbs.giggle)
@@ -73,7 +73,7 @@ exports.sendPlayerStats = (msg, server, player) => {
         .then(playerStats => {
             if (!playerStats.name)
                 msg.channel.send(
-                    new Discord.RichEmbed()
+                    new Discord.MessageEmbed()
                         .setTitle('Player not found')
                         .setDescription(`No player with the name of [${player}](https://www.gametracker.com/server_info/${servers[server].ip}/top_players/?query=${encodeUrl(player)}) was found on [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}).`)
                         .setThumbnail(thumbs.sad)
@@ -81,7 +81,7 @@ exports.sendPlayerStats = (msg, server, player) => {
                 )
             else
                 msg.channel.send(
-                    new Discord.RichEmbed()
+                    new Discord.MessageEmbed()
                         .setTitle(playerStats.name + '\'s stats')
                         .setDescription(
                             '__**Rank:** ' + playerStats.rank + '__'
@@ -97,7 +97,7 @@ exports.sendPlayerStats = (msg, server, player) => {
         })
         .catch(err => {
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                     .setTitle('Error')
                     .setDescription('Something happened while getting ' + player + '\' stats.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
                     .setThumbnail(thumbs.sad)

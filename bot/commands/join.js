@@ -6,7 +6,7 @@ const getAvailableServers = require('./help').getAvailableServers
 exports.sendJoinLink = (msg, server) => {
     if (!server) {
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Missing server')
                 .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers('join').join(', ') + '\nType ``' + process.env.PREFIX + 'help join`` for more information.')
                 .setThumbnail(thumbs.giggle)
@@ -16,7 +16,7 @@ exports.sendJoinLink = (msg, server) => {
     }
     if (!servers[server] || !getAvailableServers('join', null).includes(server)) {
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Invalid server')
                 .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers('join').join(', ') + '\nType ``' + process.env.PREFIX + 'help join`` for more information.')
                 .setThumbnail(thumbs.confused)
@@ -26,7 +26,7 @@ exports.sendJoinLink = (msg, server) => {
     }
 
     msg.channel.send(
-        new Discord.RichEmbed()
+        new Discord.MessageEmbed()
         .setDescription(`**[Click here to join ${servers[server].name}!](${process.env.BASEURI}/redirect/${server})**`)
         .setColor('GOLD')
     )

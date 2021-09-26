@@ -155,10 +155,10 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
 
     let channel = process.env.FORUMS_CHECK_MESSAGE_CHANNEL
 
-    // Pings roles (pinging inside RichEmbed doesn't actually pings)
-    bot.channels.get(channel).send(sectionGroup.rolesToPing.join(' '))
+    // Pings roles (pinging inside MessageEmbed doesn't actually pings)
+    bot.channels.cache.get(channel).send(sectionGroup.rolesToPing.join(' '))
 
-    /* RichEmbed structure rules:
+    /* MessageEmbed structure rules:
         - All sections have threadInfo, but Applications don't have the Preview field
         - General Discussions don't have Steam or Gametracker info, all the other sections do (if found)
         - Only Applications have Activity field / Graph Image
@@ -166,7 +166,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
     */
 
     // Adds threadInfo and color
-    let richEmbed = new Discord.RichEmbed()
+    let richEmbed = new Discord.MessageEmbed()
         .setAuthor(c.threadInfo.author.name, c.threadInfo.author.avatar, 'https://smithtainment.com/forums/' + c.threadInfo.author.profile)
         .setTitle(c.threadInfo.title)
         .setURL('https://smithtainment.com/forums/showthread.php?tid=' + c.threadInfo.tid)
@@ -177,7 +177,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
         richEmbed
             .addField('Preview', '```\n' + c.threadInfo.preview + '\n```', false)
 
-    // Adds steamInfo to RichEmbed
+    // Adds steamInfo to MessageEmbed
     if (c.steamInfo) {
         richEmbed
             .setThumbnail(c.steamInfo.avatarmedium)
@@ -192,7 +192,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
                 + '\n**Created:** ' + (c.steamInfo.timecreated ? `${timeago.format(new Date(c.steamInfo.timecreated * 1000))}` : '(unknown)')
                 , true)
 
-        // Adds gametrackerInfo to RichEmbed
+        // Adds gametrackerInfo to MessageEmbed
         if (c.gametrackerInfo && c.gametrackerInfo.name) {
             richEmbed
                 .addField('Gametracker info',
@@ -210,7 +210,7 @@ function sendMessage(bot, sectionGroup, sectionIndex, c) {
         richEmbed
             .addField('Preview', '```\n' + c.threadInfo.preview + '\n```', false)
 
-    bot.channels.get(channel).send(richEmbed)
+    bot.channels.cache.get(channel).send(richEmbed)
 }
 
 exports.checkForums = async (bot, checkRepeated = true, checkOld = true) => {
@@ -226,8 +226,8 @@ exports.checkForums = async (bot, checkRepeated = true, checkOld = true) => {
                 .then(checkInfo => sendMessage(bot, sectionGroup, s, checkInfo))
                 .catch(err =>
                     // Sends error
-                    bot.channels.get(process.env.DEBUG_CHANNEL).send(
-                        new Discord.RichEmbed()
+                    bot.channels.cache.get(process.env.DEBUG_CHANNEL).send(
+                        new Discord.MessageEmbed()
                             .setTitle('Forums check error')
                             .setDescription('Something happened while checking the forums. Stack trace:\n```js\n' + (err.stack.toString().length > 1900 ? err.stack.toString().substr(0, 1900) + ' [...]' : err.stack.toString()) + '\n```')
                             .addField('Values', 'section: ```json\n' + JSON.stringify(sectionGroup.sections[s], null, ' ') + '\n```\n s: ' + s + '\ncheckRepeated: ' + checkRepeated + '\ncheckOld: ' + checkOld, true)

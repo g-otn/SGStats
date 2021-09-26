@@ -31,7 +31,7 @@ exports.sendServerInfo = (msg, server) => {
     getServerInfo(servers[server])
         .then(serverInfo =>
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                     .setTitle(servers[server].name + ' status')
                     .setURL(`${process.env.BASEURI}/redirect/${server}`)
                     .setDescription(
@@ -46,7 +46,7 @@ exports.sendServerInfo = (msg, server) => {
         )
         .catch(err =>
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                     .setTitle('Error')
                     .setDescription('Something happened while getting ' + server.name + ' information.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
                     .setThumbnail(thumbs.sad)

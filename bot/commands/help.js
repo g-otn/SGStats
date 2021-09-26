@@ -22,7 +22,7 @@ function getAvailableServers(commandName, serverNameWrapper = '``') {
 }
 
 exports.sendHelpMenu = (msg, commandName) => {
-    let helpmsg = new Discord.RichEmbed()
+    let helpmsg = new Discord.MessageEmbed()
     .setFooter(`SGStats v${version} by Skeke#2155 - Online since ${timeago.format(onlineSince)}`, 'https://cdn.discordapp.com/avatars/310491216393404416/97be88722638646a0be55b1fcb65bf7c.png?size=32')
 
     if (commandName && commands.list[commandName]) { // Command exists

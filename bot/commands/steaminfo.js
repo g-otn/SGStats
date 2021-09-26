@@ -53,7 +53,7 @@ function sendMessage(msg, steamInfo, err) {
     if (err) {
         err = err.err.toString()
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Error')
                 .setDescription('Something happened while getting ' + input + '\'s Steam information.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.length > 250 ? err.substr(0, 250) + ' [...]' : err) + '\n```')
                 .setThumbnail(thumbs.sad)
@@ -62,7 +62,7 @@ function sendMessage(msg, steamInfo, err) {
     }
     else if (!steamInfo)
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('User not found')
                 .setDescription(`No Steam user with the SteamID, SteamID64 or CustomURL of \"${input}\" was found.`)
                 .setThumbnail(thumbs.sad)
@@ -70,7 +70,7 @@ function sendMessage(msg, steamInfo, err) {
         )
     else
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle(steamInfo.personaname + '\'s info')
                 .setDescription(
                     '**Display name:** ' + steamInfo.personaname
@@ -101,7 +101,7 @@ exports.sendSteamInfo = (msg, input) => {
     // Data validation
     if (!input) {
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Missing input')
                 .setDescription('You must type an input!\n' + commands.list.steaminfo.syntax[1] + '\nType ``' + process.env.PREFIX + 'help steaminfo`` for more information.')
                 .setThumbnail(thumbs.giggle)

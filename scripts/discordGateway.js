@@ -18,8 +18,7 @@ exports.waitForDiscordGateway = async () => {
   await getDiscordGatewayResponse()
     .then(async res => {
       const status = res.statusCode
-
-      if (status !== 200) { // Probably 429 Too Many Requests (Glitch.com Discord bans https://support.glitch.com/t/discord-ban-mega-thread-the-second-discord-bot-something-took-too-long-to-do)
+      if (status !== 200) { // Probably 429 Too Many Requests
         const retryAfter = Number(res.headers['retry-after']) * 1000
         console.warn(`Discord gateway not ok (${status}), resolving after ${retryAfter}ms (${Math.ceil(retryAfter / 3600000)}h)`)
         await wait(retryAfter)

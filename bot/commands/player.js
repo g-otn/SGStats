@@ -40,7 +40,7 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
     if (!period || (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/i) && !player)) {
         // Missing player name
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
                 .setTitle('Missing player')
                 .setDescription('You must type a player name!\nType ``' + process.env.PREFIX + 'help player' + graphType + '`` for more information.')
                 .setThumbnail(thumbs.giggle)
@@ -64,14 +64,14 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
             // Send message
             if (foundPlayer.name)
                 msg.channel.send(
-                    new Discord.RichEmbed()
+                    new Discord.MessageEmbed()
                         .setDescription(`Showing [${foundPlayer.name}](${foundPlayer.profile})'s ${graphType == 'h' ? 'activity' : 'score'} on\n[${server.name}](https://www.gametracker.com/server_info/${server.ip}) throughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}.\nFor similar names, click [here](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}).`)
                         .setImage(foundPlayer.graphURL)
                         .setColor('BLUE')
                 )
             else
                 msg.channel.send(
-                    new Discord.RichEmbed()
+                    new Discord.MessageEmbed()
                         .setTitle('Player not found')
                         .setDescription(`No player with the name of [${unencodedPlayerName}](https://www.gametracker.com/server_info/${server.ip}/top_players/?query=${player}) was found on [${server.name}](https://www.gametracker.com/server_info/${server.ip}).`)
                         .setThumbnail(thumbs.sad)
@@ -80,7 +80,7 @@ exports.sendPlayerGraph = (msg, graphType, server, period, player) => {
         })
         .catch(err => 
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                     .setTitle('Error')
                     .setDescription('Something happened while getting ' + unencodedPlayerName + '\'s graph.\nPlease ping or open and add <@310491216393404416> to a support ticket if this continues __after some time__. Error:\n```js\n' + (err.toString().length > 250 ? err.toString().substr(0, 250) + ' [...]' : err.toString()) + '\n```')
                     .setThumbnail(thumbs.sad)

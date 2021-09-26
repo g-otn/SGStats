@@ -20,7 +20,7 @@ exports.sendData = (msg, cmd, period, server) => {
     if (!period && !server) {
         // Missing server
         msg.channel.send(
-            new Discord.RichEmbed()
+            new Discord.MessageEmbed()
             .setTitle('Missing server')
             .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
             .setThumbnail(thumbs.giggle)
@@ -34,7 +34,7 @@ exports.sendData = (msg, cmd, period, server) => {
         if (period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/)) {
             // Correct period but missing server name
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                 .setTitle('Missing server')
                 .setDescription('You must choose a server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
                 .setThumbnail(thumbs.giggle)
@@ -45,7 +45,7 @@ exports.sendData = (msg, cmd, period, server) => {
         if (!getAvailableServers('map', null).includes(period)) {
             // Invalid server name inside period variable
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                 .setTitle('Invalid server')
                 .setDescription('\"' + period + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
                 .setThumbnail(thumbs.confused)
@@ -69,7 +69,7 @@ exports.sendData = (msg, cmd, period, server) => {
         if (!period.match(/^(day)$|^(week)$|^(month)$|^d$|^w$|^m$/)) {
             // Invalid period (and full command is used)
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                 .setTitle('Invalid period')
                 .setDescription('\"' + period + '\" is not a valid period!\n' + commands.list[cmd].syntax[1] + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
                 .setThumbnail(thumbs.confused)
@@ -80,7 +80,7 @@ exports.sendData = (msg, cmd, period, server) => {
         if (!getAvailableServers('map', null).includes(server)) {
             // Invalid server name inside server variable
             msg.channel.send(
-                new Discord.RichEmbed()
+                new Discord.MessageEmbed()
                 .setTitle('Invalid server')
                 .setDescription('\"' + server + '\" is not a valid server!\n**Servers:** ' + getAvailableServers(cmd).join(', ') + '\nType ``' + process.env.PREFIX + 'help ' + cmd + '`` for more information.')
                 .setThumbnail(thumbs.sad)
@@ -94,7 +94,7 @@ exports.sendData = (msg, cmd, period, server) => {
 
     // Send message
     msg.channel.send(
-        new Discord.RichEmbed()
+        new Discord.MessageEmbed()
         .setDescription(`Showing [${servers[server].name}](https://www.gametracker.com/server_info/${servers[server].ip}) ${cmd == 'map' ? 'maps' : cmd}\nthroughout the ${period == 'd' ? 'day' : period == 'w' ? 'week' : period == 'm' ? 'month' : period}. **[Join now!](${process.env.BASEURI}/redirect/${server})**`)
         .setImage(graphURL)
         .setColor('GOLD')
